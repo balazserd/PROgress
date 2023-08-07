@@ -17,6 +17,7 @@
 		568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B607E2A7AD98400D5B5D3 /* PROgressUITests.swift */; };
 		568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60802A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift */; };
 		568B608F2A7ADE2400D5B5D3 /* EBUniAppsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 568B608E2A7ADE2400D5B5D3 /* EBUniAppsKit */; };
+		568B60922A7B8C1600D5B5D3 /* PRLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60912A7B8C1600D5B5D3 /* PRLogger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		568B607A2A7AD98400D5B5D3 /* PROgressUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PROgressUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B607E2A7AD98400D5B5D3 /* PROgressUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressUITests.swift; sourceTree = "<group>"; };
 		568B60802A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		568B60912A7B8C1600D5B5D3 /* PRLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PRLogger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		568B605C2A7AD98300D5B5D3 /* PROgress */ = {
 			isa = PBXGroup;
 			children = (
+				568B60902A7B8C0500D5B5D3 /* Logging */,
 				568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */,
 				568B605F2A7AD98300D5B5D3 /* ContentView.swift */,
 				568B60612A7AD98400D5B5D3 /* Assets.xcassets */,
@@ -135,6 +138,14 @@
 				568B60802A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift */,
 			);
 			path = PROgressUITests;
+			sourceTree = "<group>";
+		};
+		568B60902A7B8C0500D5B5D3 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				568B60912A7B8C1600D5B5D3 /* PRLogger.swift */,
+			);
+			path = Logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -275,6 +286,7 @@
 			files = (
 				568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */,
 				568B60602A7AD98300D5B5D3 /* ContentView.swift in Sources */,
+				568B60922A7B8C1600D5B5D3 /* PRLogger.swift in Sources */,
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
 				568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */,
 			);
