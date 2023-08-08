@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
-		568B60602A7AD98300D5B5D3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* ContentView.swift */; };
+		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
 		568B60652A7AD98400D5B5D3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60642A7AD98400D5B5D3 /* Preview Assets.xcassets */; };
 		568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
@@ -18,6 +18,9 @@
 		568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60802A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift */; };
 		568B608F2A7ADE2400D5B5D3 /* EBUniAppsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 568B608E2A7ADE2400D5B5D3 /* EBUniAppsKit */; };
 		568B60922A7B8C1600D5B5D3 /* PRLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60912A7B8C1600D5B5D3 /* PRLogger.swift */; };
+		568B60942A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */; };
+		568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60962A82B3C900D5B5D3 /* ProgressImage.swift */; };
+		568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +43,7 @@
 /* Begin PBXFileReference section */
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressApp.swift; sourceTree = "<group>"; };
-		568B605F2A7AD98300D5B5D3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
 		568B60612A7AD98400D5B5D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		568B60642A7AD98400D5B5D3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		568B60662A7AD98400D5B5D3 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -52,6 +55,9 @@
 		568B607E2A7AD98400D5B5D3 /* PROgressUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressUITests.swift; sourceTree = "<group>"; };
 		568B60802A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		568B60912A7B8C1600D5B5D3 /* PRLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PRLogger.swift; sourceTree = "<group>"; };
+		568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoViewModel.swift; sourceTree = "<group>"; };
+		568B60962A82B3C900D5B5D3 /* ProgressImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressImage.swift; sourceTree = "<group>"; };
+		568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTransferingError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +111,7 @@
 			children = (
 				568B60902A7B8C0500D5B5D3 /* Logging */,
 				568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */,
-				568B605F2A7AD98300D5B5D3 /* ContentView.swift */,
+				568B609C2A82B4CB00D5B5D3 /* New Progress Video */,
 				568B60612A7AD98400D5B5D3 /* Assets.xcassets */,
 				568B60662A7AD98400D5B5D3 /* Persistence.swift */,
 				568B606B2A7AD98400D5B5D3 /* Info.plist */,
@@ -146,6 +152,17 @@
 				568B60912A7B8C1600D5B5D3 /* PRLogger.swift */,
 			);
 			path = Logging;
+			sourceTree = "<group>";
+		};
+		568B609C2A82B4CB00D5B5D3 /* New Progress Video */ = {
+			isa = PBXGroup;
+			children = (
+				568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */,
+				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
+				568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */,
+				568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */,
+			);
+			path = "New Progress Video";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,9 +302,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */,
-				568B60602A7AD98300D5B5D3 /* ContentView.swift in Sources */,
+				568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */,
 				568B60922A7B8C1600D5B5D3 /* PRLogger.swift in Sources */,
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
+				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
+				568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */,
+				568B60942A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift in Sources */,
 				568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

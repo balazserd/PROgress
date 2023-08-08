@@ -13,7 +13,7 @@ struct PROgressApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NewProgressVideoView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
