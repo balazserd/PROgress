@@ -17,47 +17,57 @@ struct NewProgressVideoView: View {
     
     var body: some View {
         NavigationStack {
-            switch viewModel.state {
-            case .undefined:
-                PhotosPicker(selection: $viewModel.selectedItems, matching: .any(of: [.images, .screenshots])) {
-                    Text("Select photos")
-                }
-                
-            case .loading:
-                VStack {
-                    ProgressView(value: viewModel.loadingProgress) {
-                        Text("Importing photos...")
+            VStack {
+                switch viewModel.state {
+                case .undefined:
+                    PhotosPicker(selection: $viewModel.selectedItems, matching: .any(of: [.images, .screenshots])) {
+                        Text("Select photos")
                     }
                     
-                    Text("Depending on the count of selected photos, this operation might take a few minutes.")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                }
-                .padding()
-                
-            case .failure:
-                Text("Loading the image failed!")
-                
-            case .success(let progressImages):
-                ScrollView {
-                    LazyVGrid(columns: Array(repeating: .init(), count: 5)) {
-                        ForEach(progressImages) { progressImage in
-                            Rectangle()
-                                .aspectRatio(1, contentMode: .fill)
-                                .overlay {
-                                    progressImage.image
-                                        .resizable()
-                                        .scaledToFill()
-                                }
-                                .cornerRadius(8)
-                                .clipped()
+                case .loading:
+                    VStack(alignment: .leading) {
+                        ProgressView(value: viewModel.loadingProgress) {
+                            Text("Importing photos...")
                         }
+                        
+                        Text("Depending on the number of selected photos, this operation might take a few minutes.")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
                     }
-                    .padding(.horizontal, 8)
+                    .padding()
+                    
+                case .failure:
+                    Text("Loading the image failed!")
+                    
+                case .success(let progressImages):
+                    ScrollView {
+                        LazyVGrid(columns: Array(repeating: .init(), count: 4)) {
+                            ForEach(progressImages) { progressImage in
+                                Rectangle()
+                                    .aspectRatio(1, contentMode: .fill)
+                                    .overlay {
+                                        progressImage.image
+                                            .resizable()
+                                            .scaledToFill()
+                                    }
+                                    .cornerRadius(4)
+                                    .clipped()
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                    }
                 }
             }
-            
+            .navigationTitle("New progress video")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    PhotosPicker(selection: $viewModel.selectedItems, matching: .any(of: [.images, .screenshots])) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
         }
+        
     }
 }
 

@@ -25,6 +25,7 @@ class NewProgressVideoViewModel: ObservableObject {
         guard await selectedItems.count > 0 else { return }
         
         await updateState(to: .loading)
+        await resetLoadingProgress()
         
         typealias IndexedImage = (image: ProgressImage?, index: Int)
         do {
@@ -57,6 +58,10 @@ class NewProgressVideoViewModel: ObservableObject {
     
     private func advanceLoadingProgress(by value: Double) {
         self.loadingProgress = min(1.0, self.loadingProgress + value)
+    }
+    
+    private func resetLoadingProgress() {
+        self.loadingProgress = 0.0
     }
     
     enum ImageLoadingState {
