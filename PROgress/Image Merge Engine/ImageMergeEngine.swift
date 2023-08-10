@@ -77,6 +77,7 @@ class ImageMergeEngine {
                                                       withPresentationTime: sample.time)
                 
                 sampleBuffer.remove(at: nextSampleBufferIndex)
+                await self.advanceProcessingProgress(by: 1.0 / Double(images.count))
             }
         }
         
@@ -91,6 +92,16 @@ class ImageMergeEngine {
         }
         
         return nil
+    }
+    
+    @MainActor
+    private func advanceProcessingProgress(by value: Double) {
+        guard case let .working(progress) = self.state.value else {
+            PRLogger.imageProcessing.warning("Cannot advance processing progress without `.working` being the current state!")
+            return
+        }
+        
+        self.state.value = .working(progress: min(1.0, progress + value))
     }
     
     private func processImage(_ image: PhotosPickerItem,
@@ -125,6 +136,18 @@ class ImageMergeEngine {
     }
     
     enum State: Equatable {
+        case idle
+        case working(progress: Double)
+        case finished(video: ProgressVideo)
+        
+        var isWorking: Bool {
+            if case .working = self {
+                return true
+            } else {
+                return false
+            }
+        }
+        
         static func == (lhs: ImageMergeEngine.State, rhs: ImageMergeEngine.State) -> Bool {
             switch lhs {
             case .idle:
@@ -135,18 +158,6 @@ class ImageMergeEngine {
                 
             case .finished:
                 if case .finished = rhs { return true } else { return false }
-            }
-        }
-        
-        case idle
-        case working(progress: Double)
-        case finished(video: ProgressVideo)
-        
-        var isWorking: Bool {
-            if case .working = self {
-                return true
-            } else {
-                return false
             }
         }
     }
