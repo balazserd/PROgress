@@ -13,34 +13,44 @@ import Factory
 
 @MainActor
 class NewProgressVideoViewModel: ObservableObject {
+    // MARK: - Injections
     @Injected(\.imageMergeEngine) private var imageMergeEngine
     
+    // MARK: - Public variables
+    @Published var navigationState = NavigationPath()
+    
+    /// This item tracks any ordering changes that is done by the user over the photos.
+    ///
+    /// ``selectedItems`` cannot directly track this, as it's a published variable.
+    @Published var orderedSelectedItems: [PhotosPickerItem] = []
     @Published var selectedItems: [PhotosPickerItem] = [] {
         didSet {
+            self.orderedSelectedItems = selectedItems
+            
             Task.detached { await self.loadImages(from: self.selectedItems) }
         }
     }
     
     @Published private(set) var imageLoadingState: ImageLoadingState = .undefined
+    @Published var progressImages: [ProgressImage]?
+    
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
     @Published private(set) var video: ProgressVideo?
-    
+
+    // MARK: - Public methods
     func beginMerge() {
         guard case .success = self.imageLoadingState else {
             PRLogger.app.fault("beginMerge() was called without a success state!")
             return
         }
         
-        Task.detached(priority: .userInitiated) { [selectedItems] in
+        Task.detached(priority: .userInitiated) { [orderedSelectedItems] in
             do {
-                _ = try await self.imageMergeEngine.mergeImages(selectedItems)
+                let video = try await self.imageMergeEngine.mergeImages(orderedSelectedItems)
+                await self.addVideoToView(video)
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
                 return
-            }
-            
-            if case let .finished(video) = await self.videoProcessingState {
-                await self.addVideoToView(video)
             }
         }
         
@@ -49,10 +59,19 @@ class NewProgressVideoViewModel: ObservableObject {
             .assign(to: &$videoProcessingState)
     }
     
-    func clearVideoProcessingState() {
+    func resetVideoProcessingState() {
         self.videoProcessingState = .idle
     }
     
+    func watchVideo() {
+        resetVideoProcessingState()
+        
+        if let video = video {
+            self.navigationState.append(video)
+        }
+    }
+    
+    // MARK: - Private methods
     private nonisolated func loadImages(from selection: [PhotosPickerItem]) async {
         guard await selectedItems.count > 0 else { return }
         
@@ -71,14 +90,23 @@ class NewProgressVideoViewModel: ObservableObject {
             .compactMap { $0 }
             
             PRLogger.app.debug("Successfully imported \(progressImages.count) photos")
-            await updateState(to: .success(images: progressImages))
+            await self.setProgressImages(to: progressImages)
+            await updateState(to: .success)
         } catch let error {
             PRLogger.app.error("Failed to fetch images! [\(error)]")
             await updateState(to: .failure(error))
         }
     }
     
+    private func setProgressImages(to images: [ProgressImage]) {
+        self.progressImages = images
+    }
+    
     private func updateState(to state: ImageLoadingState) {
+        if case .success = state, self.progressImages == nil {
+            PRLogger.app.fault("Settings success state without `progressImages` being set!")
+        }
+        
         self.imageLoadingState = state
     }
     
@@ -95,10 +123,16 @@ class NewProgressVideoViewModel: ObservableObject {
         self.video = video
     }
     
+    // MARK: - ImageLoadingState enum
     enum ImageLoadingState {
         case undefined
         case loading(progress: Double)
-        case success(images: [ProgressImage])
+        case success
         case failure(Error)
+        
+        var isSuccess: Bool {
+            guard case .success = self else { return false }
+            return true
+        }
     }
 }

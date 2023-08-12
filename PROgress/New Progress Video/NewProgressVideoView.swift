@@ -9,15 +9,18 @@ import SwiftUI
 import PhotosUI
 import Combine
 import CoreData
+import AVKit
 
 struct NewProgressVideoView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State private var isReordering: Bool = false
+    @State private var draggedImage: ProgressImage?
     @StateObject private var viewModel = NewProgressVideoViewModel()
     
     var body: some View {
         ZStack {
-            NavigationStack {
+            NavigationStack(path: $viewModel.navigationState) {
                 VStack {
                     switch viewModel.imageLoadingState {
                     case .undefined:
@@ -31,12 +34,26 @@ struct NewProgressVideoView: View {
                     case .failure:
                         Text("Loading the image failed!")
                         
-                    case .success(let progressImages):
-                        successView(progressImages)
+                    case .success:
+                        ImageLoadingSuccessView()
                     }
                 }
                 .navigationTitle("New progress video")
+                .navigationDestination(for: ProgressVideo.self) { progressVideo in
+                    NewProgressVideoPlayerView(video: progressVideo)
+                }
                 .toolbar { toolbar }
+                .overlay(alignment: .bottom) {
+                    if viewModel.video != nil {
+                        Button(action: { viewModel.watchVideo() }) {
+                            Text("Watch video")
+                                .bold()
+                                .frame(maxWidth: .infinity, minHeight: 32)
+                        }
+                        .padding(8)
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
             }
                 
             switch viewModel.videoProcessingState {
@@ -47,19 +64,22 @@ struct NewProgressVideoView: View {
                 Color.gray
                     .opacity(0.7)
                     .edgesIgnoringSafeArea(.all)
+                    .onTapGesture(perform: { viewModel.resetVideoProcessingState() })
                 
                 VideoProcessingInProgressView(progress: progress)
-                    .animation(.linear, value: viewModel.videoProcessingState)
+                    .transition(.opacity.animation(.linear(duration: 0.3)))
                 
             case .finished:
                 Color.gray
                     .opacity(0.7)
                     .edgesIgnoringSafeArea(.all)
+                    .onTapGesture(perform: { viewModel.resetVideoProcessingState() })
                 
-                VideoProcessingFinishedView(action: { viewModel.clearVideoProcessingState() })
-                    .animation(.linear, value: viewModel.videoProcessingState)
+                VideoProcessingFinishedView(action: { viewModel.watchVideo() })
+                    .transition(.opacity.animation(.linear(duration: 0.3)))
             }
         }
+        .environmentObject(self.viewModel)
     }
     
     private func loadingView(_ progress: Double) -> some View {
@@ -75,26 +95,6 @@ struct NewProgressVideoView: View {
         .padding()
     }
     
-    private func successView(_ progressImages: [ProgressImage]) -> some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: .init(), count: 4)) {
-                ForEach(progressImages) { progressImage in
-                    Rectangle()
-                        .aspectRatio(1, contentMode: .fill)
-                        .overlay {
-                            progressImage.image
-                                .resizable()
-                                .scaledToFill()
-                        }
-                        .cornerRadius(4)
-                        .clipped()
-                        .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-                }
-            }
-            .padding(.horizontal, 8)
-        }
-    }
-    
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
@@ -103,9 +103,12 @@ struct NewProgressVideoView: View {
             }
         }
         
-        ToolbarItem(placement: .primaryAction) {
-            Button(action: { viewModel.beginMerge() }) {
-                Image(systemName: "gearshape.arrow.triangle.2.circlepath")
+        if viewModel.selectedItems.count > 0 {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { viewModel.beginMerge() }) {
+                    Image(systemName: "gearshape.arrow.triangle.2.circlepath")
+                }
+                .disabled(!viewModel.imageLoadingState.isSuccess)
             }
         }
     }

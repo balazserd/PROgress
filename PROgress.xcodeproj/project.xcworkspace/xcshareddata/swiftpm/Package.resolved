@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/balazserd/EBUniAppsKit",
       "state" : {
-        "revision" : "47c6b4dde9092e24649129abb6b6c50f2f80f9dc",
-        "version" : "0.0.3"
+        "revision" : "2cc624d306b552076270653b7e5e1dfa8ba94c29",
+        "version" : "0.0.7"
       }
     },
     {

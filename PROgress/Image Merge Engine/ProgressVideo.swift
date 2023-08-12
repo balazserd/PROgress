@@ -7,6 +7,6 @@
 
 import Foundation
 
-class ProgressVideo {
-    
+struct ProgressVideo: Hashable {
+    var url: URL
 }

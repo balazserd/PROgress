@@ -55,15 +55,6 @@ extension NewProgressVideoView {
                         }
                     )
                     .buttonStyle(.borderedProminent)
-                    
-//                    Button(
-//                        action: { },
-//                        label: {
-//                            Text("Save now into Photos app")
-//                                .frame(maxWidth: .infinity)
-//                        }
-//                    )
-//                    .buttonStyle(.bordered)
                 }
             }
             .frame(maxWidth: 275)

@@ -10,12 +10,13 @@ import SwiftUI
 import PhotosUI
 import CoreImage
 import AVFoundation
+import EBUniAppsKit
 import Combine
 
 class ImageMergeEngine {
     @MainActor var state = CurrentValueSubject<State, Never>(.idle)
     
-    func mergeImages(_ images: [PhotosPickerItem]) async throws -> ProgressVideo? {
+    func mergeImages(_ images: [PhotosPickerItem]) async throws -> ProgressVideo {
         let ciContext = CIContext()
         
         let assetWriterConfig = try AssetWriterConfiguration()
@@ -33,53 +34,24 @@ class ImageMergeEngine {
         assetWriterConfig.assetWriter.startSession(atSourceTime: .zero)
         
         let taskLimit = ProcessInfo.recommendedMaximumConcurrency
-        try await withThrowingTaskGroup(of: Sample.self) { group in
-            for imageIndex in 0..<min(taskLimit, images.count) {
-                group.addTask(priority: .userInitiated) {
-                    return try await self.processImage(images[imageIndex],
-                                                       indexed: imageIndex,
-                                                       by: assetWriterConfig,
-                                                       in: ciContext)
-                }
-            }
-            
-            var nextImageIndex = taskLimit
-            var sampleBuffer = [Sample]()
-            for sampleIndex in 0..<images.count {
-                repeat {
-                    guard let sample = try await group.next() else { break }
-                    sampleBuffer.append(sample)
-                    
-                    if nextImageIndex < images.count {
-                        group.addTask(priority: .userInitiated) { [nextImageIndex] in
-                            return try await self.processImage(images[nextImageIndex],
-                                                               indexed: nextImageIndex,
-                                                               by: assetWriterConfig,
-                                                               in: ciContext)
-                        }
-                    }
-                    
-                    nextImageIndex += 1
-                } while (sampleBuffer.firstIndex(where: { $0.index == sampleIndex }) == nil)
-                
-                guard let nextSampleBufferIndex = sampleBuffer.firstIndex(where: {
-                    $0.index == sampleIndex
-                }) else {
-                    PRLogger.imageProcessing.error("Next sample not found in buffer!")
-                    throw MergeError.missingSample
-                }
-                
-                PRLogger.imageProcessing.debug("Received next sample... [\(sampleIndex+1)/\(images.count)]")
-                let sample = sampleBuffer[nextSampleBufferIndex]
-                
+        
+        try await images.mapConcurrentlyThenPerformSeriallyAsync(
+            maxConcurrencyCount: taskLimit,
+            mapPriority: .userInitiated,
+            mapBlock: { image in
+                return try await self.processImage(image,
+                                                   indexed: images.firstIndex(of: image)!,
+                                                   by: assetWriterConfig,
+                                                   in: ciContext)
+            },
+            serialPerformBlock: { sample in
                 await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
+                
                 assetWriterConfig.inputAdaptor.append(sample.buffer,
                                                       withPresentationTime: sample.time)
-                
-                sampleBuffer.remove(at: nextSampleBufferIndex)
                 await self.advanceProcessingProgress(by: 1.0 / Double(images.count))
             }
-        }
+        )
         
         assetWriterConfig.inputAdaptor.assetWriterInput.markAsFinished()
         
@@ -91,7 +63,13 @@ class ImageMergeEngine {
             PRLogger.imageProcessing.error("Status is not completed after finishing writing! [\(writerStatus.rawValue)] [error: \(error)]")
         }
         
-        return nil
+        await self.setState(to: .finished)
+        return ProgressVideo(url: assetWriterConfig.outputUrl)
+    }
+    
+    @MainActor
+    private func setState(to state: State) {
+        self.state.value = state
     }
     
     @MainActor
@@ -101,7 +79,7 @@ class ImageMergeEngine {
             return
         }
         
-        self.state.value = .working(progress: min(1.0, progress + value))
+        self.setState(to: .working(progress: min(1.0, progress + value)))
     }
     
     private func processImage(_ image: PhotosPickerItem,
@@ -138,26 +116,13 @@ class ImageMergeEngine {
     enum State: Equatable {
         case idle
         case working(progress: Double)
-        case finished(video: ProgressVideo)
+        case finished
         
         var isWorking: Bool {
             if case .working = self {
                 return true
             } else {
                 return false
-            }
-        }
-        
-        static func == (lhs: ImageMergeEngine.State, rhs: ImageMergeEngine.State) -> Bool {
-            switch lhs {
-            case .idle:
-                return rhs == .idle
-                
-            case .working:
-                if case .working = rhs { return true } else { return false }
-                
-            case .finished:
-                if case .finished = rhs { return true } else { return false }
             }
         }
     }
@@ -175,19 +140,19 @@ class ImageMergeEngine {
     private class AssetWriterConfiguration {
         let assetWriter: AVAssetWriter
         let inputAdaptor: AVAssetWriterInputPixelBufferAdaptor
-        let url: URL!
+        let outputUrl: URL!
         
         init() throws {
-            url = FileManager()
+            outputUrl = FileManager()
                 .urls(for: .documentDirectory, in: .userDomainMask)
                 .first?
                 .appendingPathComponent(UUID().uuidString, conformingTo: .quickTimeMovie)
             
-            guard url != nil else {
+            guard outputUrl != nil else {
                 throw AssetWriterConfigurationError.couldNotCreateFileURL
             }
             
-            assetWriter = try AVAssetWriter(url: self.url, fileType: .mov)
+            assetWriter = try AVAssetWriter(url: self.outputUrl, fileType: .mov)
             
             let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.h264,
                                                  AVVideoWidthKey: NSNumber(value: 640),
@@ -231,8 +196,9 @@ extension AVAssetWriterInput {
         
         PRLogger.imageProcessing.debug("Not ready for more media data! Waiting...")
         
-        let readinessChanged = self.publisher(for: \.isReadyForMoreMediaData).values
-        for await ready in readinessChanged {
+        let readinessChanged = self.publisher(for: \.isReadyForMoreMediaData,
+                                              options: [.initial, .new])
+        for await ready in readinessChanged.values {
             guard ready else { continue }
             
             PRLogger.imageProcessing.debug("Became ready for more media data.")

@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ProgressImage: Transferable, Identifiable {
+struct ProgressImage: Transferable, Equatable, Identifiable {
     let image: Image
     let id = UUID()
     
@@ -23,6 +23,28 @@ struct ProgressImage: Transferable, Identifiable {
             
             let loadedImage = Image(uiImage: scaledDownImage)
             return ProgressImage(image: loadedImage)
+        }
+    }
+    
+    @available(*, deprecated, message: "Use when transferable export is required for ProgressImage.")
+    struct Identifier: Hashable, Transferable {
+        var id: UUID
+        
+        static var transferRepresentation: some TransferRepresentation {
+            ProxyRepresentation(
+                exporting: \.id.uuidString,
+                importing: {
+                    guard let uuid = UUID(uuidString: $0) else {
+                        throw TransferableError.invalidUUIDString
+                    }
+                    
+                    return Identifier(id: uuid)
+                }
+            )
+        }
+        
+        enum TransferableError: Error {
+            case invalidUUIDString
         }
     }
 }
