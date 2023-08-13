@@ -16,4 +16,7 @@ enum PRLogger {
                             category: "app")
     static let imageProcessing = Logger(subsystem: "com.ebuniapps.PROgress",
                                         category: "imageProcessing")
+    
+    static let photoLibraryManagement = Logger(subsystem: "com.ebuniapps.PROgress",
+                                               category: "photoLibraryManagement")
 }

@@ -111,7 +111,7 @@ class ImageMergeEngine {
         
         context.render(ciImage, to: pixelBuffer)
         
-        let time = CMTime(value: Int64(index+1), timescale: 5)
+        let time = CMTime(value: Int64(index), timescale: 5)
         return Sample(index: index, time: time, buffer: pixelBuffer)
     }
     

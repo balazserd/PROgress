@@ -11,6 +11,8 @@ import AVKit
 import Combine
 
 struct NewProgressVideoPlayerView: View {
+    @StateObject private var viewModel = NewProgressVideoPlayerViewModel()
+    
     var video: ProgressVideo
     private let avPlayer: AVPlayer
     
@@ -46,7 +48,7 @@ struct NewProgressVideoPlayerView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            Button(action: { /* viewModel.save() */ }) {
+            Button(action: { viewModel.saveVideo(video) }) {
                 Image(systemName: "arrow.down.circle")
             }
         }

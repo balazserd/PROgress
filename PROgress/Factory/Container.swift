@@ -12,4 +12,8 @@ extension Container {
     var imageMergeEngine: Factory<ImageMergeEngine> {
         self { ImageMergeEngine() }
     }
+    
+    var photoLibraryManager: Factory<PhotoLibraryManager> {
+        self { PhotoLibraryManager() }
+    }
 }
