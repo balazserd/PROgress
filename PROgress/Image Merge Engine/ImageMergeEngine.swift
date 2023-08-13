@@ -47,8 +47,12 @@ class ImageMergeEngine {
             serialPerformBlock: { sample in
                 await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
                 
-                assetWriterConfig.inputAdaptor.append(sample.buffer,
-                                                      withPresentationTime: sample.time)
+                // TODO investigate possible issue when smaller image has background of previous image (pixelbufferpool not cleared between uses?)
+                if !assetWriterConfig.inputAdaptor.append(sample.buffer,
+                                                            withPresentationTime: sample.time) {
+                    PRLogger.imageProcessing.error("Frame was not appended to video!")
+                }
+                
                 await self.advanceProcessingProgress(by: 1.0 / Double(images.count))
             }
         )
