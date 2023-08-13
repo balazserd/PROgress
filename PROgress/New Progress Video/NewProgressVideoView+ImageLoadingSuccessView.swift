@@ -25,6 +25,7 @@ extension NewProgressVideoView {
                     }
                     
                     if viewModel.video != nil {
+                        // Space for the "Watch video" button
                         Color.clear.frame(height: 32 + 2 * 12)
                     }
                 }
@@ -66,7 +67,7 @@ extension NewProgressVideoView {
         private func buildDropDelegate(for progressImage: ProgressImage) -> ReorderImagesDropDelegate {
             ReorderImagesDropDelegate(parent: progressImage,
                                       onReorderEnded: { isReordering = false },
-                                      selectedPhotoPickerItems: $viewModel.orderedSelectedItems,
+                                      orderedSelectedPhotoPickerItems: $viewModel.orderedSelectedItems,
                                       allProgressImages: $viewModel.progressImages,
                                       currentlyMovedImage: $draggedImage)
         }

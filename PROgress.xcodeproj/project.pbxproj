@@ -42,6 +42,9 @@
 		56A554312A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
 		56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
 		56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
+		56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
+		56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
+		56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +90,7 @@
 		56A554282A87956900E99F65 /* NewProgressVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoPlayerView.swift; sourceTree = "<group>"; };
 		56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+ReorderImagesDropDelegate.swift"; sourceTree = "<group>"; };
 		56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+ImageLoadingSuccessView.swift"; sourceTree = "<group>"; };
+		56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetWriterConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +211,7 @@
 				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
 				568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */,
 				568B60A12A84099100D5B5D3 /* ImageMergeEngine.swift */,
+				56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */,
 			);
 			path = "Image Merge Engine";
 			sourceTree = "<group>";
@@ -374,6 +379,7 @@
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
 				56A5542D2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				568B60AE2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
+				56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60A22A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */,
@@ -390,6 +396,7 @@
 			files = (
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
+				56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				568B60752A7AD98400D5B5D3 /* PROgressTests.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
@@ -409,6 +416,7 @@
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
 				568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */,
 				56A5542B2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
+				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

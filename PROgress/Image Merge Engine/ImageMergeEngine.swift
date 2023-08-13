@@ -19,7 +19,7 @@ class ImageMergeEngine {
     func mergeImages(_ images: [PhotosPickerItem]) async throws -> ProgressVideo {
         let ciContext = CIContext()
         
-        let assetWriterConfig = try AssetWriterConfiguration()
+        let assetWriterConfig = try VideoAssetWriterConfiguration(resolution: CGSize(width: 640, height: 640))
         guard assetWriterConfig.assetWriter.startWriting() else {
             let error = assetWriterConfig.assetWriter.error
             let status = assetWriterConfig.assetWriter.status.rawValue
@@ -64,7 +64,9 @@ class ImageMergeEngine {
         }
         
         await self.setState(to: .finished)
-        return ProgressVideo(url: assetWriterConfig.outputUrl)
+        return ProgressVideo(videoId: assetWriterConfig.videoId,
+                             url: assetWriterConfig.outputUrl,
+                             resolution: assetWriterConfig.resolution)
     }
     
     @MainActor
@@ -84,7 +86,7 @@ class ImageMergeEngine {
     
     private func processImage(_ image: PhotosPickerItem,
                               indexed index: Int,
-                              by config: AssetWriterConfiguration,
+                              by config: VideoAssetWriterConfiguration,
                               in context: CIContext) async throws -> Sample {
         guard let data = try await image.loadTransferable(type: Data.self) else {
             PRLogger.imageProcessing.error("Image could not be converted to `Data`!")
@@ -135,50 +137,6 @@ class ImageMergeEngine {
         case missingPixelBufferPool
         case missingSample
         case ciImageCreationFailure
-    }
-    
-    private class AssetWriterConfiguration {
-        let assetWriter: AVAssetWriter
-        let inputAdaptor: AVAssetWriterInputPixelBufferAdaptor
-        let outputUrl: URL!
-        
-        init() throws {
-            outputUrl = FileManager()
-                .urls(for: .documentDirectory, in: .userDomainMask)
-                .first?
-                .appendingPathComponent(UUID().uuidString, conformingTo: .quickTimeMovie)
-            
-            guard outputUrl != nil else {
-                throw AssetWriterConfigurationError.couldNotCreateFileURL
-            }
-            
-            assetWriter = try AVAssetWriter(url: self.outputUrl, fileType: .mov)
-            
-            let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.h264,
-                                                 AVVideoWidthKey: NSNumber(value: 640),
-                                                AVVideoHeightKey: NSNumber(value: 640)]
-            guard assetWriter.canApply(outputSettings: outputSettings, forMediaType: .video) else {
-                throw AssetWriterConfigurationError.cannotApplyOutputSettingsForMediaType
-            }
-            
-            let input = AVAssetWriterInput(mediaType: .video, outputSettings: outputSettings)
-            guard assetWriter.canAdd(input) else {
-                throw AssetWriterConfigurationError.cannotAddInput
-            }
-            assetWriter.add(input)
-            
-            inputAdaptor = AVAssetWriterInputPixelBufferAdaptor(
-                assetWriterInput: input,
-                sourcePixelBufferAttributes:
-                    [kCVPixelBufferPixelFormatTypeKey as String: Int(kCMPixelFormat_32BGRA)]
-            )
-        }
-        
-        enum AssetWriterConfigurationError: Error {
-            case couldNotCreateFileURL
-            case cannotApplyOutputSettingsForMediaType
-            case cannotAddInput
-        }
     }
     
     private typealias Sample = (
