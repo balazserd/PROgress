@@ -44,9 +44,17 @@ class NewProgressVideoViewModel: ObservableObject {
             return
         }
         
-        Task.detached(priority: .userInitiated) { [orderedSelectedItems] in
+        Task.detached(priority: .userInitiated) { [progressImages, orderedSelectedItems] in
             do {
-                let video = try await self.imageMergeEngine.mergeImages(orderedSelectedItems)
+                let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
+                        CGSize(width: max($0.width, $1.originalSize.width),
+                               height: max($0.height, $1.originalSize.height))
+                    }
+                
+                PRLogger.app.info("The resulting video will be of size \(largestPhotoSize.debugDescription).")
+                
+                let video = try await self.imageMergeEngine.mergeImages(orderedSelectedItems,
+                                                                        options: .init(size: largestPhotoSize))
                 await self.addVideoToView(video)
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")

@@ -11,6 +11,7 @@ import Foundation
 struct ProgressImage: Transferable, Equatable, Identifiable {
     let image: Image
     let id = UUID()
+    let originalSize: CGSize
     
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(importedContentType: .image) { data in
@@ -22,7 +23,7 @@ struct ProgressImage: Transferable, Equatable, Identifiable {
             }
             
             let loadedImage = Image(uiImage: scaledDownImage)
-            return ProgressImage(image: loadedImage)
+            return ProgressImage(image: loadedImage, originalSize: uiImage.size)
         }
     }
     

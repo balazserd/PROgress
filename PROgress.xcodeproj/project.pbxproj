@@ -42,15 +42,33 @@
 		56A554312A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
 		56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
 		56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */; };
-		56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
-		56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
-		56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */; };
+		56A554352A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift */; };
+		56A554362A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift */; };
+		56A554372A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554342A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift */; };
 		56A5543A2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554392A8940F400E99F65 /* PhotoLibraryManager.swift */; };
 		56A5543B2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554392A8940F400E99F65 /* PhotoLibraryManager.swift */; };
 		56A5543C2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554392A8940F400E99F65 /* PhotoLibraryManager.swift */; };
 		56A5543E2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */; };
 		56A5543F2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */; };
 		56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */; };
+		56A554422A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */; };
+		56A554432A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */; };
+		56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */; };
+		56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */; };
+		56A554472A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */; };
+		56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */; };
+		56A5544A2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */; };
+		56A5544B2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */; };
+		56A5544C2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */; };
+		56A5544E2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */; };
+		56A5544F2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */; };
+		56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */; };
+		56A554522A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */; };
+		56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */; };
+		56A554542A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */; };
+		56A554562A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */; };
+		56A554572A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */; };
+		56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,9 +114,15 @@
 		56A554282A87956900E99F65 /* NewProgressVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoPlayerView.swift; sourceTree = "<group>"; };
 		56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+ReorderImagesDropDelegate.swift"; sourceTree = "<group>"; };
 		56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+ImageLoadingSuccessView.swift"; sourceTree = "<group>"; };
-		56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetWriterConfiguration.swift; sourceTree = "<group>"; };
+		56A554342A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+VideoAssetWriterConfiguration.swift"; sourceTree = "<group>"; };
 		56A554392A8940F400E99F65 /* PhotoLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryManager.swift; sourceTree = "<group>"; };
 		56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoPlayerViewModel.swift; sourceTree = "<group>"; };
+		56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+MergeOptions.swift"; sourceTree = "<group>"; };
+		56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+Extensions.swift"; sourceTree = "<group>"; };
+		56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAssetWriterInput+Extensions.swift"; sourceTree = "<group>"; };
+		56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Extensions.swift"; sourceTree = "<group>"; };
+		56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+MergeError.swift"; sourceTree = "<group>"; };
+		56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+State.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,14 +227,8 @@
 		568B609C2A82B4CB00D5B5D3 /* New Progress Video */ = {
 			isa = PBXGroup;
 			children = (
-				568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */,
-				56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */,
-				56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */,
-				568B60B02A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift */,
-				568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */,
-				568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */,
-				56A554282A87956900E99F65 /* NewProgressVideoPlayerView.swift */,
-				56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */,
+				56A5545A2A8BEED700E99F65 /* New Video View */,
+				56A554592A8BEECD00E99F65 /* New Video Player View */,
 			);
 			path = "New Progress Video";
 			sourceTree = "<group>";
@@ -221,7 +239,10 @@
 				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
 				568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */,
 				568B60A12A84099100D5B5D3 /* ImageMergeEngine.swift */,
-				56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */,
+				56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */,
+				56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */,
+				56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */,
+				56A554342A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift */,
 			);
 			path = "Image Merge Engine";
 			sourceTree = "<group>";
@@ -237,6 +258,9 @@
 		568B60AC2A84C45E00D5B5D3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */,
+				56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */,
+				56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */,
 				568B60AD2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift */,
 			);
 			path = Extensions;
@@ -248,6 +272,28 @@
 				56A554392A8940F400E99F65 /* PhotoLibraryManager.swift */,
 			);
 			path = PhotoLibraryManager;
+			sourceTree = "<group>";
+		};
+		56A554592A8BEECD00E99F65 /* New Video Player View */ = {
+			isa = PBXGroup;
+			children = (
+				56A554282A87956900E99F65 /* NewProgressVideoPlayerView.swift */,
+				56A5543D2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift */,
+			);
+			path = "New Video Player View";
+			sourceTree = "<group>";
+		};
+		56A5545A2A8BEED700E99F65 /* New Video View */ = {
+			isa = PBXGroup;
+			children = (
+				568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */,
+				56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */,
+				56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */,
+				568B60B02A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift */,
+				568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */,
+				568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */,
+			);
+			path = "New Video View";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,22 +436,28 @@
 			files = (
 				568B60A62A840A6E00D5B5D3 /* ProgressVideo.swift in Sources */,
 				56A554312A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
+				56A554562A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */,
 				568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */,
 				568B60922A7B8C1600D5B5D3 /* PRLogger.swift in Sources */,
 				56A554292A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
+				56A554522A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
+				56A5544E2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
 				56A5542D2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				568B60AE2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 				56A5543E2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
-				56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
+				56A554352A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
+				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				568B60A22A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */,
 				568B60942A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift in Sources */,
 				56A5543A2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
+				56A5544A2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				568B60B12A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift in Sources */,
 				568B60AA2A840C2200D5B5D3 /* Container.swift in Sources */,
+				56A554422A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 				568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,17 +466,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A554572A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
+				56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
 				56A5543B2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5543F2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
-				56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
+				56A554362A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */,
+				56A5544F2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
+				56A5544B2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				568B60752A7AD98400D5B5D3 /* PROgressTests.swift in Sources */,
+				56A554432A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
 				568B60B22A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift in Sources */,
 				568B60A72A840A6E00D5B5D3 /* ProgressVideo.swift in Sources */,
 				56A5542E2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
+				56A554472A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 			);
@@ -436,12 +494,18 @@
 			files = (
 				56A5542F2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
+				56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */,
 				56A5543C2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5542B2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
-				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
+				56A554372A8901C100E99F65 /* ImageMergeEngine+VideoAssetWriterConfiguration.swift in Sources */,
+				56A5544C2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
+				56A554542A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
+				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
+				56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
+				56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

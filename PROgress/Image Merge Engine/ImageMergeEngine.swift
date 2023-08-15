@@ -16,10 +16,10 @@ import Combine
 class ImageMergeEngine {
     @MainActor var state = CurrentValueSubject<State, Never>(.idle)
     
-    func mergeImages(_ images: [PhotosPickerItem]) async throws -> ProgressVideo {
+    func mergeImages(_ images: [PhotosPickerItem], options: MergeOptions) async throws -> ProgressVideo {
         let ciContext = CIContext()
         
-        let assetWriterConfig = try VideoAssetWriterConfiguration(resolution: CGSize(width: 640, height: 640))
+        let assetWriterConfig = try VideoAssetWriterConfiguration(resolution: options.size)
         guard assetWriterConfig.assetWriter.startWriting() else {
             let error = assetWriterConfig.assetWriter.error
             let status = assetWriterConfig.assetWriter.status.rawValue
@@ -48,10 +48,11 @@ class ImageMergeEngine {
                 await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
                 
                 // TODO investigate possible issue when smaller image has background of previous image (pixelbufferpool not cleared between uses?)
-                if !assetWriterConfig.inputAdaptor.append(sample.buffer,
-                                                            withPresentationTime: sample.time) {
+                if !assetWriterConfig.inputAdaptor.append(sample.buffer, withPresentationTime: sample.time) {
                     PRLogger.imageProcessing.error("Frame was not appended to video!")
                 }
+                
+                sample.buffer.unlock()
                 
                 await self.advanceProcessingProgress(by: 1.0 / Double(images.count))
             }
@@ -73,6 +74,7 @@ class ImageMergeEngine {
                              resolution: assetWriterConfig.resolution)
     }
     
+    // MARK: - Private functions
     @MainActor
     private func setState(to state: State) {
         self.state.value = state
@@ -113,36 +115,24 @@ class ImageMergeEngine {
             PRLogger.imageProcessing.error("Failed to create pixel buffer! \(success)")
         }
         
-        context.render(ciImage, to: pixelBuffer)
+        let scaledToFitImage = ciImage
+            .scaleUpToFitInContainerOfSize(config.resolution)
+            .positionInContainerOfSize(config.resolution)
+        
+        print("resizedImage extent: \(scaledToFitImage.extent)")
+        
+        pixelBuffer.lockAndClear()
+        
+        context.render(scaledToFitImage,
+                       to: pixelBuffer,
+                       bounds: scaledToFitImage.extent,
+                       colorSpace: nil)
         
         let time = CMTime(value: Int64(index), timescale: 5)
         return Sample(index: index, time: time, buffer: pixelBuffer)
     }
     
-    enum State: Equatable {
-        case idle
-        case working(progress: Double)
-        case finished
-        
-        var isWorking: Bool {
-            if case .working = self {
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-    
-    enum MergeError: Error {
-        case unknown
-        case dataConversionFailure
-        case taskNotFound
-        case assetWriterStartFailure
-        case missingPixelBufferPool
-        case missingSample
-        case ciImageCreationFailure
-    }
-    
+    // MARK: - Typealias Sample
     private typealias Sample = (
         index: Int,
         time: CMTime,
@@ -150,22 +140,4 @@ class ImageMergeEngine {
     )
 }
 
-extension AVAssetWriterInput {
-    func waitUntilReadyForMoreMediaData() async {
-        if self.isReadyForMoreMediaData {
-            return
-        }
-        
-        PRLogger.imageProcessing.debug("Not ready for more media data! Waiting...")
-        
-        let readinessChanged = self.publisher(for: \.isReadyForMoreMediaData,
-                                              options: [.initial, .new])
-        for await ready in readinessChanged.values {
-            guard ready else { continue }
-            
-            PRLogger.imageProcessing.debug("Became ready for more media data.")
-            
-            return
-        }
-    }
-}
+
