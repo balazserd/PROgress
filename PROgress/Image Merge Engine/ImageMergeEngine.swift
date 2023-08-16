@@ -119,7 +119,7 @@ class ImageMergeEngine {
             .scaleUpToFitInContainerOfSize(config.resolution)
             .positionInContainerOfSize(config.resolution)
         
-        print("resizedImage extent: \(scaledToFitImage.extent)")
+        PRLogger.imageProcessing.debug("resizedImage extent: \(scaledToFitImage.extent.debugDescription)")
         
         pixelBuffer.lockAndClear()
         

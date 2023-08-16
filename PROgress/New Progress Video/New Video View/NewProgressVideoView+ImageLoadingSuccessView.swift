@@ -10,6 +10,9 @@ import EBUniAppsKit
 
 extension NewProgressVideoView {
     struct ImageLoadingSuccessView: View {
+        @Environment(\.horizontalSizeClass) var horizontalSizeClass
+        @Environment(\.verticalSizeClass) var verticalSizeClass
+        
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         
         @State private var isReordering: Bool = false
@@ -18,7 +21,7 @@ extension NewProgressVideoView {
         var body: some View {
             ScrollView {
                 VStack {
-                    LazyVGrid(columns: Array(repeating: .init(), count: 4)) {
+                    LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
                         ForEach(viewModel.progressImages!) { progressImage in
                             photoGridItem(for: progressImage)
                         }
@@ -70,6 +73,12 @@ extension NewProgressVideoView {
                                       orderedSelectedPhotoPickerItems: $viewModel.orderedSelectedItems,
                                       allProgressImages: $viewModel.progressImages,
                                       currentlyMovedImage: $draggedImage)
+        }
+        
+        private var gridColumnCount: Int {
+            guard self.horizontalSizeClass == .compact else { return 8 }
+            
+            return self.verticalSizeClass == .regular ? 4 : 8
         }
     }
 }

@@ -13,8 +13,24 @@ struct PROgressApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NewProgressVideoView()
+            MainWindow()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+    }
+}
+
+struct MainWindow: View {
+    var body: some View {
+        TabView {
+            ProgressVideosCollectionView()
+                .tabItem {
+                    Label("Videos", systemImage: "photo.stack")
+                }
+            
+            NewProgressVideoView()
+                .tabItem {
+                    Label("New", systemImage: "plus.square")
+                }
         }
     }
 }
