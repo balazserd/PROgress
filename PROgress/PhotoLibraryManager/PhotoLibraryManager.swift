@@ -31,6 +31,56 @@ class PhotoLibraryManager {
         return assetCollections.firstObject
     }
     
+    /// An object that contains all albums from the user's Photo Library that has at least one image.
+    var photoAlbumCollection: PhotoAlbumCollection {
+        get async throws {
+            let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
+            
+            var tasks = [Task<PhotoAlbum?, Never>]()
+            assetCollections.enumerateObjects { assetCollection, index, _ in
+                tasks.append(Task {
+                    let name = assetCollection.localizedTitle ?? "[Anonymous Album]"
+                    
+                    let fetchOptions = PHFetchOptions()
+                    fetchOptions.predicate = NSPredicate(format: "mediaType LIKE %d", PHAssetMediaType.image.rawValue)
+                    
+                    let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                    guard let thumbnailAsset = assets.firstObject else {
+                        PRLogger.photoLibraryManagement.notice("Library \(name, privacy: .private(mask: .hash)) has no images, skipping it.")
+                        return nil
+                    }
+                    
+                    return await withCheckedContinuation { imageContinuation in
+                        let requestOptions = PHImageRequestOptions.thumbnail
+                        
+                        PHImageManager
+                            .default()
+                            .requestImageDataAndOrientation(for: thumbnailAsset, options: requestOptions) { data, _, _, resultInfo in
+                                if data == nil {
+                                    let info = resultInfo ?? [:]
+                                    PRLogger.photoLibraryManagement.error("Image data could not be loaded! \(info.debugDescription)")
+                                }
+                                
+                                let photoAlbum = PhotoAlbum(index: index, name: name, thumbnailImage: data)
+                                imageContinuation.resume(returning: photoAlbum)
+                            }
+                    }
+                })
+            }
+            
+            let albumCollection = PhotoAlbumCollection()
+            for task in tasks {
+                guard let resultAlbum = await task.value else {
+                    continue
+                }
+                
+                await albumCollection.append(resultAlbum)
+            }
+            
+            return albumCollection
+        }
+    }
+    
     func requestAuthorization() async {
         authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
     }
@@ -115,5 +165,16 @@ class PhotoLibraryManager {
         
         /// The authorization value was added in a later OS version. Photo management will err on the safe side and will not happen.
         case unknown
+    }
+}
+
+extension PHImageRequestOptions {
+    static var thumbnail: Self {
+        let requestOptions = Self()
+        requestOptions.resizeMode = .fast
+        requestOptions.version = .current
+        requestOptions.isNetworkAccessAllowed = true
+        
+        return requestOptions
     }
 }

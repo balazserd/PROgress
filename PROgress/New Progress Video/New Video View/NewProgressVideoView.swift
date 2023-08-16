@@ -16,6 +16,9 @@ struct NewProgressVideoView: View {
     
     @State private var isReordering: Bool = false
     @State private var draggedImage: ProgressImage?
+    
+    @State private var isShowingPhotoPicker: Bool = false
+    
     @StateObject private var viewModel = NewProgressVideoViewModel()
     
     var body: some View {
@@ -24,7 +27,8 @@ struct NewProgressVideoView: View {
                 VStack {
                     switch viewModel.imageLoadingState {
                     case .undefined:
-                        PhotosPicker(selection: $viewModel.selectedItems, matching: .any(of: [.images, .screenshots])) {
+                        PhotosPicker(selection: $viewModel.selectedItems,
+                                     matching: .any(of: [.images, .screenshots])) {
                             Text("Select photos")
                         }
                         
@@ -54,6 +58,9 @@ struct NewProgressVideoView: View {
                         .buttonStyle(.borderedProminent)
                     }
                 }
+                .photosPicker(isPresented: $isShowingPhotoPicker,
+                              selection: $viewModel.selectedItems,
+                              matching: .any(of: [.images, .screenshots]))
             }
                 
             switch viewModel.videoProcessingState {
@@ -98,7 +105,15 @@ struct NewProgressVideoView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            PhotosPicker(selection: $viewModel.selectedItems, matching: .any(of: [.images, .screenshots])) {
+            Menu {
+                Button(action: { isShowingPhotoPicker = true }) {
+                    Label("Select photos", systemImage: "photo.stack")
+                }
+                
+                Button(action: { }) {
+                    Label("Select a folder", systemImage: "folder")
+                }
+            } label: {
                 Image(systemName: "plus")
             }
         }
