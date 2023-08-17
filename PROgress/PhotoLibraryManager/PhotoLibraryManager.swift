@@ -7,6 +7,8 @@
 
 import Foundation
 import Photos
+import SwiftUI
+import UIKit
 
 class PhotoLibraryManager {
     var authorizationStatus: PHAuthorizationStatus
@@ -17,6 +19,7 @@ class PhotoLibraryManager {
         self.authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
     }
     
+    // MARK: - Working with albums
     /// The PROgress app's designated video folder.
     var videoLibraryAssetCollection: PHAssetCollection? {
         let options = PHFetchOptions()
@@ -31,67 +34,148 @@ class PhotoLibraryManager {
         return assetCollections.firstObject
     }
     
-    /// An object that contains all albums from the user's Photo Library that has at least one image.
-    var photoAlbumCollection: PhotoAlbumCollection {
-        get async throws {
-            let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
-            
-            var tasks = [Task<PhotoAlbum?, Never>]()
-            assetCollections.enumerateObjects { assetCollection, index, _ in
-                tasks.append(Task {
-                    let name = assetCollection.localizedTitle ?? "[Anonymous Album]"
-                    
-                    let fetchOptions = PHFetchOptions()
-                    fetchOptions.predicate = NSPredicate(format: "mediaType LIKE %d", PHAssetMediaType.image.rawValue)
-                    
-                    let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-                    guard let thumbnailAsset = assets.firstObject else {
-                        PRLogger.photoLibraryManagement.notice("Library \(name, privacy: .private(mask: .hash)) has no images, skipping it.")
-                        return nil
+    func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
+                             to fetchReason: AlbumFetchingReason,
+                             progressBlock: @escaping () async -> Void)
+    async throws -> [ProgressImage] {
+        let albumInArray = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [photoAlbum.photoKitIdentifier], options: nil)
+        guard let album = albumInArray.firstObject else {
+            PRLogger.photoLibraryManagement.error("Album with localIdentifier not found!")
+            throw OperationError.albumNotFoundWithLocalIdentifier
+        }
+        
+        let assets = PHAsset.fetchAssets(in: album, options: self.imagesInAlbumFetchOptions)
+        
+        var tasks = [Task<(Int, ProgressImage)?, Never>]()
+        assets.enumerateObjects { asset, index, _ in
+            tasks.append(Task {
+                return await withCheckedContinuation { imageContinuation in
+                    var imageRequestOptions: PHImageRequestOptions
+                    switch fetchReason {
+                    case .display:
+                        imageRequestOptions = .thumbnail
+                    case .process:
+                        imageRequestOptions = .detailed
                     }
                     
-                    return await withCheckedContinuation { imageContinuation in
-                        let requestOptions = PHImageRequestOptions.thumbnail
-                        
-                        PHImageManager
-                            .default()
-                            .requestImageDataAndOrientation(for: thumbnailAsset, options: requestOptions) { data, _, _, resultInfo in
-                                if data == nil {
-                                    let info = resultInfo ?? [:]
-                                    PRLogger.photoLibraryManagement.error("Image data could not be loaded! \(info.debugDescription)")
-                                }
-                                
-                                let photoAlbum = PhotoAlbum(index: index, name: name, thumbnailImage: data)
-                                imageContinuation.resume(returning: photoAlbum)
+                    PHImageManager.default()
+                        .requestImage(for: asset,
+                                      targetSize: CGSize(width: 640, height: 640),
+                                      contentMode: .aspectFill,
+                                      options: imageRequestOptions) { uiImage, resultInfo in
+                            let isDegraded = (resultInfo?[PHImageResultIsDegradedKey] as? NSNumber)?.boolValue
+                            if isDegraded == true {
+                                PRLogger.photoLibraryManagement.debug("Waiting for a better image result...")
+                                return
                             }
-                    }
-                })
+                            
+                            guard let uiImage = uiImage else {
+                                let info = resultInfo ?? [:]
+                                PRLogger.photoLibraryManagement.error("Image could not be loaded! \(info.debugDescription)")
+                                
+                                imageContinuation.resume(returning: nil)
+                                return
+                            }
+                            
+                            let image = Image(uiImage: uiImage)
+                            let progressImage = ProgressImage(image: image,
+                                                              localIdentifier: asset.localIdentifier,
+                                                              originalSize: CGSize(width: asset.pixelWidth,
+                                                                                   height: asset.pixelHeight))
+                            imageContinuation.resume(returning: (index, progressImage))
+                        }
+                }
+            })
+        }
+        
+        var indexedPhotos = [(index: Int, image: ProgressImage)]()
+        for task in tasks {
+            await progressBlock()
+            
+            guard let result = await task.value else {
+                continue
             }
             
-            let albumCollection = PhotoAlbumCollection()
-            for task in tasks {
-                guard let resultAlbum = await task.value else {
-                    continue
+            indexedPhotos.append(result)
+        }
+        
+        return indexedPhotos
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.image }
+    }
+    
+    /// Returns an object that contains all albums from the user's Photo Library that has at least one image.
+    func getPhotoAlbumCollection() async throws -> PhotoAlbumCollection {
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
+        
+        var tasks = [Task<PhotoAlbum?, Never>]()
+        assetCollections.enumerateObjects { assetCollection, index, _ in
+            tasks.append(Task {
+                let name = assetCollection.localizedTitle ?? "[Anonymous Album]"
+                
+                let assets = PHAsset.fetchAssets(in: assetCollection, options: self.imagesInAlbumFetchOptions)
+                guard let thumbnailAsset = assets.firstObject else {
+                    PRLogger.photoLibraryManagement.notice("Library \(name, privacy: .private(mask: .hash)) has no images, skipping it.")
+                    return nil
                 }
                 
-                await albumCollection.append(resultAlbum)
+                return await withCheckedContinuation { imageContinuation in
+                    let requestOptions = PHImageRequestOptions.thumbnail
+                    
+                    PHImageManager
+                        .default()
+                        .requestImageDataAndOrientation(for: thumbnailAsset, options: requestOptions) { data, _, _, resultInfo in
+                            if data == nil {
+                                let info = resultInfo ?? [:]
+                                PRLogger.photoLibraryManagement.error("Image data could not be loaded! \(info.debugDescription)")
+                            }
+                            
+                            var image: Image?
+                            if  let data,
+                                let uiImage = UIImage(data: data) {
+                                image = Image(uiImage: uiImage)
+                            }
+                            
+                            let photoAlbum = PhotoAlbum(index: index,
+                                                        imageCount: assets.count,
+                                                        photoKitIdentifier: assetCollection.localIdentifier,
+                                                        name: name,
+                                                        thumbnailImage: image)
+                            imageContinuation.resume(returning: photoAlbum)
+                        }
+                }
+            })
+        }
+        
+        let albumCollection = PhotoAlbumCollection()
+        for task in tasks {
+            guard let resultAlbum = await task.value else {
+                continue
             }
             
-            return albumCollection
+            await albumCollection.append(resultAlbum)
         }
+        
+        return albumCollection
     }
     
-    func requestAuthorization() async {
-        authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+    /// The `PHFetchOptions` object that wants to fetch only images from an asset collection.
+    var imagesInAlbumFetchOptions: PHFetchOptions {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+        
+        return fetchOptions
     }
     
-    func saveAssetToPhotoLibrary(atUrl url: URL) async throws {
+    // MARK: - Saving video to designated album
+    func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws {
         switch self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
             await self.requestAuthorization()
             
-            try await saveAssetToPhotoLibrary(atUrl: url)
+            try await saveAssetToPhotoLibrary(assetAtUrl: url)
             return
             
         case .restricted, .denied:
@@ -154,9 +238,28 @@ class PhotoLibraryManager {
         }
     }
     
+    // MARK: - Miscellaneous
+    func requestAuthorization() async {
+        authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+    }
+    
+    enum AlbumFetchingReason {
+        /// Retrieve images to show thumbnails of them.
+        ///
+        /// Performance-optimized details should be requested in this mode.
+        case display
+        
+        /// Retrieve images to process them.
+        ///
+        /// Maximized details should be requested in this mode.
+        case process
+    }
+    
+    // MARK: - Error types
     enum OperationError: Error {
         case videoLibraryCreationFailed(underlyingError: Error)
         case videoSaveFailed(underlyingError: Error)
+        case albumNotFoundWithLocalIdentifier
     }
     
     enum AuthorizationError: Error {
@@ -172,6 +275,15 @@ extension PHImageRequestOptions {
     static var thumbnail: Self {
         let requestOptions = Self()
         requestOptions.resizeMode = .fast
+        requestOptions.version = .current
+        requestOptions.isNetworkAccessAllowed = true
+        
+        return requestOptions
+    }
+    
+    static var detailed: Self {
+        let requestOptions = Self()
+        requestOptions.resizeMode = .exact
         requestOptions.version = .current
         requestOptions.isNetworkAccessAllowed = true
         

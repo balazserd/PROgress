@@ -78,6 +78,9 @@
 		56A554652A8D553200E99F65 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554642A8D553200E99F65 /* PhotoAlbum.swift */; };
 		56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554642A8D553200E99F65 /* PhotoAlbum.swift */; };
 		56A554672A8D553200E99F65 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554642A8D553200E99F65 /* PhotoAlbum.swift */; };
+		56A5546D2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */; };
+		56A5546E2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */; };
+		56A5546F2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +138,7 @@
 		56A5545C2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideosCollectionView.swift; sourceTree = "<group>"; };
 		56A554602A8D552300E99F65 /* PhotoAlbumCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollection.swift; sourceTree = "<group>"; };
 		56A554642A8D553200E99F65 /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
+		56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+AlbumSelectorView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,6 +309,7 @@
 				56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */,
 				56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */,
 				568B60B02A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift */,
+				56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */,
 				568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */,
 				568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */,
 			);
@@ -483,6 +488,7 @@
 				568B60B12A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift in Sources */,
 				568B60AA2A840C2200D5B5D3 /* Container.swift in Sources */,
 				56A554422A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
+				56A5546D2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */,
 				56A5545D2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 			);
@@ -493,6 +499,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56A554572A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
+				56A5546E2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
@@ -531,6 +538,7 @@
 				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A5544C2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
+				56A5546F2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				56A554542A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				56A554672A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,

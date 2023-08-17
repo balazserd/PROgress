@@ -19,7 +19,7 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
         
         Task.detached {
             do {
-                try await self.photoLibraryManager.saveAssetToPhotoLibrary(atUrl: progressVideo.url)
+                try await self.photoLibraryManager.saveAssetToPhotoLibrary(assetAtUrl: progressVideo.url)
                 
                 await self.setSaveVideoStatus(to: .finished)
             } catch let error {

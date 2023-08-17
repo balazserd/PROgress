@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct PhotoAlbum {
     var index: Int
+    var imageCount: Int
+    var photoKitIdentifier: String
     var name: String
-    var thumbnailImage: Data?
+    var thumbnailImage: Image?
 }

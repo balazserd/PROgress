@@ -11,6 +11,7 @@ import Foundation
 struct ProgressImage: Transferable, Equatable, Identifiable {
     let image: Image
     let id = UUID()
+    var localIdentifier: String!
     let originalSize: CGSize
     
     static var transferRepresentation: some TransferRepresentation {

@@ -15,6 +15,7 @@ import Factory
 class NewProgressVideoViewModel: ObservableObject {
     // MARK: - Injections
     @Injected(\.imageMergeEngine) private var imageMergeEngine
+    @Injected(\.photoLibraryManager) private var photoLibraryManager
     
     // MARK: - Public variables
     @Published var navigationState = NavigationPath()
@@ -36,6 +37,24 @@ class NewProgressVideoViewModel: ObservableObject {
     
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
     @Published private(set) var video: ProgressVideo?
+    
+    @Published private(set) var photoAlbumsLoadingState: PhotoAlbumsLoadingState = .undefined
+    @Published private(set) var photoAlbums: [PhotoAlbum]?
+    @Published var selectedAlbum: PhotoAlbum? {
+        didSet {
+            guard selectedAlbum != nil else { return }
+            
+            Task.detached {
+                await self.loadImages(for: self.selectedAlbum!)
+                
+                let orderedPhotosPickerItems = await self.progressImages?.map {
+                    PhotosPickerItem(itemIdentifier: $0.localIdentifier)
+                } ?? []
+                
+                await self.setOrderedSelectedItems(to: orderedPhotosPickerItems)
+            }
+        }
+    }
 
     // MARK: - Public methods
     func beginMerge() {
@@ -79,6 +98,21 @@ class NewProgressVideoViewModel: ObservableObject {
         }
     }
     
+    func loadPhotoAlbums() {
+        self.setPhotoAlbumsLoadingState(to: .loading)
+        
+        Task.detached { [photoLibraryManager] in
+            do {
+                let albumCollection = try await photoLibraryManager.getPhotoAlbumCollection()
+                let albums = await albumCollection.photoAlbums
+                await self.setPhotoAlbumsLoadingState(to: .success(albums: albums))
+            } catch let error {
+                PRLogger.app.error("Could not get albumCollection! [\(error)]")
+                await self.setPhotoAlbumsLoadingState(to: .failure)
+            }
+        }
+    }
+    
     // MARK: - Private methods
     private nonisolated func loadImages(from selection: [PhotosPickerItem]) async {
         guard await selectedItems.count > 0 else { return }
@@ -89,7 +123,9 @@ class NewProgressVideoViewModel: ObservableObject {
         do {
             let taskLimit = ProcessInfo.recommendedMaximumConcurrency
             let progressImages = try await selection.mapAsync(maxConcurrencyCount: taskLimit) { [weak self] in
-                let transferable = try await $0.loadTransferable(type: ProgressImage.self)
+                var transferable = try await $0.loadTransferable(type: ProgressImage.self)
+                transferable?.localIdentifier = $0.itemIdentifier
+                
                 await self?.advanceLoadingProgress(by: 1.0 / Double(selection.count))
                 return IndexedImage(transferable, selection.firstIndex(of: $0) ?? .max)
             }
@@ -98,7 +134,24 @@ class NewProgressVideoViewModel: ObservableObject {
             .compactMap { $0 }
             
             PRLogger.app.debug("Successfully imported \(progressImages.count) photos")
-            await self.setProgressImages(to: progressImages)
+            await setProgressImages(to: progressImages)
+            await updateState(to: .success)
+        } catch let error {
+            PRLogger.app.error("Failed to fetch images! [\(error)]")
+            await updateState(to: .failure(error))
+        }
+    }
+    
+    private nonisolated func loadImages(for album: PhotoAlbum) async {
+        await updateState(to: .loading(progress: 0.0))
+        
+        do {
+            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { [weak self] in
+                await self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
+            }
+            
+            PRLogger.app.debug("Successfully imported \(album.imageCount) photos")
+            await setProgressImages(to: progressImages)
             await updateState(to: .success)
         } catch let error {
             PRLogger.app.error("Failed to fetch images! [\(error)]")
@@ -127,8 +180,16 @@ class NewProgressVideoViewModel: ObservableObject {
         self.imageLoadingState = .loading(progress: min(1.0, currentProgress + value))
     }
     
+    private func setOrderedSelectedItems(to items: [PhotosPickerItem]) {
+        self.orderedSelectedItems = items
+    }
+    
     private func addVideoToView(_ video: ProgressVideo) {
         self.video = video
+    }
+    
+    private func setPhotoAlbumsLoadingState(to state: PhotoAlbumsLoadingState) {
+        self.photoAlbumsLoadingState = state
     }
     
     // MARK: - ImageLoadingState enum
@@ -142,5 +203,12 @@ class NewProgressVideoViewModel: ObservableObject {
             guard case .success = self else { return false }
             return true
         }
+    }
+    
+    enum PhotoAlbumsLoadingState {
+        case undefined
+        case loading
+        case success(albums: [PhotoAlbum])
+        case failure
     }
 }

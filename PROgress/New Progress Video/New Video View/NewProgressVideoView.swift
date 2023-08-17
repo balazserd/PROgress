@@ -18,6 +18,7 @@ struct NewProgressVideoView: View {
     @State private var draggedImage: ProgressImage?
     
     @State private var isShowingPhotoPicker: Bool = false
+    @State private var isShowingPhotoAlbumPicker: Bool = false
     
     @StateObject private var viewModel = NewProgressVideoViewModel()
     
@@ -27,8 +28,7 @@ struct NewProgressVideoView: View {
                 VStack {
                     switch viewModel.imageLoadingState {
                     case .undefined:
-                        PhotosPicker(selection: $viewModel.selectedItems,
-                                     matching: .any(of: [.images, .screenshots])) {
+                        photoSelectionMenu {
                             Text("Select photos")
                         }
                         
@@ -61,6 +61,10 @@ struct NewProgressVideoView: View {
                 .photosPicker(isPresented: $isShowingPhotoPicker,
                               selection: $viewModel.selectedItems,
                               matching: .any(of: [.images, .screenshots]))
+                .sheet(isPresented: $isShowingPhotoAlbumPicker,
+                       onDismiss: { isShowingPhotoAlbumPicker = false }) {
+                    AlbumSelectorView(selectedAlbum: $viewModel.selectedAlbum)
+                }
             }
                 
             switch viewModel.videoProcessingState {
@@ -102,23 +106,34 @@ struct NewProgressVideoView: View {
         .padding()
     }
     
+    private func photoSelectionMenu<Content: View>(@ViewBuilder label: () -> Content) -> some View {
+        Menu {
+            Button(action: { isShowingPhotoPicker = true }) {
+                Label("Select photos", systemImage: "photo.stack")
+            }
+            
+            Button(action: {
+                isShowingPhotoAlbumPicker = true
+                viewModel.loadPhotoAlbums()
+            }) {
+                Label("Select a folder", systemImage: "folder")
+            }
+        } label: {
+            label()
+        }
+    }
+    
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            Menu {
-                Button(action: { isShowingPhotoPicker = true }) {
-                    Label("Select photos", systemImage: "photo.stack")
-                }
-                
-                Button(action: { }) {
-                    Label("Select a folder", systemImage: "folder")
-                }
-            } label: {
+            photoSelectionMenu {
                 Image(systemName: "plus")
             }
         }
         
-        if viewModel.selectedItems.count > 0 {
+        if  let progressImages = viewModel.progressImages,
+            progressImages.count > 0
+        {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { viewModel.beginMerge() }) {
                     Image(systemName: "gearshape.arrow.triangle.2.circlepath")
