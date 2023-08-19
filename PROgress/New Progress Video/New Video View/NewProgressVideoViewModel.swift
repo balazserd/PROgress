@@ -68,7 +68,7 @@ class NewProgressVideoViewModel: ObservableObject {
         
         Task.detached(priority: .userInitiated) { [photoUserOrdering, selectedItems] in
             do {
-                let options = ImageMergeEngine.MergeOptions(size: CGSize(width: 1024, height: 1024),
+                let options = ImageMergeEngine.MergeOptions(size: largestPhotoSize,
                                                             customOrder: photoUserOrdering)
                 
                 PRLogger.app.info("The resulting video will be of size \(largestPhotoSize.debugDescription).")
