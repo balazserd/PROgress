@@ -36,20 +36,16 @@ class PhotoLibraryManager {
     
     func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
                              to fetchReason: AlbumFetchingReason,
-                             progressBlock: @escaping () async -> Void)
+                             progressBlock: @escaping () -> Void)
     async throws -> [ProgressImage] {
-        let albumInArray = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [photoAlbum.photoKitIdentifier], options: nil)
-        guard let album = albumInArray.firstObject else {
-            PRLogger.photoLibraryManagement.error("Album with localIdentifier not found!")
-            throw OperationError.albumNotFoundWithLocalIdentifier
-        }
-        
+        let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: self.imagesInAlbumFetchOptions)
         
-        var tasks = [Task<(Int, ProgressImage)?, Never>]()
-        assets.enumerateObjects { asset, index, _ in
-            tasks.append(Task {
-                return await withCheckedContinuation { imageContinuation in
+        let indexedPhotos = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                var _indexedPhotos = [(index: Int, image: ProgressImage)]()
+                
+                assets.enumerateObjects { asset, index, _ in // it's disgusting that this is sync but @escaping :) - cannot use TaskGroup
                     var imageRequestOptions: PHImageRequestOptions
                     switch fetchReason {
                     case .display:
@@ -58,45 +54,38 @@ class PhotoLibraryManager {
                         imageRequestOptions = .detailed
                     }
                     
+                    imageRequestOptions.isSynchronous = true
+                    
                     PHImageManager.default()
-                        .requestImage(for: asset,
-                                      targetSize: CGSize(width: 640, height: 640),
-                                      contentMode: .aspectFill,
-                                      options: imageRequestOptions) { uiImage, resultInfo in
-                            let isDegraded = (resultInfo?[PHImageResultIsDegradedKey] as? NSNumber)?.boolValue
-                            if isDegraded == true {
-                                PRLogger.photoLibraryManagement.debug("Waiting for a better image result...")
-                                return
+                        .requestImageDataAndOrientation(for: asset, options: imageRequestOptions) { data, _, _, resultInfo in
+                            defer {
+                                DispatchQueue.main.async {
+                                    progressBlock()
+                                }
                             }
                             
-                            guard let uiImage = uiImage else {
+                            guard
+                                let data,
+                                let uiImage = UIImage(data: data),
+                                let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: 640, height: 640))
+                            else {
                                 let info = resultInfo ?? [:]
                                 PRLogger.photoLibraryManagement.error("Image could not be loaded! \(info.debugDescription)")
-                                
-                                imageContinuation.resume(returning: nil)
+                        
                                 return
                             }
                             
-                            let image = Image(uiImage: uiImage)
+                            let image = Image(uiImage: thumbnail)
                             let progressImage = ProgressImage(image: image,
                                                               localIdentifier: asset.localIdentifier,
                                                               originalSize: CGSize(width: asset.pixelWidth,
                                                                                    height: asset.pixelHeight))
-                            imageContinuation.resume(returning: (index, progressImage))
+                            _indexedPhotos.append((index, progressImage))
                         }
                 }
-            })
-        }
-        
-        var indexedPhotos = [(index: Int, image: ProgressImage)]()
-        for task in tasks {
-            await progressBlock()
-            
-            guard let result = await task.value else {
-                continue
+                
+                continuation.resume(returning: _indexedPhotos)
             }
-            
-            indexedPhotos.append(result)
         }
         
         return indexedPhotos
@@ -132,7 +121,7 @@ class PhotoLibraryManager {
                             
                             var image: Image?
                             if  let data,
-                                let uiImage = UIImage(data: data) {
+                                let uiImage = UIImage(data: data)?.preparingThumbnail(of: CGSize(width: 360, height: 360)) {
                                 image = Image(uiImage: uiImage)
                             }
                             
@@ -157,6 +146,29 @@ class PhotoLibraryManager {
         }
         
         return albumCollection
+    }
+    
+    /// Returns the corresponding `PHAssetCollection` for the album.
+    func assetCollectionForAlbum(_ album: PhotoAlbum) throws -> PHAssetCollection {
+        let albumInArray = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [album.photoKitIdentifier], options: nil)
+        
+        guard let album = albumInArray.firstObject else {
+            PRLogger.photoLibraryManagement.error("Album with localIdentifier not found!")
+            throw OperationError.albumNotFoundWithLocalIdentifier
+        }
+        
+        return album
+    }
+    
+    func assetForIdentifier(_ identifier: String) throws -> PHAsset {
+        let assetInArray = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
+        
+        guard let asset = assetInArray.firstObject else {
+            PRLogger.photoLibraryManagement.error("Asset with localIdentifier not found!")
+            throw OperationError.assetNotFoundWithLocalIdentifier
+        }
+        
+        return asset
     }
     
     /// The `PHFetchOptions` object that wants to fetch only images from an asset collection.
@@ -260,6 +272,7 @@ class PhotoLibraryManager {
         case videoLibraryCreationFailed(underlyingError: Error)
         case videoSaveFailed(underlyingError: Error)
         case albumNotFoundWithLocalIdentifier
+        case assetNotFoundWithLocalIdentifier
     }
     
     enum AuthorizationError: Error {

@@ -9,12 +9,8 @@ import Foundation
 import CoreImage
 
 extension CIImage {
-    /// Transforms an image to fit in a **larger** container size.
-    ///
-    /// - Important: This method assumes that `size` is not smaller in either dimensions than `CIImage.extents`.
-    func scaleUpToFitInContainerOfSize(_ size: CGSize) -> CIImage {
-        precondition(size.width >= self.extent.width && size.height >= self.extent.height,
-                     "The specified size is smaller than the CIImage's current size!")
+    /// Transforms an image to fit in a container size.
+    func scaleToFitInContainerOfSize(_ size: CGSize) -> CIImage {
         
         let maximumHeightScale = size.height / self.extent.height
         let maximumWidthScale = size.width / self.extent.width
@@ -26,8 +22,6 @@ extension CIImage {
     }
     
     /// Returns the appropriate origin to center an image in a **larger** container size.
-    ///
-    /// - Important: This method assumes that `size` is not smaller in either dimensions than `CIImage.extents`.
     func positionInContainerOfSize(_ size: CGSize) -> CIImage {
         return self.transformed(by: CGAffineTransform(translationX: (size.width - self.extent.width) / 2,
                                                       y: (size.height - self.extent.height) / 2))

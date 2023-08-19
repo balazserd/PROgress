@@ -16,7 +16,16 @@ import Combine
 class ImageMergeEngine {
     @MainActor var state = CurrentValueSubject<State, Never>(.idle)
     
-    func mergeImages(_ images: [PhotosPickerItem], options: MergeOptions) async throws -> ProgressVideo {
+    func mergeImages<ConversionEngine: PhotoConversionEngine>(
+        _ _images: [ConversionEngine.Input],
+        by engine: ConversionEngine,
+        options: MergeOptions
+    ) async throws -> ProgressVideo {
+        var indexedImages = _images.map { ($0, _images.firstIndex(of: $0)!) }
+        if let order = options.customOrder {
+            indexedImages = order.map { indexedImages[$0] }
+        }
+        
         let ciContext = CIContext()
         
         let assetWriterConfig = try VideoAssetWriterConfiguration(resolution: options.size)
@@ -34,32 +43,33 @@ class ImageMergeEngine {
         assetWriterConfig.assetWriter.startSession(atSourceTime: .zero)
         
         let taskLimit = ProcessInfo.recommendedMaximumConcurrency
-        
-        try await images.mapConcurrentlyThenPerformSeriallyAsync(
+        let count = indexedImages.count
+        try await indexedImages.mapConcurrentlyThenPerformSeriallyAsync(
             maxConcurrencyCount: taskLimit,
             mapPriority: .userInitiated,
-            mapBlock: { image in
+            mapBlock: { [unowned self] (image, index) in
                 return try await self.processImage(image,
-                                                   indexed: images.firstIndex(of: image)!,
-                                                   by: assetWriterConfig,
-                                                   in: ciContext)
+                                                   with: engine,
+                                                   indexed: index,
+                                                   config: assetWriterConfig,
+                                                   context: ciContext)
             },
-            serialPerformBlock: { sample in
-                await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
-                
-                // TODO investigate possible issue when smaller image has background of previous image (pixelbufferpool not cleared between uses?)
+            serialPerformBlock: { [unowned self] sample in
+                while !assetWriterConfig.inputAdaptor.assetWriterInput.isReadyForMoreMediaData {
+                    try await Task.sleep(for: .milliseconds(100))
+                }
+
                 if !assetWriterConfig.inputAdaptor.append(sample.buffer, withPresentationTime: sample.time) {
                     PRLogger.imageProcessing.error("Frame was not appended to video!")
                 }
-                
+
                 sample.buffer.unlock()
-                
-                await self.advanceProcessingProgress(by: 1.0 / Double(images.count))
+
+                await self.advanceProcessingProgress(by: 1.0 / Double(count))
             }
         )
         
         assetWriterConfig.inputAdaptor.assetWriterInput.markAsFinished()
-        
         await assetWriterConfig.assetWriter.finishWriting()
         
         let writerStatus = assetWriterConfig.assetWriter.status
@@ -90,12 +100,18 @@ class ImageMergeEngine {
         self.setState(to: .working(progress: min(1.0, progress + value)))
     }
     
-    private func processImage(_ image: PhotosPickerItem,
-                              indexed index: Int,
-                              by config: VideoAssetWriterConfiguration,
-                              in context: CIContext) async throws -> Sample {
-        guard let data = try await image.loadTransferable(type: Data.self) else {
-            PRLogger.imageProcessing.error("Image could not be converted to `Data`!")
+    private func processImage<ConversionEngine: PhotoConversionEngine>(
+        _ image: ConversionEngine.Input,
+        with engine: ConversionEngine,
+        indexed index: Int,
+        config: VideoAssetWriterConfiguration,
+        context: CIContext
+    ) async throws -> Sample {
+        var data: Data
+        do {
+            data = try await engine.convertInput(image)
+        } catch let error {
+            PRLogger.imageProcessing.error("Image could not be converted to `Data`! [\(error)]")
             throw MergeError.dataConversionFailure
         }
         
@@ -116,13 +132,14 @@ class ImageMergeEngine {
         }
         
         let scaledToFitImage = ciImage
-            .scaleUpToFitInContainerOfSize(config.resolution)
+            .scaleToFitInContainerOfSize(config.resolution)
             .positionInContainerOfSize(config.resolution)
         
         PRLogger.imageProcessing.debug("resizedImage extent: \(scaledToFitImage.extent.debugDescription)")
         
         pixelBuffer.lockAndClear()
         
+        context.clearCaches() // Removes ciContext caches. Important!
         context.render(scaledToFitImage,
                        to: pixelBuffer,
                        bounds: scaledToFitImage.extent,

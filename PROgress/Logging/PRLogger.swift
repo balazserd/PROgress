@@ -19,4 +19,7 @@ enum PRLogger {
     
     static let photoLibraryManagement = Logger(subsystem: "com.ebuniapps.PROgress",
                                                category: "photoLibraryManagement")
+    
+    static let photoConversion = Logger(subsystem: "com.ebuniapps.PROgress",
+                                        category: "photoConversion")
 }

@@ -23,10 +23,11 @@ class NewProgressVideoViewModel: ObservableObject {
     /// This item tracks any ordering changes that is done by the user over the photos.
     ///
     /// ``selectedItems`` cannot directly track this, as it's a published variable.
-    @Published var orderedSelectedItems: [PhotosPickerItem] = []
+    @Published var photoUserOrdering: [Int] = []
     @Published var selectedItems: [PhotosPickerItem] = [] {
         didSet {
-            self.orderedSelectedItems = selectedItems
+            self.selectedAlbum = nil
+            self.photoUserOrdering = Array(0..<selectedItems.count)
             
             Task.detached { await self.loadImages(from: self.selectedItems) }
         }
@@ -43,15 +44,10 @@ class NewProgressVideoViewModel: ObservableObject {
     @Published var selectedAlbum: PhotoAlbum? {
         didSet {
             guard selectedAlbum != nil else { return }
+            self.photoUserOrdering = Array(0..<selectedAlbum!.imageCount)
             
             Task.detached {
                 await self.loadImages(for: self.selectedAlbum!)
-                
-                let orderedPhotosPickerItems = await self.progressImages?.map {
-                    PhotosPickerItem(itemIdentifier: $0.localIdentifier)
-                } ?? []
-                
-                await self.setOrderedSelectedItems(to: orderedPhotosPickerItems)
             }
         }
     }
@@ -63,17 +59,31 @@ class NewProgressVideoViewModel: ObservableObject {
             return
         }
         
-        Task.detached(priority: .userInitiated) { [progressImages, orderedSelectedItems] in
+        let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
+            CGSize(width: max($0.width, $1.originalSize.width),
+                   height: max($0.height, $1.originalSize.height))
+        }
+        let assetIdentifiers = progressImages!.compactMap { $0.localIdentifier }
+        let isConvertingAlbum = selectedAlbum != nil
+        
+        Task.detached(priority: .userInitiated) { [photoUserOrdering, selectedItems] in
             do {
-                let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
-                        CGSize(width: max($0.width, $1.originalSize.width),
-                               height: max($0.height, $1.originalSize.height))
-                    }
+                let options = ImageMergeEngine.MergeOptions(size: CGSize(width: 1024, height: 1024),
+                                                            customOrder: photoUserOrdering)
                 
                 PRLogger.app.info("The resulting video will be of size \(largestPhotoSize.debugDescription).")
                 
-                let video = try await self.imageMergeEngine.mergeImages(orderedSelectedItems,
-                                                                        options: .init(size: largestPhotoSize))
+                var video: ProgressVideo
+                if isConvertingAlbum {
+                    video = try await self.imageMergeEngine.mergeImages(assetIdentifiers,
+                                                                        by: .phAssetEngine(options: .detailed),
+                                                                        options: options)
+                } else {
+                    video = try await self.imageMergeEngine.mergeImages(selectedItems,
+                                                                        by: .photosPickerItemEngine,
+                                                                        options: options)
+                }
+                
                 await self.addVideoToView(video)
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
@@ -146,8 +156,8 @@ class NewProgressVideoViewModel: ObservableObject {
         await updateState(to: .loading(progress: 0.0))
         
         do {
-            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { [weak self] in
-                await self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
+            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { @MainActor [weak self] in
+                self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
             }
             
             PRLogger.app.debug("Successfully imported \(album.imageCount) photos")
@@ -178,10 +188,6 @@ class NewProgressVideoViewModel: ObservableObject {
         }
         
         self.imageLoadingState = .loading(progress: min(1.0, currentProgress + value))
-    }
-    
-    private func setOrderedSelectedItems(to items: [PhotosPickerItem]) {
-        self.orderedSelectedItems = items
     }
     
     private func addVideoToView(_ video: ProgressVideo) {

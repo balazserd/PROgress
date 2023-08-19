@@ -16,7 +16,7 @@ extension NewProgressVideoView {
         let onReorderEnded: (() -> Void)?
         
         // Must follow index changes here too!
-        @Binding var orderedSelectedPhotoPickerItems: [PhotosPickerItem]
+        @Binding var photoUserOrdering: [Int]
         
         @Binding var allProgressImages: [ProgressImage]?
         @Binding var currentlyMovedImage: ProgressImage?
@@ -36,8 +36,8 @@ extension NewProgressVideoView {
                 allProgressImages!.move(fromOffsets: IndexSet([dragIndex]),
                                         toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
                 
-                orderedSelectedPhotoPickerItems.move(fromOffsets: IndexSet([dragIndex]),
-                                                     toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
+                photoUserOrdering.move(fromOffsets: IndexSet([dragIndex]),
+                                       toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
             }
         }
         

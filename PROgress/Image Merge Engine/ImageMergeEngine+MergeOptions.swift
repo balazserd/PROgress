@@ -10,5 +10,6 @@ import Foundation
 extension ImageMergeEngine {
     struct MergeOptions {
         var size: CGSize
+        var customOrder: [Int]?
     }
 }

@@ -70,7 +70,7 @@ extension NewProgressVideoView {
         private func buildDropDelegate(for progressImage: ProgressImage) -> ReorderImagesDropDelegate {
             ReorderImagesDropDelegate(parent: progressImage,
                                       onReorderEnded: { isReordering = false },
-                                      orderedSelectedPhotoPickerItems: $viewModel.orderedSelectedItems,
+                                      photoUserOrdering: $viewModel.photoUserOrdering,
                                       allProgressImages: $viewModel.progressImages,
                                       currentlyMovedImage: $draggedImage)
         }
