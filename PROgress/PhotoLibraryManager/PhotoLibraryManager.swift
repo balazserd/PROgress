@@ -36,7 +36,7 @@ class PhotoLibraryManager {
     
     func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
                              to fetchReason: AlbumFetchingReason,
-                             progressBlock: @escaping () -> Void)
+                             progressBlock: @escaping @MainActor () -> Void)
     async throws -> [ProgressImage] {
         let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: self.imagesInAlbumFetchOptions)

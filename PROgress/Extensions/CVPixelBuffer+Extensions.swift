@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreVideo
+import Accelerate
 
 extension CVPixelBuffer {
     /// Locks the pixel buffer, then clears it with black pixels.
@@ -14,9 +15,16 @@ extension CVPixelBuffer {
     /// - Important: When using the buffer from a `CVPixelBufferPool` and for delayed operations, like appending the buffer to an `AVAssetWriterInputPixelBufferAdaptor`, you must call this method **before** using the buffer, not after being done using the buffer.
     func lockAndClear() {
         CVPixelBufferLockBaseAddress(self, [])
-        memset_pattern16(CVPixelBufferGetBaseAddress(self),
-                         [0, 0, 0, 0xFF],
-                         CVPixelBufferGetBytesPerRow(self) * CVPixelBufferGetHeight(self))
+        
+        var buffer = vImage_Buffer(data: CVPixelBufferGetBaseAddress(self),
+                                   height: vImagePixelCount(CVPixelBufferGetHeight(self)),
+                                   width: vImagePixelCount(CVPixelBufferGetWidth(self)),
+                                   rowBytes: CVPixelBufferGetBytesPerRow(self))
+        
+        print(vImageBufferFill_ARGB8888(&buffer, [0xFF, 0xFF, 0xFF, 0xFF], vImage_Flags(kvImageNoFlags)))
+//        memset_pattern16(CVPixelBufferGetBaseAddress(self),
+//                         [0, 0, 0, 0],
+//                         CVPixelBufferGetBytesPerRow(self) * CVPixelBufferGetHeight(self))
     }
     
     func unlock() {

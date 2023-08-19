@@ -115,7 +115,7 @@ class ImageMergeEngine {
             throw MergeError.dataConversionFailure
         }
         
-        guard let ciImage = CIImage(data: data) else {
+        guard let ciImage = CIImage(data: data, options: [.applyOrientationProperty: true]) else {
             PRLogger.imageProcessing.error("Could not create CIImage from Data!")
             throw MergeError.ciImageCreationFailure
         }

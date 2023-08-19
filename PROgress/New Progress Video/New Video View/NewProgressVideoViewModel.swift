@@ -156,7 +156,7 @@ class NewProgressVideoViewModel: ObservableObject {
         await updateState(to: .loading(progress: 0.0))
         
         do {
-            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { @MainActor [weak self] in
+            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { [weak self] in
                 self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
             }
             
