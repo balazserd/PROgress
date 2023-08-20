@@ -84,6 +84,15 @@
 		56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554712A8FC14100E99F65 /* PhotoConversionEngine.swift */; };
 		56A554732A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554712A8FC14100E99F65 /* PhotoConversionEngine.swift */; };
 		56A554742A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554712A8FC14100E99F65 /* PhotoConversionEngine.swift */; };
+		56A5547C2A9210A100E99F65 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56A5547B2A9210A100E99F65 /* WidgetKit.framework */; };
+		56A5547E2A9210A100E99F65 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56A5547D2A9210A100E99F65 /* SwiftUI.framework */; };
+		56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */; };
+		56A554832A9210A100E99F65 /* VideoCreationLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */; };
+		56A554852A9210A100E99F65 /* PROgressActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554842A9210A100E99F65 /* PROgressActivities.swift */; };
+		56A554882A9210A300E99F65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A554872A9210A300E99F65 /* Assets.xcassets */; };
+		56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
+		56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
+		56A5548E2A9210A300E99F65 /* PROgressActivitiesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +110,28 @@
 			remoteGlobalIDString = 568B60592A7AD98300D5B5D3;
 			remoteInfo = PROgress;
 		};
+		56A5548C2A9210A300E99F65 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 568B60522A7AD98300D5B5D3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 56A554782A9210A100E99F65;
+			remoteInfo = PROgressActivitiesExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		56A5548F2A9210A300E99F65 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				56A5548E2A9210A300E99F65 /* PROgressActivitiesExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,6 +173,15 @@
 		56A554642A8D553200E99F65 /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
 		56A5546C2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+AlbumSelectorView.swift"; sourceTree = "<group>"; };
 		56A554712A8FC14100E99F65 /* PhotoConversionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoConversionEngine.swift; sourceTree = "<group>"; };
+		56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PROgressActivitiesExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		56A5547B2A9210A100E99F65 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		56A5547D2A9210A100E99F65 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressActivitiesBundle.swift; sourceTree = "<group>"; };
+		56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationLiveActivity.swift; sourceTree = "<group>"; };
+		56A554842A9210A100E99F65 /* PROgressActivities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressActivities.swift; sourceTree = "<group>"; };
+		56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PROgressActivities.intentdefinition; sourceTree = "<group>"; };
+		56A554872A9210A300E99F65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		56A554892A9210A300E99F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +208,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56A554762A9210A100E99F65 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A5547E2A9210A100E99F65 /* SwiftUI.framework in Frameworks */,
+				56A5547C2A9210A100E99F65 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -178,6 +226,8 @@
 				568B605C2A7AD98300D5B5D3 /* PROgress */,
 				568B60732A7AD98400D5B5D3 /* PROgressTests */,
 				568B607D2A7AD98400D5B5D3 /* PROgressUITests */,
+				56A5547F2A9210A100E99F65 /* PROgressActivities */,
+				56A5547A2A9210A100E99F65 /* Frameworks */,
 				568B605B2A7AD98300D5B5D3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -188,6 +238,7 @@
 				568B605A2A7AD98300D5B5D3 /* PROgress.app */,
 				568B60702A7AD98400D5B5D3 /* PROgressTests.xctest */,
 				568B607A2A7AD98400D5B5D3 /* PROgressUITests.xctest */,
+				56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -337,6 +388,28 @@
 			path = "Photo conversion";
 			sourceTree = "<group>";
 		};
+		56A5547A2A9210A100E99F65 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56A5547B2A9210A100E99F65 /* WidgetKit.framework */,
+				56A5547D2A9210A100E99F65 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56A5547F2A9210A100E99F65 /* PROgressActivities */ = {
+			isa = PBXGroup;
+			children = (
+				56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */,
+				56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */,
+				56A554842A9210A100E99F65 /* PROgressActivities.swift */,
+				56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */,
+				56A554872A9210A300E99F65 /* Assets.xcassets */,
+				56A554892A9210A300E99F65 /* Info.plist */,
+			);
+			path = PROgressActivities;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -347,10 +420,12 @@
 				568B60562A7AD98300D5B5D3 /* Sources */,
 				568B60572A7AD98300D5B5D3 /* Frameworks */,
 				568B60582A7AD98300D5B5D3 /* Resources */,
+				56A5548F2A9210A300E99F65 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				56A5548D2A9210A300E99F65 /* PBXTargetDependency */,
 			);
 			name = PROgress;
 			packageProductDependencies = (
@@ -397,6 +472,23 @@
 			productReference = 568B607A2A7AD98400D5B5D3 /* PROgressUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		56A554782A9210A100E99F65 /* PROgressActivitiesExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56A554922A9210A300E99F65 /* Build configuration list for PBXNativeTarget "PROgressActivitiesExtension" */;
+			buildPhases = (
+				56A554752A9210A100E99F65 /* Sources */,
+				56A554762A9210A100E99F65 /* Frameworks */,
+				56A554772A9210A100E99F65 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PROgressActivitiesExtension;
+			productName = PROgressActivitiesExtension;
+			productReference = 56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -417,6 +509,9 @@
 					568B60792A7AD98400D5B5D3 = {
 						CreatedOnToolsVersion = 14.3.1;
 						TestTargetID = 568B60592A7AD98300D5B5D3;
+					};
+					56A554782A9210A100E99F65 = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
 				};
 			};
@@ -440,6 +535,7 @@
 				568B60592A7AD98300D5B5D3 /* PROgress */,
 				568B606F2A7AD98400D5B5D3 /* PROgressTests */,
 				568B60792A7AD98400D5B5D3 /* PROgressUITests */,
+				56A554782A9210A100E99F65 /* PROgressActivitiesExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -468,6 +564,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56A554772A9210A100E99F65 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A554882A9210A300E99F65 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -489,6 +593,7 @@
 				56A5542D2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				568B60AE2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 				56A5543E2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
+				56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
 				56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A554612A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
@@ -565,6 +670,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56A554752A9210A100E99F65 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A554832A9210A100E99F65 /* VideoCreationLiveActivity.swift in Sources */,
+				56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */,
+				56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
+				56A554852A9210A100E99F65 /* PROgressActivities.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -577,6 +693,11 @@
 			isa = PBXTargetDependency;
 			target = 568B60592A7AD98300D5B5D3 /* PROgress */;
 			targetProxy = 568B607B2A7AD98400D5B5D3 /* PBXContainerItemProxy */;
+		};
+		56A5548D2A9210A300E99F65 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 56A554782A9210A100E99F65 /* PROgressActivitiesExtension */;
+			targetProxy = 56A5548C2A9210A300E99F65 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -698,6 +819,7 @@
 		568B60852A7AD98400D5B5D3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -707,8 +829,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PROgress/Info.plist;
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(PRODUCT_NAME) needs your permission to create its dedicated video folder and add your progress videos to it.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(PRODUCT_NAME) needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -730,6 +853,7 @@
 		568B60862A7AD98400D5B5D3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -739,8 +863,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PROgress/Info.plist;
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(PRODUCT_NAME) needs your permission to create its dedicated video folder and add your progress videos to it.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(PRODUCT_NAME) needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -835,6 +960,62 @@
 			};
 			name = Release;
 		};
+		56A554902A9210A300E99F65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B9J6J6XB6U;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PROgressActivities/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PROgressActivities;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress.PROgressActivities;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		56A554912A9210A300E99F65 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B9J6J6XB6U;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PROgressActivities/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PROgressActivities;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress.PROgressActivities;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -870,6 +1051,15 @@
 			buildConfigurations = (
 				568B608B2A7AD98400D5B5D3 /* Debug */,
 				568B608C2A7AD98400D5B5D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56A554922A9210A300E99F65 /* Build configuration list for PBXNativeTarget "PROgressActivitiesExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56A554902A9210A300E99F65 /* Debug */,
+				56A554912A9210A300E99F65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

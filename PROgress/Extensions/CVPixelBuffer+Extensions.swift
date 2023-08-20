@@ -21,9 +21,13 @@ extension CVPixelBuffer {
                                    width: vImagePixelCount(CVPixelBufferGetWidth(self)),
                                    rowBytes: CVPixelBufferGetBytesPerRow(self))
         
-        print(vImageBufferFill_ARGB8888(&buffer, [0xFF, 0xFF, 0xFF, 0xFF], vImage_Flags(kvImageNoFlags)))
+        let error = vImageBufferFill_ARGB8888(&buffer, [0xFF, 0xFF, 0xFF, 0xFF], vImage_Flags(kvImageNoFlags))
+        if error != kvImageNoError {
+            PRLogger.imageProcessing.error("Image Buffer could not be filled! [\(error)]")
+        }
+        
 //        memset_pattern16(CVPixelBufferGetBaseAddress(self),
-//                         [0, 0, 0, 0],
+//                         [0, 0, 0, 0xFF],
 //                         CVPixelBufferGetBytesPerRow(self) * CVPixelBufferGetHeight(self))
     }
     
