@@ -16,6 +16,7 @@ class NewProgressVideoViewModel: ObservableObject {
     // MARK: - Injections
     @Injected(\.imageMergeEngine) private var imageMergeEngine
     @Injected(\.photoLibraryManager) private var photoLibraryManager
+    @Injected(\.activityManager) private var activityManager
     
     // MARK: - Public variables
     @Published var navigationState = NavigationPath()
@@ -68,6 +69,32 @@ class NewProgressVideoViewModel: ObservableObject {
         
         Task.detached(priority: .userInitiated) { [photoUserOrdering, selectedItems] in
             do {
+                let backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
+                    Task {
+                        let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
+                        PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")
+                    }
+                }
+                
+                if backgroundTaskId == .invalid {
+                    PRLogger.app.error("Background task could not be spawned!")
+                }
+                
+                var thumbnails: VideoCreationActivityThumbnailData
+                if isConvertingAlbum {
+                    thumbnails = try await self.imageMergeEngine.provideVideoCreationActivityThumbnails(from: assetIdentifiers,
+                                                                                                        by: .phAssetEngine(options: .detailed))
+                } else {
+                    thumbnails = try await self.imageMergeEngine.provideVideoCreationActivityThumbnails(from: selectedItems,
+                                                                                                        by: .photosPickerItemEngine)
+                }
+                
+                let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
+                                                                     middleImages: thumbnails.middleImagesData,
+                                                                     lastImage: thumbnails.lastImageData,
+                                                                     title: "Creating your video...")
+                _ = try await self.activityManager.startActivity(.videoCreation(attributes))
+                
                 let options = ImageMergeEngine.MergeOptions(size: largestPhotoSize,
                                                             customOrder: photoUserOrdering)
                 
@@ -85,6 +112,13 @@ class NewProgressVideoViewModel: ObservableObject {
                 }
                 
                 await self.addVideoToView(video)
+                
+                if await UIApplication.shared.applicationState == .background {
+                    PRLogger.app.notice("App is in background, automatically saving video to Photo Library.")
+                    try await self.photoLibraryManager.saveAssetToPhotoLibrary(assetAtUrl: video.url)
+                }
+                
+                await UIApplication.shared.endBackgroundTask(backgroundTaskId)
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
                 return

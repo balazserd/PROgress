@@ -14,7 +14,76 @@ import EBUniAppsKit
 import Combine
 
 class ImageMergeEngine {
+    static let backgroundTaskName = "com.ebuniapps.PROgress-imageMergeTask"
+    
     @MainActor var state = CurrentValueSubject<State, Never>(.idle)
+    
+    func provideVideoCreationActivityThumbnails<ConversionEngine: PhotoConversionEngine>(
+        from images: [ConversionEngine.Input],
+        by engine: ConversionEngine
+    ) async throws -> VideoCreationActivityThumbnailData {
+        typealias IndexedThumbnailUrl = (url: URL?, index: Int)
+        
+        guard images.count > 0 else {
+            throw VideoCreationThumbnailActivityError.zeroImageCount
+        }
+        
+        var items = [(images.first!, 0), (nil, 1), (nil, 2), (nil, 3), (images.first!, 4)]
+        if images.count > 1 {
+            items[4] = (images.last!, 4)
+        }
+        
+        if images.count > 4 {
+            let step = images.count / 4
+            
+            items[1] = (images[step * 1], 1)
+            items[2] = (images[step * 2], 2)
+            items[3] = (images[step * 3], 3)
+        }
+        
+        let thumbnailDatas = try await withThrowingTaskGroup(of: IndexedThumbnailUrl.self) { group in
+            let id = UUID()
+            
+            for item in items {
+                group.addTask {
+                    guard item.0 != nil else { return IndexedThumbnailUrl(nil, item.1) }
+                    
+                    let originalSizedData = try await engine.convertInput(item.0!)
+                    guard
+                        let uiImage = UIImage(data: originalSizedData),
+                        let thumbnailUiImage = await uiImage.byPreparingThumbnail(ofSize: CGSize(width: 240, height: 240)),
+                        let thumbnailData = thumbnailUiImage.pngData()
+                    else {
+                        PRLogger.imageProcessing.error("Could not create UIImage from data!")
+                        throw VideoCreationThumbnailActivityError.thumbnailImageCreation
+                    }
+                    
+                    guard let fileUrl = FileManager.default
+                        .containerURL(forSecurityApplicationGroupIdentifier: PROgressApp.groupIdentifier)?
+                        .appendingPathComponent("\(id.uuidString)-\(item.1).png") else {
+                        throw VideoCreationThumbnailActivityError.appGroupNotFound
+                    }
+                    
+                    try thumbnailData.write(to: fileUrl)
+                    
+                    return IndexedThumbnailUrl(url: fileUrl, index: item.1)
+                }
+            }
+            
+            var indexedThumbnailUrls = [IndexedThumbnailUrl]()
+            for try await thumbnailUrl in group {
+                indexedThumbnailUrls.append(thumbnailUrl)
+            }
+            
+            return indexedThumbnailUrls
+        }
+        .sorted(by: { $0.index < $1.index })
+        .map { $0.url }
+        
+        return VideoCreationActivityThumbnailData(firstImageData: thumbnailDatas.first!,
+                                                  middleImagesData: Array(thumbnailDatas[1...3]),
+                                                  lastImageData: thumbnailDatas.last!)
+    }
     
     func mergeImages<ConversionEngine: PhotoConversionEngine>(
         _ _images: [ConversionEngine.Input],

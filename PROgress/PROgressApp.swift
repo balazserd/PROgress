@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct PROgressApp: App {
+    static let groupIdentifier = "group.com.ebuniapps.PROgress"
+    
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {

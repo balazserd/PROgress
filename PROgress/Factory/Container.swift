@@ -16,4 +16,8 @@ extension Container {
     var photoLibraryManager: Factory<PhotoLibraryManager> {
         self { PhotoLibraryManager() }
     }
+    
+    var activityManager: Factory<ActivityManager> {
+        self { ActivityManager() }
+    }
 }

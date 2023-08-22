@@ -13,7 +13,7 @@ import Factory
 
 // MARK: - Protocol definition
 protocol PhotoConversionEngine {
-    associatedtype Input: Equatable
+    associatedtype Input: Hashable
     
     /// Converts the appropriate input to its `Data` representation.
     ///

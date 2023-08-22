@@ -9,24 +9,11 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct VideoCreationLiveActivityAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        var progress: Double
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var firstImage: Data?
-    var middleImages: [Data?]
-    var lastImage: Data?
-    var title: String
-}
-
 struct VideoCreationLiveActivity: Widget {
     private typealias Context = ActivityViewContext<VideoCreationLiveActivityAttributes>
     
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: VideoCreationLiveActivityAttributes.self) { context in
-            // Lock screen/banner UI goes here
             VStack {
                 middleContent(for: context)
                 
@@ -34,7 +21,6 @@ struct VideoCreationLiveActivity: Widget {
             }
             .frame(height: 110)
             .padding(16)
-            
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.bottom) {
@@ -118,10 +104,10 @@ struct VideoCreationLiveActivity: Widget {
     
     // MARK: - Reused components
     @ViewBuilder
-    private func image(for data: Data?, scale: Image.Scale) -> some View {
+    private func image(for url: URL?, scale: Image.Scale) -> some View {
         ZStack {
-            if  let imageData = data,
-                let uiImage = UIImage(data: imageData)
+            if  let url,
+                let uiImage = UIImage(contentsOfFile: url.path())
             {
                 Image(uiImage: uiImage)
                     .aspectRatio(1.0, contentMode: .fit)

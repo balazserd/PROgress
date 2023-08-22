@@ -93,6 +93,19 @@
 		56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
 		56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
 		56A5548E2A9210A300E99F65 /* PROgressActivitiesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
+		56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
+		56A554962A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
+		56A554972A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
+		56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
+		56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
+		56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
+		56BF34C52A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
+		56BF34C62A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
+		56BF34C72A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
+		56BF34C92A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
+		56BF34CA2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
+		56BF34CB2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -182,6 +195,12 @@
 		56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PROgressActivities.intentdefinition; sourceTree = "<group>"; };
 		56A554872A9210A300E99F65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56A554892A9210A300E99F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationLiveActivityAttributes.swift; sourceTree = "<group>"; };
+		56A554992A949E3F00E99F65 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
+		56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityThumbnailData.swift; sourceTree = "<group>"; };
+		56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+VideoCreationThumbnailActivityError.swift"; sourceTree = "<group>"; };
+		56BF34CC2A953F5900AFA9E4 /* PROgress.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROgress.entitlements; sourceTree = "<group>"; };
+		56BF34CD2A953FA500AFA9E4 /* PROgressActivitiesExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROgressActivitiesExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +242,7 @@
 		568B60512A7AD98300D5B5D3 = {
 			isa = PBXGroup;
 			children = (
+				56BF34CD2A953FA500AFA9E4 /* PROgressActivitiesExtension.entitlements */,
 				568B605C2A7AD98300D5B5D3 /* PROgress */,
 				568B60732A7AD98400D5B5D3 /* PROgressTests */,
 				568B607D2A7AD98400D5B5D3 /* PROgressUITests */,
@@ -246,12 +266,14 @@
 		568B605C2A7AD98300D5B5D3 /* PROgress */ = {
 			isa = PBXGroup;
 			children = (
+				56BF34CC2A953F5900AFA9E4 /* PROgress.entitlements */,
 				568B60A82A840C1100D5B5D3 /* Factory */,
 				568B60902A7B8C0500D5B5D3 /* Logging */,
 				568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */,
 				56A5545B2A8CB3A600E99F65 /* Progress Videos Collection */,
 				56A554382A8940D800E99F65 /* PhotoLibraryManager */,
 				568B60A02A84092600D5B5D3 /* Image Merge Engine */,
+				56A554982A949E2B00E99F65 /* Activities */,
 				568B609C2A82B4CB00D5B5D3 /* New Progress Video */,
 				568B60AC2A84C45E00D5B5D3 /* Extensions */,
 				568B60612A7AD98400D5B5D3 /* Assets.xcassets */,
@@ -312,9 +334,11 @@
 				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
 				568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */,
 				568B60A12A84099100D5B5D3 /* ImageMergeEngine.swift */,
+				56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */,
 				56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */,
 				56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */,
 				56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */,
+				56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */,
 				56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */,
 			);
 			path = "Image Merge Engine";
@@ -402,12 +426,21 @@
 			children = (
 				56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */,
 				56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */,
+				56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */,
 				56A554842A9210A100E99F65 /* PROgressActivities.swift */,
 				56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */,
 				56A554872A9210A300E99F65 /* Assets.xcassets */,
 				56A554892A9210A300E99F65 /* Info.plist */,
 			);
 			path = PROgressActivities;
+			sourceTree = "<group>";
+		};
+		56A554982A949E2B00E99F65 /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+				56A554992A949E3F00E99F65 /* ActivityManager.swift */,
+			);
+			path = Activities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -596,10 +629,14 @@
 				56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
 				56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A554612A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
+				56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
+				56BF34C52A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
+				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				568B60A22A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
+				56BF34C92A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
 				568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */,
 				568B60942A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift in Sources */,
 				56A5543A2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
@@ -622,22 +659,26 @@
 				56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
+				56BF34C62A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
 				56A5543B2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5543F2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A5544F2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				56A5544B2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
+				56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				568B60752A7AD98400D5B5D3 /* PROgressTests.swift in Sources */,
 				56A554432A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 				56A554732A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56A5545E2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
+				56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
 				568B60B22A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift in Sources */,
 				568B60A72A840A6E00D5B5D3 /* ProgressVideo.swift in Sources */,
 				56A5542E2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A554472A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
+				56BF34CA2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 				56A554622A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
@@ -648,6 +689,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A554962A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
+				56BF34CB2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
 				56A5542F2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A5545F2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
@@ -664,7 +707,9 @@
 				56A554742A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56A554632A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
+				56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
+				56BF34C72A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
 				56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 			);
@@ -674,6 +719,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A554972A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A554832A9210A100E99F65 /* VideoCreationLiveActivity.swift in Sources */,
 				56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */,
 				56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
@@ -752,7 +798,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -806,7 +852,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -822,6 +868,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PROgress/PROgress.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PROgress/Preview Content\"";
@@ -856,6 +903,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PROgress/PROgress.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PROgress/Preview Content\"";
@@ -965,6 +1013,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PROgressActivitiesExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B9J6J6XB6U;
@@ -993,6 +1042,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PROgressActivitiesExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B9J6J6XB6U;
