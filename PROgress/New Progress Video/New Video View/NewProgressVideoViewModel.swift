@@ -8,8 +8,10 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import Combine
 import EBUniAppsKit
 import Factory
+import ActivityKit
 
 @MainActor
 class NewProgressVideoViewModel: ObservableObject {
@@ -18,7 +20,7 @@ class NewProgressVideoViewModel: ObservableObject {
     @Injected(\.photoLibraryManager) private var photoLibraryManager
     @Injected(\.activityManager) private var activityManager
     
-    // MARK: - Public variables
+    // MARK: - Variables
     @Published var navigationState = NavigationPath()
     
     /// This item tracks any ordering changes that is done by the user over the photos.
@@ -37,6 +39,7 @@ class NewProgressVideoViewModel: ObservableObject {
     @Published private(set) var imageLoadingState: ImageLoadingState = .undefined
     @Published var progressImages: [ProgressImage]?
     
+    private var videoCreationLiveActivity: VideoCreationActivity?
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
     @Published private(set) var video: ProgressVideo?
     
@@ -52,7 +55,9 @@ class NewProgressVideoViewModel: ObservableObject {
             }
         }
     }
-
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
     // MARK: - Public methods
     func beginMerge() {
         guard case .success = self.imageLoadingState else {
@@ -68,8 +73,15 @@ class NewProgressVideoViewModel: ObservableObject {
         let isConvertingAlbum = selectedAlbum != nil
         
         Task.detached(priority: .userInitiated) { [photoUserOrdering, selectedItems] in
+            var backgroundTaskId: UIBackgroundTaskIdentifier
+            defer {
+                Task { [backgroundTaskId] in
+                    await UIApplication.shared.endBackgroundTask(backgroundTaskId)
+                }
+            }
+            
             do {
-                let backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
+                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
                         PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")
@@ -91,9 +103,13 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
                                                                      middleImages: thumbnails.middleImagesData,
-                                                                     lastImage: thumbnails.lastImageData,
-                                                                     title: "Creating your video...")
-                _ = try await self.activityManager.startActivity(.videoCreation(attributes))
+                                                                     lastImage: thumbnails.lastImageData)
+                let activity = await MainActor.run { [attributes] in
+                    self.videoCreationLiveActivity = .videoCreation(attributes)
+                    return self.videoCreationLiveActivity!
+                }
+                
+                try await self.activityManager.startActivity(activity)
                 
                 let options = ImageMergeEngine.MergeOptions(size: largestPhotoSize,
                                                             customOrder: photoUserOrdering)
@@ -118,16 +134,30 @@ class NewProgressVideoViewModel: ObservableObject {
                     try await self.photoLibraryManager.saveAssetToPhotoLibrary(assetAtUrl: video.url)
                 }
                 
-                await UIApplication.shared.endBackgroundTask(backgroundTaskId)
+                try await self.activityManager.endActivity(activity, with: .ended())
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
                 return
             }
         }
         
-        imageMergeEngine.state
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$videoProcessingState)
+        Task.detached { [unowned self] in
+            for await state in await self.imageMergeEngine.state.values {
+                await MainActor.run {
+                    self.videoProcessingState = state
+                }
+                
+                if  case .working(let progress) = state,
+                    let activity = await self.videoCreationLiveActivity
+                {
+                    do {
+                        try await self.activityManager.updateActivity(activity, with: .inProgress(value: progress))
+                    } catch let error {
+                        PRLogger.app.error("Failed to update live activity! [\(error)]")
+                    }
+                }
+            }
+        }
     }
     
     func resetVideoProcessingState() {

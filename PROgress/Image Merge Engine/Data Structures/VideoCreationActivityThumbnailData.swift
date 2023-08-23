@@ -1,5 +1,5 @@
 //
-//  ActivityThumbnailData.swift
+//  VideoCreationActivityThumbnailData.swift
 //  PROgress
 //
 //  Created by Balázs Erdész on 2023. 08. 22..

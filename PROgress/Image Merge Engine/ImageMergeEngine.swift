@@ -52,7 +52,7 @@ class ImageMergeEngine {
                     guard
                         let uiImage = UIImage(data: originalSizedData),
                         let thumbnailUiImage = await uiImage.byPreparingThumbnail(ofSize: CGSize(width: 240, height: 240)),
-                        let thumbnailData = thumbnailUiImage.pngData()
+                        let thumbnailData = thumbnailUiImage.jpegData(compressionQuality: 1.0)
                     else {
                         PRLogger.imageProcessing.error("Could not create UIImage from data!")
                         throw VideoCreationThumbnailActivityError.thumbnailImageCreation

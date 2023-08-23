@@ -47,7 +47,7 @@ struct VideoCreationLiveActivity: Widget {
     // MARK: - Large presentation components
     private func bottomContent(for context: Context) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(context.attributes.title)
+            Text(context.state.description)
                 .font(.caption)
             
             ProgressView(value: context.state.progress)
@@ -106,19 +106,20 @@ struct VideoCreationLiveActivity: Widget {
     @ViewBuilder
     private func image(for url: URL?, scale: Image.Scale) -> some View {
         ZStack {
-            if  let url,
-                let uiImage = UIImage(contentsOfFile: url.path())
-            {
-                Image(uiImage: uiImage)
-                    .aspectRatio(1.0, contentMode: .fit)
-            } else {
-                Color.accentColor.opacity(0.7)
-                    .overlay {
-                        Image(systemName: "photo.circle")
-                            .imageScale(scale)
+            Color.accentColor.opacity(0.7)
+                .overlay {
+                    Image(systemName: "photo.circle")
+                        .imageScale(scale)
+                }
+                .aspectRatio(1.0, contentMode: .fit)
+                .overlay {
+                    if  let url,
+                        let uiImage = UIImage(contentsOfFile: url.path()) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .aspectRatio(1.0, contentMode: .fill)
                     }
-                    .aspectRatio(1.0, contentMode: .fit)
-            }
+                }
         }
         .cornerRadius(scale == .large ? 8 : 3)
         .layoutPriority(scale == .large ? 1.0 : 0.5)
@@ -126,13 +127,13 @@ struct VideoCreationLiveActivity: Widget {
 }
 
 struct PROgressActivitiesLiveActivity_Previews: PreviewProvider {
+    static let url = URL(string: "/Users/balazserdesz/Downloads/xxx.jpg")
     static let attributes = VideoCreationLiveActivityAttributes(
-        firstImage: nil,
-        middleImages: [nil, nil, nil],
-        lastImage: nil,
-        title: "Creating your video..."
+        firstImage: Self.url,
+        middleImages: [Self.url, Self.url, Self.url],
+        lastImage: Self.url
     )
-    static let contentState = VideoCreationLiveActivityAttributes.ContentState(progress: 0.77)
+    static let contentState = VideoCreationLiveActivityAttributes.ContentState(progress: 0.77, description: "Creating your video...")
 
     static var previews: some View {
         attributes

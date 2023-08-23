@@ -100,9 +100,9 @@
 		56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
 		56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
 		56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
-		56BF34C52A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
-		56BF34C62A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
-		56BF34C72A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */; };
+		56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
+		56BF34C62A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
+		56BF34C72A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
 		56BF34C92A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
 		56BF34CA2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
 		56BF34CB2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */; };
@@ -197,7 +197,7 @@
 		56A554892A9210A300E99F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationLiveActivityAttributes.swift; sourceTree = "<group>"; };
 		56A554992A949E3F00E99F65 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
-		56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityThumbnailData.swift; sourceTree = "<group>"; };
+		56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationActivityThumbnailData.swift; sourceTree = "<group>"; };
 		56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+VideoCreationThumbnailActivityError.swift"; sourceTree = "<group>"; };
 		56BF34CC2A953F5900AFA9E4 /* PROgress.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROgress.entitlements; sourceTree = "<group>"; };
 		56BF34CD2A953FA500AFA9E4 /* PROgressActivitiesExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROgressActivitiesExtension.entitlements; sourceTree = "<group>"; };
@@ -330,11 +330,9 @@
 		568B60A02A84092600D5B5D3 /* Image Merge Engine */ = {
 			isa = PBXGroup;
 			children = (
+				56BF34CE2A96A6AF00AFA9E4 /* Data Structures */,
 				56A554702A8FC12600E99F65 /* Photo conversion */,
-				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
-				568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */,
 				568B60A12A84099100D5B5D3 /* ImageMergeEngine.swift */,
-				56BF34C42A952E9200AFA9E4 /* ActivityThumbnailData.swift */,
 				56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */,
 				56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */,
 				56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */,
@@ -441,6 +439,16 @@
 				56A554992A949E3F00E99F65 /* ActivityManager.swift */,
 			);
 			path = Activities;
+			sourceTree = "<group>";
+		};
+		56BF34CE2A96A6AF00AFA9E4 /* Data Structures */ = {
+			isa = PBXGroup;
+			children = (
+				568B60962A82B3C900D5B5D3 /* ProgressImage.swift */,
+				568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */,
+				56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */,
+			);
+			path = "Data Structures";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -633,7 +641,7 @@
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
-				56BF34C52A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
+				56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				568B60A22A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56BF34C92A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
@@ -659,7 +667,7 @@
 				56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56A554322A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
-				56BF34C62A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
+				56BF34C62A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A5543B2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5543F2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
@@ -709,7 +717,7 @@
 				56A554632A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
 				56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
-				56BF34C72A952E9200AFA9E4 /* ActivityThumbnailData.swift in Sources */,
+				56BF34C72A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 			);
