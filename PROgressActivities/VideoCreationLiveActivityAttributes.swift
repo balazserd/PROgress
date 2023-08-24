@@ -8,7 +8,7 @@
 import Foundation
 import ActivityKit
 
-struct VideoCreationLiveActivityAttributes: ActivityAttributes {
+struct VideoCreationLiveActivityAttributes: Equatable, ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var progress: Double
         var description: String

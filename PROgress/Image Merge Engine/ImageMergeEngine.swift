@@ -28,17 +28,17 @@ class ImageMergeEngine {
             throw VideoCreationThumbnailActivityError.zeroImageCount
         }
         
-        var items = [(images.first!, 0), (nil, 1), (nil, 2), (nil, 3), (images.first!, 4)]
+        var items = [(images.first!, 0, "first"), (nil, 1, "middle1"), (nil, 2, "middle2"), (nil, 3, "middle3"), (images.first!, 4, "last")]
         if images.count > 1 {
-            items[4] = (images.last!, 4)
+            items[4] = (images.last!, 4, "last")
         }
         
         if images.count > 4 {
             let step = images.count / 4
             
-            items[1] = (images[step * 1], 1)
-            items[2] = (images[step * 2], 2)
-            items[3] = (images[step * 3], 3)
+            items[1] = (images[step * 1], 1, "middle1")
+            items[2] = (images[step * 2], 2, "middle2")
+            items[3] = (images[step * 3], 3, "middle3")
         }
         
         let thumbnailDatas = try await withThrowingTaskGroup(of: IndexedThumbnailUrl.self) { group in
@@ -60,7 +60,7 @@ class ImageMergeEngine {
                     
                     guard let fileUrl = FileManager.default
                         .containerURL(forSecurityApplicationGroupIdentifier: PROgressApp.groupIdentifier)?
-                        .appendingPathComponent("\(id.uuidString)-\(item.1).png") else {
+                        .appendingPathComponent("videocreation-\(item.2).png") else {
                         throw VideoCreationThumbnailActivityError.appGroupNotFound
                     }
                     

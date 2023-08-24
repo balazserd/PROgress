@@ -15,84 +15,94 @@ struct VideoCreationLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: VideoCreationLiveActivityAttributes.self) { context in
             VStack {
-                middleContent(for: context)
+                middleContent(firstImage: context.attributes.firstImage,
+                              middleImages: context.attributes.middleImages,
+                              lastImage: context.attributes.lastImage)
                 
-                bottomContent(for: context)
+                bottomContent(description: context.state.description,
+                              progress: context.state.progress)
+                    .contentTransition(.identity)
             }
             .frame(height: 110)
             .padding(16)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.bottom) {
-                    bottomContent(for: context)
+                    bottomContent(description: context.state.description,
+                                  progress: context.state.progress)
                         .padding([.horizontal], 10)
+                        .contentTransition(.identity)
                 }
                 
                 DynamicIslandExpandedRegion(.center) {
-                    middleContent(for: context)
+                    middleContent(firstImage: context.attributes.firstImage,
+                                  middleImages: context.attributes.middleImages,
+                                  lastImage: context.attributes.lastImage)
                         .padding(.horizontal, 10)
                 }
             } compactLeading: {
-                compactTrailingContent(for: context)
+                compactTrailingContent(firstImage: context.attributes.firstImage,
+                                       lastImage: context.attributes.lastImage)
             } compactTrailing: {
-                minimalContent(for: context)
+                minimalContent(progress: context.state.progress)
+                    .transition(.identity)
             } minimal: {
-                minimalContent(for: context)
+                minimalContent(progress: context.state.progress)
+                    .transition(.identity)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
     
     // MARK: - Large presentation components
-    private func bottomContent(for context: Context) -> some View {
+    private func bottomContent(description: String, progress: Double) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(context.state.description)
+            Text(description)
                 .font(.caption)
             
-            ProgressView(value: context.state.progress)
+            ProgressView(value: progress)
         }
     }
     
-    private func middleContent(for context: Context) -> some View {
-        HStack {
-            self.image(for: context.attributes.lastImage, scale: .large)
+    private func middleContent(firstImage: URL?, middleImages: [URL?], lastImage: URL?) -> some View {
+        HStack(spacing: 6) {
+            thumbnailImage(url: firstImage, scale: .large)
             
             Image(systemName: "arrow.forward")
                 .imageScale(.small)
                 .opacity(0.5)
             
             ForEach(0..<3) { middleImageIndex in
-                self.image(for: context.attributes.middleImages[middleImageIndex], scale: .small)
+                thumbnailImage(url: middleImages[middleImageIndex], scale: .small)
                 
                 Image(systemName: "arrow.forward")
                     .imageScale(.small)
                     .opacity(0.5)
             }
             
-            self.image(for: context.attributes.firstImage, scale: .large)
+            thumbnailImage(url: lastImage, scale: .large)
         }
         .frame(maxHeight: .infinity)
     }
     
     // MARK: - Compact presentation components
-    private func compactTrailingContent(for context: Context) -> some View {
+    private func compactTrailingContent(firstImage: URL?, lastImage: URL?) -> some View {
         HStack(spacing: 4) {
-            self.image(for: context.attributes.firstImage, scale: .medium)
+            thumbnailImage(url: firstImage, scale: .medium)
                 .frame(height: 25)
             
             Image(systemName: "arrow.forward")
                 .imageScale(.small)
+                .opacity(0.5)
             
-            self.image(for: context.attributes.lastImage, scale: .medium)
+            thumbnailImage(url: lastImage, scale: .medium)
                 .frame(height: 25)
         }
         .padding(.horizontal, 8)
     }
     
     // MARK: - Minimal presentation components
-    private func minimalContent(for context: Context) -> some View {
-        ProgressView(value: context.state.progress) {
+    private func minimalContent(progress: Double) -> some View {
+        ProgressView(value: progress) {
             Image(systemName: "photo.stack")
                 .imageScale(.small)
                 .foregroundColor(.accentColor.opacity(0.5))
@@ -103,8 +113,7 @@ struct VideoCreationLiveActivity: Widget {
     }
     
     // MARK: - Reused components
-    @ViewBuilder
-    private func image(for url: URL?, scale: Image.Scale) -> some View {
+    private func thumbnailImage(url: URL?, scale: Image.Scale) -> some View {
         ZStack {
             Color.accentColor.opacity(0.7)
                 .overlay {
@@ -117,7 +126,8 @@ struct VideoCreationLiveActivity: Widget {
                         let uiImage = UIImage(contentsOfFile: url.path()) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(1.0, contentMode: .fill)
+                            .scaledToFill()
+                            .contentTransition(.identity)
                     }
                 }
         }
