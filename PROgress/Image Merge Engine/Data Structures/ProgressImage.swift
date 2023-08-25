@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ProgressImage: Transferable, Equatable, Identifiable {
+struct ProgressImage: Transferable, Equatable, Identifiable, @unchecked Sendable {
     let image: Image
     let id = UUID()
     var localIdentifier: String!

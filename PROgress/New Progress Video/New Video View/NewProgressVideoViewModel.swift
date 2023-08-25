@@ -32,7 +32,9 @@ class NewProgressVideoViewModel: ObservableObject {
             self.selectedAlbum = nil
             self.photoUserOrdering = Array(0..<selectedItems.count)
             
-            Task.detached { await self.loadImages(from: self.selectedItems) }
+            Task.detached { [selectedItems] in
+                await self.loadImages(from: selectedItems)
+            }
         }
     }
     
@@ -81,7 +83,7 @@ class NewProgressVideoViewModel: ObservableObject {
             }
             
             do {
-                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
+                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable () -> () in
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
                         PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")
@@ -220,8 +222,10 @@ class NewProgressVideoViewModel: ObservableObject {
         await updateState(to: .loading(progress: 0.0))
         
         do {
-            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) { [weak self] in
-                self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
+            let progressImages = try await photoLibraryManager.getAllPhotosOfAlbum(album, to: .display) {
+                Task { @MainActor [weak self] in
+                    self?.advanceLoadingProgress(by: 1.0 / Double(album.imageCount))
+                }
             }
             
             PRLogger.app.debug("Successfully imported \(album.imageCount) photos")

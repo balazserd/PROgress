@@ -10,39 +10,76 @@ import SwiftUI
 import PhotosUI
 import CoreImage
 import AVFoundation
-import EBUniAppsKit
+//import EBUniAppsKit
 import Combine
 
-class ImageMergeEngine {
+extension Array {
+    func mapConcurrentlyThenPerformSeriallyAsync<M>(maxConcurrencyCount: Int = .max,
+                                                    mapPriority: TaskPriority = .medium,
+                                                    mapBlock: @escaping @Sendable (Self.Element) async throws -> M,
+                                                    serialPerformBlock: @escaping @Sendable (M) async throws -> Void)
+    async throws where M: Sendable, Self.Element: Sendable {
+        try await withThrowingTaskGroup(of: (Int, M).self) { group in
+            for index in 0..<Swift.min(maxConcurrencyCount, self.count) {
+                group.addTask(priority: mapPriority) {
+                    return try await (index, mapBlock(self[index]))
+                }
+            }
+            
+            var nextTaskIndex = maxConcurrencyCount
+            var buffer = [(Int, M)]()
+            for nextResultIndex in 0..<self.count {
+                repeat {
+                    guard let (newResultIndex, newResult) = try await group.next() else { break }
+                    buffer.append((newResultIndex, newResult))
+                    
+                    if nextTaskIndex < self.count {
+                        group.addTask(priority: mapPriority) { [nextTaskIndex] in
+                            return try await (nextTaskIndex, mapBlock(self[nextTaskIndex]))
+                        }
+                    }
+                    
+                    nextTaskIndex += 1
+                } while buffer.first(where: { $0.0 == nextResultIndex }) == nil
+                
+                guard let nextResultBufferIndex = buffer.firstIndex(where: { $0.0 == nextResultIndex }) else {
+                    throw NSError(domain: "EBUniAppsKit", code: -1, userInfo: ["Description": "The next result buffer index is not found."])
+                }
+                
+                try await serialPerformBlock(buffer[nextResultBufferIndex].1)
+                buffer.remove(at: nextResultBufferIndex)
+            }
+        }
+    }
+}
+
+actor ImageMergeEngine {
     static let backgroundTaskName = "com.ebuniapps.PROgress-imageMergeTask"
     
-    @MainActor var state = CurrentValueSubject<State, Never>(.idle)
+    var state = CurrentValueSubject<State, Never>(.idle)
     
     func provideVideoCreationActivityThumbnails<ConversionEngine: PhotoConversionEngine>(
         from images: [ConversionEngine.Input],
         by engine: ConversionEngine
     ) async throws -> VideoCreationActivityThumbnailData {
         typealias IndexedThumbnailUrl = (url: URL?, index: Int)
-        
-        guard images.count > 0 else {
-            throw VideoCreationThumbnailActivityError.zeroImageCount
-        }
-        
-        var items = [(images.first!, 0, "first"), (nil, 1, "middle1"), (nil, 2, "middle2"), (nil, 3, "middle3"), (images.first!, 4, "last")]
-        if images.count > 1 {
-            items[4] = (images.last!, 4, "last")
-        }
-        
-        if images.count > 4 {
-            let step = images.count / 4
-            
-            items[1] = (images[step * 1], 1, "middle1")
-            items[2] = (images[step * 2], 2, "middle2")
-            items[3] = (images[step * 3], 3, "middle3")
-        }
-        
         let thumbnailDatas = try await withThrowingTaskGroup(of: IndexedThumbnailUrl.self) { group in
-            let id = UUID()
+            guard images.count > 0 else {
+                throw VideoCreationThumbnailActivityError.zeroImageCount
+            }
+            
+            var items = [(images.first!, 0, "first"), (nil, 1, "middle1"), (nil, 2, "middle2"), (nil, 3, "middle3"), (images.first!, 4, "last")]
+            if images.count > 1 {
+                items[4] = (images.last!, 4, "last")
+            }
+            
+            if images.count > 4 {
+                let step = images.count / 4
+                
+                items[1] = (images[step * 1], 1, "middle1")
+                items[2] = (images[step * 2], 2, "middle2")
+                items[3] = (images[step * 3], 3, "middle3")
+            }
             
             for item in items {
                 group.addTask {
@@ -107,7 +144,7 @@ class ImageMergeEngine {
             throw MergeError.assetWriterStartFailure
         }
         
-        await state.send(.working(progress: 0.0))
+        state.send(.working(progress: 0.0))
         
         assetWriterConfig.assetWriter.startSession(atSourceTime: .zero)
         
@@ -147,26 +184,24 @@ class ImageMergeEngine {
             PRLogger.imageProcessing.error("Status is not completed after finishing writing! [\(writerStatus.rawValue)] [error: \(error)]")
         }
         
-        await self.setState(to: .finished)
+        self.state.value = .finished
         return ProgressVideo(videoId: assetWriterConfig.videoId,
                              url: assetWriterConfig.outputUrl,
                              resolution: assetWriterConfig.resolution)
     }
     
     // MARK: - Private functions
-    @MainActor
     private func setState(to state: State) {
         self.state.value = state
     }
     
-    @MainActor
     private func advanceProcessingProgress(by value: Double) {
         guard case let .working(progress) = self.state.value else {
             PRLogger.imageProcessing.warning("Cannot advance processing progress without `.working` being the current state!")
             return
         }
         
-        self.setState(to: .working(progress: min(1.0, progress + value)))
+        self.state.value = .working(progress: min(1.0, progress + value))
     }
     
     private func processImage<ConversionEngine: PhotoConversionEngine>(

@@ -10,7 +10,7 @@ import Photos
 import SwiftUI
 import UIKit
 
-class PhotoLibraryManager {
+actor PhotoLibraryManager {
     var authorizationStatus: PHAuthorizationStatus
     
     static let videoLibraryTitle = "PROgress"
@@ -21,7 +21,7 @@ class PhotoLibraryManager {
     
     // MARK: - Working with albums
     /// The PROgress app's designated video folder.
-    var videoLibraryAssetCollection: PHAssetCollection? {
+    nonisolated var videoLibraryAssetCollection: PHAssetCollection? {
         let options = PHFetchOptions()
         options.predicate = NSPredicate(format: "title LIKE %@", Self.videoLibraryTitle)
         
@@ -34,9 +34,9 @@ class PhotoLibraryManager {
         return assetCollections.firstObject
     }
     
-    func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
-                             to fetchReason: AlbumFetchingReason,
-                             progressBlock: @escaping @MainActor () -> Void)
+    nonisolated func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
+                                         to fetchReason: AlbumFetchingReason,
+                                         progressBlock: @escaping @Sendable () -> Void)
     async throws -> [ProgressImage] {
         let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: self.imagesInAlbumFetchOptions)
@@ -59,7 +59,7 @@ class PhotoLibraryManager {
                     PHImageManager.default()
                         .requestImageDataAndOrientation(for: asset, options: imageRequestOptions) { data, _, _, resultInfo in
                             defer {
-                                DispatchQueue.main.async {
+                                Task {
                                     progressBlock()
                                 }
                             }
@@ -94,7 +94,7 @@ class PhotoLibraryManager {
     }
     
     /// Returns an object that contains all albums from the user's Photo Library that has at least one image.
-    func getPhotoAlbumCollection() async throws -> PhotoAlbumCollection {
+    nonisolated func getPhotoAlbumCollection() async throws -> PhotoAlbumCollection {
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
         
         var tasks = [Task<PhotoAlbum?, Never>]()
@@ -149,7 +149,7 @@ class PhotoLibraryManager {
     }
     
     /// Returns the corresponding `PHAssetCollection` for the album.
-    func assetCollectionForAlbum(_ album: PhotoAlbum) throws -> PHAssetCollection {
+    nonisolated func assetCollectionForAlbum(_ album: PhotoAlbum) throws -> PHAssetCollection {
         let albumInArray = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [album.photoKitIdentifier], options: nil)
         
         guard let album = albumInArray.firstObject else {
@@ -160,7 +160,7 @@ class PhotoLibraryManager {
         return album
     }
     
-    func assetForIdentifier(_ identifier: String) throws -> PHAsset {
+    nonisolated func assetForIdentifier(_ identifier: String) throws -> PHAsset {
         let assetInArray = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
         
         guard let asset = assetInArray.firstObject else {
@@ -172,7 +172,7 @@ class PhotoLibraryManager {
     }
     
     /// The `PHFetchOptions` object that wants to fetch only images from an asset collection.
-    var imagesInAlbumFetchOptions: PHFetchOptions {
+    nonisolated var imagesInAlbumFetchOptions: PHFetchOptions {
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
         fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
@@ -181,8 +181,8 @@ class PhotoLibraryManager {
     }
     
     // MARK: - Saving video to designated album
-    func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws {
-        switch self.authorizationStatus {
+    nonisolated func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws {
+        switch await self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
             await self.requestAuthorization()
@@ -234,7 +234,7 @@ class PhotoLibraryManager {
         }
     }
     
-    func createPROgressMediaLibrary() async throws {
+    nonisolated func createPROgressMediaLibrary() async throws {
         guard self.videoLibraryAssetCollection == nil else {
             PRLogger.photoLibraryManagement.fault("Attempted to recreate the PROgress video library!")
             return

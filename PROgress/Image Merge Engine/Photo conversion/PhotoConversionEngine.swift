@@ -12,8 +12,8 @@ import SwiftUI
 import Factory
 
 // MARK: - Protocol definition
-protocol PhotoConversionEngine {
-    associatedtype Input: Hashable
+protocol PhotoConversionEngine: Sendable {
+    associatedtype Input: Hashable, Sendable
     
     /// Converts the appropriate input to its `Data` representation.
     ///
@@ -26,7 +26,7 @@ extension PhotoConversionEngine where Self == PHAssetConversionEngine {
     static func phAssetEngine(options: PHImageRequestOptions? = nil) -> Self { .init(options: options) }
 }
 
-class PHAssetConversionEngine: PhotoConversionEngine {
+class PHAssetConversionEngine: PhotoConversionEngine, @unchecked Sendable {
     typealias LocalIdentifier = String
     
     @Injected(\.photoLibraryManager) private var photoLibraryManager
@@ -66,7 +66,7 @@ extension PhotoConversionEngine where Self == PhotosPickerItemConversionEngine {
     static var photosPickerItemEngine: Self { .init() }
 }
 
-class PhotosPickerItemConversionEngine: PhotoConversionEngine {
+final class PhotosPickerItemConversionEngine: PhotoConversionEngine {
     func convertInput(_ input: PhotosPickerItem) async throws -> Data {
         guard let data = try await input.loadTransferable(type: Data.self) else {
             throw ConversionError.transferableLoadError

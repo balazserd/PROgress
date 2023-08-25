@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 
 /// A configuration object that contains information necessary to produce progress videos with ``ImageMergeEngine`` by utilizing an `AVFoundation.AVAssetWriter`.
-class VideoAssetWriterConfiguration {
+class VideoAssetWriterConfiguration: @unchecked Sendable {
     let assetWriter: AVAssetWriter
     let inputAdaptor: AVAssetWriterInputPixelBufferAdaptor
     let outputUrl: URL!

@@ -13,8 +13,8 @@ extension ActivityProtocol where Self == VideoCreationActivity {
     }
 }
 
-class VideoCreationActivity: ActivityProtocol {
-    var attributes: VideoCreationLiveActivityAttributes
+actor VideoCreationActivity: ActivityProtocol {
+    let attributes: VideoCreationLiveActivityAttributes
     
     let initialState = VideoCreationLiveActivityAttributes.ContentState.inProgress(value: 0.0)
     

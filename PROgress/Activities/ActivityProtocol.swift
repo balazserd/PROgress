@@ -8,7 +8,7 @@
 import Foundation
 import ActivityKit
 
-protocol ActivityProtocol: AnyObject {
+protocol ActivityProtocol: Actor {
     associatedtype Attributes: ActivityAttributes
     
     var attributes: Attributes { get }

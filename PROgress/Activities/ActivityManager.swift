@@ -8,7 +8,7 @@
 import Foundation
 import ActivityKit
 
-class ActivityManager {
+final class ActivityManager: Sendable {
     /// Starts a Live Activity for this activity.
     ///
     /// This method will set the ``ActivityProtocol/id`` property.
