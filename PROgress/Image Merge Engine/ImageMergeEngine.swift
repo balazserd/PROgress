@@ -247,7 +247,7 @@ actor ImageMergeEngine {
         context.render(scaledToFitImage,
                        to: pixelBuffer,
                        bounds: scaledToFitImage.extent,
-                       colorSpace: nil)
+                       colorSpace: CGColorSpaceCreateDeviceRGB()) // Not setting the color space produces a dark image!!!
         
         let time = CMTime(value: Int64(index), timescale: 5)
         return Sample(index: index, time: time, buffer: pixelBuffer)

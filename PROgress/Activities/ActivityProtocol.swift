@@ -9,7 +9,7 @@ import Foundation
 import ActivityKit
 
 protocol ActivityProtocol: Actor {
-    associatedtype Attributes: ActivityAttributes
+    associatedtype Attributes: ActivityAttributes, Sendable where Attributes.ContentState: Sendable
     
     var attributes: Attributes { get }
     var initialState: Attributes.ContentState { get }
@@ -17,6 +17,7 @@ protocol ActivityProtocol: Actor {
     
     func staleDate() -> Date
     
+    func setId(to id: String)
     func onStart()
     func onFinish()
 }
@@ -24,4 +25,8 @@ protocol ActivityProtocol: Actor {
 extension ActivityProtocol {
     func onStart() { }
     func onFinish() { }
+    
+    func setId(to id: String) {
+        self.id = id
+    }
 }

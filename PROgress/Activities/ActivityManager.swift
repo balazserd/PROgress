@@ -17,30 +17,30 @@ final class ActivityManager: Sendable {
             throw ActivityManagementError.activitiesAreDisabled
         }
         
-        let activityInitialContent = ActivityContent(state: activity.initialState, staleDate: activity.staleDate())
-        let activityKitActivity = try Activity.request(attributes: activity.attributes, content: activityInitialContent)
+        let activityInitialContent = ActivityContent(state: await activity.initialState, staleDate: await activity.staleDate())
+        let activityKitActivity = try Activity.request(attributes: await activity.attributes, content: activityInitialContent)
         
-        activity.id = activityKitActivity.id
+        await activity.setId(to: activityKitActivity.id)
         
-        activity.onStart()
+        await activity.onStart()
     }
     
     func updateActivity<A: ActivityProtocol>(_ activity: A,
                                              with state: A.Attributes.ContentState) async throws {
-        let activityKitActivity = try self.activityWithId(activity.id, withAttributeType: A.Attributes.self)
+        let activityKitActivity = try self.activityWithId(await activity.id, withAttributeType: A.Attributes.self)
         
-        let newActivityContent = ActivityContent(state: state, staleDate: activity.staleDate())
+        let newActivityContent = ActivityContent(state: state, staleDate: await activity.staleDate())
         await activityKitActivity.update(newActivityContent)
     }
     
     func endActivity<A: ActivityProtocol>(_ activity: A,
                                           with state: A.Attributes.ContentState) async throws {
-        let activityKitActivity = try self.activityWithId(activity.id, withAttributeType: A.Attributes.self)
+        let activityKitActivity = try self.activityWithId(await activity.id, withAttributeType: A.Attributes.self)
         
-        let finalActivityContent = ActivityContent(state: state, staleDate: activity.staleDate())
+        let finalActivityContent = ActivityContent(state: state, staleDate: await activity.staleDate())
         await activityKitActivity.end(finalActivityContent)
         
-        activity.onFinish()
+        await activity.onFinish()
     }
     
     private func activityWithId<Attributes: ActivityAttributes>(_ id: String,

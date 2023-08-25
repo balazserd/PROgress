@@ -20,7 +20,7 @@ extension CVPixelBuffer {
                                    height: vImagePixelCount(CVPixelBufferGetHeight(self)),
                                    width: vImagePixelCount(CVPixelBufferGetWidth(self)),
                                    rowBytes: CVPixelBufferGetBytesPerRow(self))
-        
+
         let error = vImageBufferFill_ARGB8888(&buffer, [0xFF, 0xFF, 0xFF, 0xFF], vImage_Flags(kvImageNoFlags))
         if error != kvImageNoError {
             PRLogger.imageProcessing.error("Image Buffer could not be filled! [\(error)]")
