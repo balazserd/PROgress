@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5604B1142A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
+		5604B1152A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
+		5604B1162A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
@@ -159,6 +162,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+VideoSettingsView.swift"; sourceTree = "<group>"; };
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressApp.swift; sourceTree = "<group>"; };
 		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
@@ -402,6 +406,7 @@
 			isa = PBXGroup;
 			children = (
 				568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */,
+				5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */,
 				56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */,
 				56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */,
 				568B60B02A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift */,
@@ -670,6 +675,7 @@
 				56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
+				5604B1142A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
@@ -714,6 +720,7 @@
 				56A554732A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56A5545E2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
+				5604B1152A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */,
 				56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
@@ -735,6 +742,7 @@
 			files = (
 				56A554962A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56BF34CB2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
+				5604B1162A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */,
 				56A5542F2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A5545F2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,

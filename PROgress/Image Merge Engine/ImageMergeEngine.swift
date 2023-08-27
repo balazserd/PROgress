@@ -10,48 +10,8 @@ import SwiftUI
 import PhotosUI
 import CoreImage
 import AVFoundation
-//import EBUniAppsKit
+import EBUniAppsKit
 import Combine
-
-extension Array {
-    func mapConcurrentlyThenPerformSeriallyAsync<M>(maxConcurrencyCount: Int = .max,
-                                                    mapPriority: TaskPriority = .medium,
-                                                    mapBlock: @escaping @Sendable (Self.Element) async throws -> M,
-                                                    serialPerformBlock: @escaping @Sendable (M) async throws -> Void)
-    async throws where M: Sendable, Self.Element: Sendable {
-        try await withThrowingTaskGroup(of: (Int, M).self) { group in
-            for index in 0..<Swift.min(maxConcurrencyCount, self.count) {
-                group.addTask(priority: mapPriority) {
-                    return try await (index, mapBlock(self[index]))
-                }
-            }
-            
-            var nextTaskIndex = maxConcurrencyCount
-            var buffer = [(Int, M)]()
-            for nextResultIndex in 0..<self.count {
-                repeat {
-                    guard let (newResultIndex, newResult) = try await group.next() else { break }
-                    buffer.append((newResultIndex, newResult))
-                    
-                    if nextTaskIndex < self.count {
-                        group.addTask(priority: mapPriority) { [nextTaskIndex] in
-                            return try await (nextTaskIndex, mapBlock(self[nextTaskIndex]))
-                        }
-                    }
-                    
-                    nextTaskIndex += 1
-                } while buffer.first(where: { $0.0 == nextResultIndex }) == nil
-                
-                guard let nextResultBufferIndex = buffer.firstIndex(where: { $0.0 == nextResultIndex }) else {
-                    throw NSError(domain: "EBUniAppsKit", code: -1, userInfo: ["Description": "The next result buffer index is not found."])
-                }
-                
-                try await serialPerformBlock(buffer[nextResultBufferIndex].1)
-                buffer.remove(at: nextResultBufferIndex)
-            }
-        }
-    }
-}
 
 actor ImageMergeEngine {
     static let backgroundTaskName = "com.ebuniapps.PROgress-imageMergeTask"

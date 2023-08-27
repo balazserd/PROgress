@@ -263,7 +263,7 @@ actor PhotoLibraryManager {
         
         /// Retrieve images to process them.
         ///
-        /// Maximized details should be requested in this mode.
+        /// Maximum details should be requested in this mode.
         case process
     }
     

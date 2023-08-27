@@ -20,7 +20,23 @@ extension NewProgressVideoView {
         
         var body: some View {
             ScrollView {
-                VStack {
+                VStack(alignment: .leading) {
+                    Text("Settings")
+                        .font(.title3)
+                        .bold()
+                    
+                    VideoSettingsView()
+                    
+                    Divider()
+                    
+                    Text("Selected photos (\(viewModel.progressImages!.count))")
+                        .font(.title3)
+                        .bold()
+                    
+                    Text("Tip: long press and drag an image to reorder it.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
                     LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
                         ForEach(viewModel.progressImages!) { progressImage in
                             photoGridItem(for: progressImage)

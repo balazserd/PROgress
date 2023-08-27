@@ -13,6 +13,46 @@ import EBUniAppsKit
 import Factory
 import ActivityKit
 
+struct VideoProcessingUserSettings {
+    var timeBetweenFrames: Double = 0.2
+    var resolution: Resolution = .medium
+    var customExtent: Int = 640
+    var customExtentAxis: CustomExtentAxis = .horizontal
+    
+    enum Resolution: String, CaseIterable {
+        case tiny = "Tiny"
+        case low = "Low"
+        case medium = "Medium"
+        case high = "High"
+        case extreme = "Extreme"
+        case customWidthPreservedAspectRatio = "Custom (preserve aspect ratio)"
+        case custom = "Custom (both extents)"
+        
+        var displayName: String { self.rawValue }
+        
+        var shortName: String {
+            switch self {
+            case .custom, .customWidthPreservedAspectRatio: return "Custom"
+            default: return self.displayName
+            }
+        }
+        
+        var isFree: Bool {
+            switch self {
+            case .tiny, .low, .medium: return true
+            default: return false
+            }
+        }
+    }
+    
+    enum CustomExtentAxis: String, CaseIterable {
+        case horizontal = "Width"
+        case vertical = "Height"
+        
+        var displayName: String { self.rawValue }
+    }
+}
+
 @MainActor
 class NewProgressVideoViewModel: ObservableObject {
     // MARK: - Injections
@@ -40,6 +80,8 @@ class NewProgressVideoViewModel: ObservableObject {
     
     @Published private(set) var imageLoadingState: ImageLoadingState = .undefined
     @Published var progressImages: [ProgressImage]?
+    
+    @Published var userSettings = VideoProcessingUserSettings()
     
     private var videoCreationLiveActivity: VideoCreationActivity?
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
