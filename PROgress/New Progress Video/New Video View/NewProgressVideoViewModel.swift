@@ -24,7 +24,7 @@ struct VideoProcessingUserSettings {
         case low = "Low"
         case medium = "Medium"
         case high = "High"
-        case extreme = "Extreme"
+        case ultra = "Ultra"
         case customWidthPreservedAspectRatio = "Custom (preserve aspect ratio)"
         case custom = "Custom (both extents)"
         
@@ -34,6 +34,17 @@ struct VideoProcessingUserSettings {
             switch self {
             case .custom, .customWidthPreservedAspectRatio: return "Custom"
             default: return self.displayName
+            }
+        }
+        
+        var maxExtentLength: Int? {
+            switch self {
+            case .tiny: return 480
+            case .low: return 640
+            case .medium: return 800
+            case .high: return 1280
+            case .ultra: return 1920
+            default: return nil
             }
         }
         

@@ -15,17 +15,27 @@ extension NewProgressVideoView {
         
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         
+        enum NavigationDestination {
+            case settings
+        }
+        
         @State private var isReordering: Bool = false
         @State private var draggedImage: ProgressImage?
         
         var body: some View {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Settings")
-                        .font(.title3)
-                        .bold()
-                    
-                    VideoSettingsView()
+                    HStack {
+                        Text("Settings")
+                            .font(.title3)
+                            .bold()
+                        
+                        Spacer()
+                        
+                        NavigationLink(value: NavigationDestination.settings) {
+                            Text("View")
+                        }
+                    }
                     
                     Divider()
                     
@@ -49,6 +59,12 @@ extension NewProgressVideoView {
                     }
                 }
                 .padding(.horizontal, 8)
+            }
+            .navigationDestination(for: NavigationDestination.self) { destination in
+                switch destination {
+                case .settings:
+                    VideoSettingsView()
+                }
             }
         }
         

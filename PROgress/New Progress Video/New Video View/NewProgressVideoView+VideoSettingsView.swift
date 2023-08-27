@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import EBUniAppsKit
 import SwiftUI
 
 extension NewProgressVideoView {
     struct VideoSettingsView: View {
-        @State private var isPremiumUser: Bool = false
+        @State private var isPremiumUser: Bool = true
         
         enum SubSetting {
             case resolution
@@ -41,39 +42,8 @@ extension NewProgressVideoView {
                             .foregroundColor(.secondary)
                     }
                 }
-                
-                switch viewModel.userSettings.resolution {
-                case .customWidthPreservedAspectRatio:
-                    VStack {
-                        HStack {
-                            Text("Custom dimension")
-                            
-                            Picker("", selection: $viewModel.userSettings.customExtentAxis) {
-                                ForEach(customExtentAxisCases, id: \.rawValue) { customExtentAxis in
-                                    Text(customExtentAxis.displayName)
-                                        .tag(customExtentAxis)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                        
-                        Text("of")
-                        
-                        
-                        
-                        Text("pixels")
-                    }
-                    
-                case .custom:
-                    Divider()
-                    
-                    Divider()
-                    
-                    
-                default:
-                    EmptyView()
-                }
             }
+            .navigationTitle("Video Settings")
             .navigationDestination(for: SubSetting.self) {
                 switch $0 {
                 case .resolution:
@@ -81,15 +51,19 @@ extension NewProgressVideoView {
                         Section {
                             Picker(selection: $viewModel.userSettings.resolution) {
                                 ForEach(resolutionCases, id: \.rawValue) { resolutionType in
-                                    if resolutionType.isFree || isPremiumUser {
+                                    VStack(alignment: .leading, spacing: 3) {
                                         Text(resolutionType.displayName)
-                                            .foregroundColor(.primary)
-                                            .tag(resolutionType)
-                                    } else {
-                                        Text(resolutionType.displayName)
-                                            .foregroundColor(.secondary)
+                                            .foregroundColor(resolutionType.isFree || isPremiumUser ? .primary : .secondary)
+                                            .lineLimit(1)
+                                            .truncationMode(.middle)
+                                        
+                                        if let length = resolutionType.maxExtentLength {
+                                            Text("Maximum size in pixels in either direction: \(length)")
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                        }
                                     }
-                                    
+                                    .conditionalTag(resolutionType.isFree || isPremiumUser, tag: resolutionType)
                                 }
                             } label: {
                                 EmptyView()
@@ -98,8 +72,12 @@ extension NewProgressVideoView {
                         } header: {
                             Text("Resolution Types")
                         } footer: {
-                            if !isPremiumUser {
-                                Text(footnoteAttributedString)
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("PROgress cannot upscale your images, even if you select a larger resolution.")
+                                
+                                if !isPremiumUser {
+                                    Text(footnoteAttributedString)
+                                }
                             }
                         }
                         
@@ -128,7 +106,7 @@ extension NewProgressVideoView {
         }
         
         private var footnoteAttributedString: AttributedString = {
-            let regularTextPart = AttributedString("Some resolution types are only available with PROgress PRO subscription. ")
+            let regularTextPart = AttributedString("Some resolution types are only available with PROgress Premium subscription. ")
             var linkPart = AttributedString("More info...")
             linkPart.link = URL(string: "https://www.apple.com")
             
