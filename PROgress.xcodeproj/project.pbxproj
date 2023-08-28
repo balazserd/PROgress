@@ -10,6 +10,12 @@
 		5604B1142A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
 		5604B1152A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
 		5604B1162A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */; };
+		5604B1182A9D054500B0DA4B /* ResolutionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1172A9D054500B0DA4B /* ResolutionPicker.swift */; };
+		5604B1192A9D054500B0DA4B /* ResolutionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1172A9D054500B0DA4B /* ResolutionPicker.swift */; };
+		5604B11A2A9D054500B0DA4B /* ResolutionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1172A9D054500B0DA4B /* ResolutionPicker.swift */; };
+		561D66AB2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561D66AA2A9D235E000A7E7C /* ResolutionPickerForm.swift */; };
+		561D66AC2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561D66AA2A9D235E000A7E7C /* ResolutionPickerForm.swift */; };
+		561D66AD2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561D66AA2A9D235E000A7E7C /* ResolutionPickerForm.swift */; };
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
@@ -163,6 +169,8 @@
 
 /* Begin PBXFileReference section */
 		5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProgressVideoView+VideoSettingsView.swift"; sourceTree = "<group>"; };
+		5604B1172A9D054500B0DA4B /* ResolutionPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolutionPicker.swift; sourceTree = "<group>"; };
+		561D66AA2A9D235E000A7E7C /* ResolutionPickerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolutionPickerForm.swift; sourceTree = "<group>"; };
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressApp.swift; sourceTree = "<group>"; };
 		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
@@ -259,6 +267,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		561D66AE2A9D246E000A7E7C /* Video Settings */ = {
+			isa = PBXGroup;
+			children = (
+				5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */,
+				561D66AA2A9D235E000A7E7C /* ResolutionPickerForm.swift */,
+				5604B1172A9D054500B0DA4B /* ResolutionPicker.swift */,
+			);
+			path = "Video Settings";
+			sourceTree = "<group>";
+		};
 		568B60512A7AD98300D5B5D3 = {
 			isa = PBXGroup;
 			children = (
@@ -406,7 +424,7 @@
 			isa = PBXGroup;
 			children = (
 				568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */,
-				5604B1132A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift */,
+				561D66AE2A9D246E000A7E7C /* Video Settings */,
 				56A5542C2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift */,
 				56A554302A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift */,
 				568B60B02A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift */,
@@ -679,6 +697,7 @@
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
+				5604B1182A9D054500B0DA4B /* ResolutionPicker.swift in Sources */,
 				568B60A22A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
 				56BF34C92A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
 				568B609A2A82B3F700D5B5D3 /* PhotoTransferingError.swift in Sources */,
@@ -689,6 +708,7 @@
 				568B60B12A85034A00D5B5D3 /* NewProgressVideoView+ImageProcessing.swift in Sources */,
 				568B60AA2A840C2200D5B5D3 /* Container.swift in Sources */,
 				56A554422A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
+				561D66AB2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
 				56A5546D2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */,
 				56A5545D2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
@@ -702,6 +722,7 @@
 			files = (
 				56A554572A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56BF34DE2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */,
+				561D66AC2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
 				56A5546E2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				56A554532A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				568B60A32A84099100D5B5D3 /* ImageMergeEngine.swift in Sources */,
@@ -729,6 +750,7 @@
 				56A5542E2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A554472A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56BF34CA2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
+				5604B1192A9D054500B0DA4B /* ResolutionPicker.swift in Sources */,
 				56BF34D12A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
@@ -747,6 +769,7 @@
 				56A5545F2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
 				56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
+				561D66AD2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
 				568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */,
 				56A5543C2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5542B2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
@@ -756,6 +779,7 @@
 				56A5546F2A8E8F4600E99F65 /* NewProgressVideoView+AlbumSelectorView.swift in Sources */,
 				56BF34D72A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,
 				56BF34DB2A98FD2700AFA9E4 /* Photos+Sendable.swift in Sources */,
+				5604B11A2A9D054500B0DA4B /* ResolutionPicker.swift in Sources */,
 				56A554542A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				56A554672A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				56A554742A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,

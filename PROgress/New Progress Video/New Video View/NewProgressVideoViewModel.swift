@@ -17,7 +17,7 @@ struct VideoProcessingUserSettings {
     var timeBetweenFrames: Double = 0.2
     var resolution: Resolution = .medium
     var customExtent: Int = 640
-    var customExtentAxis: CustomExtentAxis = .horizontal
+    var customExtentAxis: Axis = .horizontal
     
     enum Resolution: String, CaseIterable {
         case tiny = "Tiny"
@@ -55,12 +55,14 @@ struct VideoProcessingUserSettings {
             }
         }
     }
-    
-    enum CustomExtentAxis: String, CaseIterable {
-        case horizontal = "Width"
-        case vertical = "Height"
-        
-        var displayName: String { self.rawValue }
+}
+
+extension Axis {
+    var displayName: String {
+        switch self {
+        case .horizontal: return "Width"
+        case .vertical: return "Height"
+        }
     }
 }
 
