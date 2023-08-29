@@ -33,9 +33,11 @@ struct CustomResolutionPickerPage: View {
             .foregroundColor(.secondary)
             
             Divider()
+                .padding(.bottom, 2)
             
             HStack {
                 Text("Custom dimension")
+                    .padding(.top, 2)
                 
                 Spacer()
                 
@@ -48,6 +50,9 @@ struct CustomResolutionPickerPage: View {
                 .pickerStyle(.segmented)
                 .fixedSize()
             }
+            
+            Divider()
+                .padding(.bottom, 6)
             
             HStack {
                 Text("Width")
@@ -74,6 +79,7 @@ struct CustomResolutionPickerPage: View {
         }
         .navigationTitle("Custom resolution")
         .frame(maxWidth: .infinity)
+        .padding()
     }
     
     private var widthValueBinding: Binding<Int> {
@@ -98,7 +104,6 @@ struct CustomResolutionPickerPage_Previews: PreviewProvider {
         NavigationStack {
             CustomResolutionPickerPage()
                 .environmentObject(NewProgressVideoViewModel())
-                .padding()
         }
     }
 }
