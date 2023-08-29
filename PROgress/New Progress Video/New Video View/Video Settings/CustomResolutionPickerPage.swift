@@ -21,7 +21,7 @@ struct CustomResolutionPickerPage: View {
             Grid(alignment: .leading, verticalSpacing: 8) {
                 GridRow {
                     Text("💡").font(.body)
-                    Text("Resize the frame rectangle by dragging it, or specify the custom extent of the frame manually.")
+                    Text("Resize the frame rectangle by dragging it along the customized axis, or specify the custom extent of the frame manually.")
                 }
                 
                 GridRow {
@@ -76,6 +76,9 @@ struct CustomResolutionPickerPage: View {
             CustomResolutionPicker(resolution: $viewModel.userSettings.customExtent,
                                    aspectRatio: viewModel.userSettings.aspectRatio,
                                    customDimension: viewModel.userSettings.customExtentAxis)
+            .background(Color.gray.opacity(0.05).cornerRadius(8))
+            
+            Spacer()
         }
         .navigationTitle("Custom resolution")
         .frame(maxWidth: .infinity)

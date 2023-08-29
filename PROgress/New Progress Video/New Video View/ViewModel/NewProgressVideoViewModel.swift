@@ -17,8 +17,16 @@ struct VideoProcessingUserSettings {
     var timeBetweenFrames: Double = 0.2
     var resolution: Resolution = .customWidthPreservedAspectRatio
     var customExtent: Int = 640
-    var customExtentAxis: Axis = .horizontal
-    var aspectRatio: Double = 9 / 16
+    var customExtentAxis: Axis = .horizontal {
+        didSet {
+            if customExtentAxis == .horizontal {
+                customExtent = Int(Double(customExtent) * aspectRatio)
+            } else {
+                customExtent = Int(Double(customExtent) / aspectRatio)
+            }
+        }
+    }
+    var aspectRatio: Double = 16 / 9
     
     var width: Int {
         if customExtentAxis == .horizontal {
