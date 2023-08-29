@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ResolutionPicker: View {
+struct CustomResolutionPicker: View {
     @Binding var resolution: Int
     
     let range: ClosedRange<Int> = 120...4096
@@ -42,12 +42,12 @@ struct ResolutionPicker: View {
                     .strokeBorder(style: StrokeStyle(lineWidth: 2.5 / scale))
                     .foregroundColor(.accentColor)
                     .overlay(alignment: .bottom) {
-                        Text("\(resolution)")
+                        Text("\(width)")
                             .alignmentGuide(.bottom, computeValue: { d in d[.top] - 4 / scale })
                             .font(.system(size: 12 / scale))
                     }
                     .overlay(alignment: .trailing) {
-                        Text("\(Int(Double(resolution) / aspectRatio))")
+                        Text("\(height)")
                             .alignmentGuide(.trailing, computeValue: { d in d[.leading] - 6 / scale })
                             .font(.system(size: 12 / scale))
                     }
@@ -74,6 +74,22 @@ struct ResolutionPicker: View {
         .aspectRatio(aspectRatio, contentMode: .fit)
     }
     
+    private var width: Int {
+        if customDimension == .horizontal {
+            return resolution
+        } else {
+            return Int(Double(resolution) * aspectRatio)
+        }
+    }
+    
+    private var height: Int {
+        if customDimension == .vertical {
+            return resolution
+        } else {
+            return Int(Double(resolution) / aspectRatio)
+        }
+    }
+    
     private var customizedRange: ClosedRange<Int> {
         self.customDimension == .horizontal ? xRange : yRange
     }
@@ -84,7 +100,7 @@ struct ResolutionPicker: View {
     }
 }
 
-struct ResolutionPicker_Previews: PreviewProvider {
+struct CustomResolutionPicker_Previews: PreviewProvider {
     static var previews: some View {
         ResolutionPickerPreview()
             .padding()
@@ -95,7 +111,7 @@ struct ResolutionPicker_Previews: PreviewProvider {
         @State private var resolution = 2048
         
         var body: some View {
-            ResolutionPicker(resolution: $resolution, aspectRatio: 16 / 9)
+            CustomResolutionPicker(resolution: $resolution, aspectRatio: 16 / 9)
         }
     }
 }

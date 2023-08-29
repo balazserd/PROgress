@@ -15,9 +15,26 @@ import ActivityKit
 
 struct VideoProcessingUserSettings {
     var timeBetweenFrames: Double = 0.2
-    var resolution: Resolution = .medium
+    var resolution: Resolution = .customWidthPreservedAspectRatio
     var customExtent: Int = 640
     var customExtentAxis: Axis = .horizontal
+    var aspectRatio: Double = 9 / 16
+    
+    var width: Int {
+        if customExtentAxis == .horizontal {
+            return customExtent
+        } else {
+            return Int(Double(customExtent) * aspectRatio)
+        }
+    }
+    
+    var height: Int {
+        if customExtentAxis == .vertical {
+            return customExtent
+        } else {
+            return Int(Double(customExtent) / aspectRatio)
+        }
+    }
     
     enum Resolution: String, CaseIterable {
         case tiny = "Tiny"
@@ -114,6 +131,10 @@ class NewProgressVideoViewModel: ObservableObject {
     }
     
     private var subscriptions = Set<AnyCancellable>()
+    
+    init() {
+        initializeBindings()
+    }
     
     // MARK: - Public methods
     func beginMerge() {
@@ -245,6 +266,22 @@ class NewProgressVideoViewModel: ObservableObject {
     }
     
     // MARK: - Private methods
+    private func initializeBindings() {
+        // Pop the view if a resolution was picked.
+        $userSettings
+            .map { $0.resolution }
+            .removeDuplicates()
+            .handleEvents(receiveOutput: {
+                print("received output: \($0)")
+                print("navigationpath: \(self.navigationState)")
+            })
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.navigationState.removeLast()
+            }
+            .store(in: &subscriptions)
+    }
+    
     private nonisolated func loadImages(from selection: [PhotosPickerItem]) async {
         guard await selectedItems.count > 0 else { return }
         

@@ -10,7 +10,7 @@ import CoreVideo
 import Accelerate
 
 extension CVPixelBuffer {
-    /// Locks the pixel buffer, then clears it with black pixels.
+    /// Locks the pixel buffer, then clears it with white pixels.
     ///
     /// - Important: When using the buffer from a `CVPixelBufferPool` and for delayed operations, like appending the buffer to an `AVAssetWriterInputPixelBufferAdaptor`, you must call this method **before** using the buffer, not after being done using the buffer.
     func lockAndClear() {

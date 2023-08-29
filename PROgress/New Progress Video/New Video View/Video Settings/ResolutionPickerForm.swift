@@ -12,11 +12,6 @@ extension NewProgressVideoView.VideoSettingsView {
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         
         @State private var isPremiumUser: Bool = true
-        @State private var numberFormatter: NumberFormatter = {
-            var formatter = NumberFormatter()
-            formatter.numberStyle = .none
-            return formatter
-        }()
         
         var body: some View {
             Form {
@@ -52,48 +47,6 @@ extension NewProgressVideoView.VideoSettingsView {
                         }
                     }
                 }
-                
-                switch viewModel.userSettings.resolution {
-                case .custom:
-                    Section {
-                        
-                    } header: {
-                        Text("Custom settings")
-                    }
-                    
-                case .customWidthPreservedAspectRatio:
-                    Section {
-                        HStack {
-                            Text("Custom dimension")
-                            
-                            Spacer()
-                            
-                            Picker("", selection: $viewModel.userSettings.customExtentAxis) {
-                                ForEach(customExtentAxisCases, id: \.self) { axis in
-                                    Text(axis.displayName)
-                                        .tag(axis)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .fixedSize()
-                        }
-                        
-                        VStack {
-                            HStack {
-                                TextField("Width", value: $viewModel.userSettings.customExtent, formatter: numberFormatter)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-                            
-                            ResolutionPicker(resolution: $viewModel.userSettings.customExtent,
-                                             customDimension: viewModel.userSettings.customExtentAxis)
-                        }
-                    } header: {
-                        Text("Custom resolution (preserved aspect ratio)")
-                    }
-                    
-                default:
-                    EmptyView()
-                }
             }
             .navigationTitle("Resolution Picker")
         }
@@ -107,12 +60,12 @@ extension NewProgressVideoView.VideoSettingsView {
         }()
         
         private var resolutionCases = VideoProcessingUserSettings.Resolution.allCases
-        private var customExtentAxisCases = Axis.allCases
     }
 }
 
 struct ResolutionPickerForm_Previews: PreviewProvider {
     static var previews: some View {
         NewProgressVideoView.VideoSettingsView.ResolutionPickerForm()
+            .environmentObject(NewProgressVideoViewModel())
     }
 }
