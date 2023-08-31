@@ -1,13 +1,13 @@
 //
-//  CustomResolutionPickerPage.swift
+//  FreeResolutionPickerPage.swift
 //  PROgress
 //
-//  Created by Balázs Erdész on 2023. 08. 29..
+//  Created by Balázs Erdész on 2023. 08. 31..
 //
 
 import SwiftUI
 
-struct CustomResolutionPickerPage: View {
+struct FreeResolutionPickerPage: View {
     @EnvironmentObject private var viewModel: NewProgressVideoViewModel
     
     @State private var numberFormatter: NumberFormatter = {
@@ -58,14 +58,14 @@ struct CustomResolutionPickerPage: View {
                 Text("Width")
                     .font(.subheadline)
                 
-                TextField("Width", value: widthValueBinding, formatter: numberFormatter)
+                TextField("Width", value: $viewModel.userSettings.extentX, formatter: numberFormatter)
                     .textFieldStyle(.roundedBorder)
                     .disabled(viewModel.userSettings.customExtentAxis != .horizontal)
                 
                 Text(" X ")
                     .bold()
                 
-                TextField("Height", value: heightValueBinding, formatter: numberFormatter)
+                TextField("Height", value: $viewModel.userSettings.extentY, formatter: numberFormatter)
                     .textFieldStyle(.roundedBorder)
                     .disabled(viewModel.userSettings.customExtentAxis != .vertical)
                 
@@ -73,10 +73,10 @@ struct CustomResolutionPickerPage: View {
                     .font(.subheadline)
             }
             
-            CustomResolutionPicker(resolution: $viewModel.userSettings.customExtent,
-                                   aspectRatio: viewModel.userSettings.aspectRatio,
-                                   customDimension: viewModel.userSettings.customExtentAxis)
-            .background(Color.gray.opacity(0.05).cornerRadius(8))
+//            FreeResolutionPicker(resolution: customExtentBinding,
+//                                   aspectRatio: viewModel.userSettings.aspectRatio,
+//                                   customDimension: viewModel.userSettings.customExtentAxis)
+            
             
             Spacer()
         }
@@ -85,27 +85,19 @@ struct CustomResolutionPickerPage: View {
         .padding()
     }
     
-    private var widthValueBinding: Binding<Int> {
+    private var customExtentBinding: Binding<Double> {
         if viewModel.userSettings.customExtentAxis == .horizontal {
-            return $viewModel.userSettings.customExtent
+            return $viewModel.userSettings.extentX
         } else {
-            return .constant(Int(Double(viewModel.userSettings.customExtent) * viewModel.userSettings.aspectRatio))
-        }
-    }
-    
-    private var heightValueBinding: Binding<Int> {
-        if viewModel.userSettings.customExtentAxis == .vertical {
-            return $viewModel.userSettings.customExtent
-        } else {
-            return .constant(Int(Double(viewModel.userSettings.customExtent) / viewModel.userSettings.aspectRatio))
+            return $viewModel.userSettings.extentY
         }
     }
 }
 
-struct CustomResolutionPickerPage_Previews: PreviewProvider {
+struct FreeResolutionPickerPage_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            CustomResolutionPickerPage()
+            FreeResolutionPickerPage()
                 .environmentObject(NewProgressVideoViewModel())
         }
     }

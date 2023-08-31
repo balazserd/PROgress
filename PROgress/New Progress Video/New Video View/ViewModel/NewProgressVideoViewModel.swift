@@ -14,33 +14,55 @@ import Factory
 import ActivityKit
 
 struct VideoProcessingUserSettings {
-    var timeBetweenFrames: Double = 0.2
-    var resolution: Resolution = .customWidthPreservedAspectRatio
-    var customExtent: Int = 640
-    var customExtentAxis: Axis = .horizontal {
+    var timeBetweenFrames: Double
+    var resolution: Resolution {
         didSet {
-            if customExtentAxis == .horizontal {
-                customExtent = Int(Double(customExtent) * aspectRatio)
-            } else {
-                customExtent = Int(Double(customExtent) / aspectRatio)
+            guard oldValue != resolution else { return }
+            
+            switch resolution {
+            case .customWidthPreservedAspectRatio:
+                customExtentAxis = .horizontal
+                aspectRatio = Double(extentX) / Double(extentY)
+                
+            case .custom:
+                customExtentAxis = nil
+                aspectRatio = nil
+                
+            default: break
             }
         }
     }
-    var aspectRatio: Double = 16 / 9
-    
-    var width: Int {
-        if customExtentAxis == .horizontal {
-            return customExtent
-        } else {
-            return Int(Double(customExtent) * aspectRatio)
+    var extentX: Double {
+        didSet {
+            guard customExtentAxis == .horizontal else { return }
+            extentY = extentX / aspectRatio
         }
     }
     
-    var height: Int {
-        if customExtentAxis == .vertical {
-            return customExtent
-        } else {
-            return Int(Double(customExtent) / aspectRatio)
+    var extentY: Double {
+        didSet {
+            guard customExtentAxis == .vertical else { return }
+            extentX = extentY * aspectRatio
+        }
+    }
+    
+    var customExtentAxis: Axis?
+    
+    private(set) var aspectRatio: Double!
+    
+    init(timeBetweenFrames: Double = 0.2,
+         resolution: Resolution = .customWidthPreservedAspectRatio,
+         extentX: Double = 640,
+         extentY: Double = 320,
+         customExtentAxis: Axis? = .horizontal) {
+        self.timeBetweenFrames = timeBetweenFrames
+        self.resolution = resolution
+        self.extentX = extentX
+        self.extentY = extentY
+        
+        self.customExtentAxis = customExtentAxis
+        if customExtentAxis != nil {
+            aspectRatio = extentX / extentY
         }
     }
     
@@ -57,7 +79,8 @@ struct VideoProcessingUserSettings {
         
         var shortName: String {
             switch self {
-            case .custom, .customWidthPreservedAspectRatio: return "Custom"
+            case .custom: return "Custom (free)"
+            case .customWidthPreservedAspectRatio: return "Custom (aspect fixed)"
             default: return self.displayName
             }
         }
@@ -279,10 +302,6 @@ class NewProgressVideoViewModel: ObservableObject {
         $userSettings
             .map { $0.resolution }
             .removeDuplicates()
-            .handleEvents(receiveOutput: {
-                print("received output: \($0)")
-                print("navigationpath: \(self.navigationState)")
-            })
             .dropFirst()
             .sink { [weak self] _ in
                 self?.navigationState.removeLast()

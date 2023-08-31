@@ -39,13 +39,12 @@ extension NewProgressVideoView {
                     }
                     
                     if viewModel.userSettings.resolution == .customWidthPreservedAspectRatio {
-                        NavigationLink(value: SubSetting.customResolutionPicker) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Custom Dimensions")
-                                Text("\(viewModel.userSettings.width, specifier: "%d") x \(viewModel.userSettings.height, specifier: "%d")")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+                        NavigationLink(value: SubSetting.aspectRatioFixedCustomResolutionPicker) {
+                            customResolutionNavigationLinkLabel
+                        }
+                    } else if viewModel.userSettings.resolution == .custom {
+                        NavigationLink(value: SubSetting.freeCustomResolutionPicker) {
+                            customResolutionNavigationLinkLabel
                         }
                     }
                 }
@@ -55,9 +54,20 @@ extension NewProgressVideoView {
                 switch $0 {
                 case .resolutionTypePicker:
                     ResolutionPickerForm()
-                case .customResolutionPicker:
-                    CustomResolutionPickerPage()
+                case .aspectRatioFixedCustomResolutionPicker:
+                    AspectRatioFixedResolutionPickerPage()
+                case .freeCustomResolutionPicker:
+                    EmptyView()
                 }
+            }
+        }
+        
+        private var customResolutionNavigationLinkLabel: some View {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Custom Dimensions")
+                Text("\(viewModel.userSettings.extentX, specifier: "%d") x \(viewModel.userSettings.extentY, specifier: "%d")")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
         }
         
@@ -69,7 +79,8 @@ extension NewProgressVideoView {
 
 fileprivate enum SubSetting {
     case resolutionTypePicker
-    case customResolutionPicker
+    case aspectRatioFixedCustomResolutionPicker
+    case freeCustomResolutionPicker
 }
 
 struct VideoSettingsView_Previews: PreviewProvider {
