@@ -77,7 +77,6 @@ struct AspectRatioFixedResolutionPickerPage: View {
                                              aspectRatio: viewModel.userSettings.aspectRatio,
                                              customDimension: viewModel.userSettings.customExtentAxis!)
             
-            
             Spacer()
         }
         .navigationTitle("Custom resolution")

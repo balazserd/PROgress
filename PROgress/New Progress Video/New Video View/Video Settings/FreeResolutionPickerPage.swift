@@ -21,35 +21,16 @@ struct FreeResolutionPickerPage: View {
             Grid(alignment: .leading, verticalSpacing: 8) {
                 GridRow {
                     Text("💡").font(.body)
-                    Text("Resize the frame rectangle by dragging it along the customized axis, or specify the custom extent of the frame manually.")
+                    Text("Resize the frame rectangle by dragging it along either axis, or specify the extents of the frame manually.")
                 }
                 
                 GridRow {
                     Text("💡").font(.body)
-                    Text("To resize both dimensions freely, select another resolution mode: \"Custom (both extents)\"")
+                    Text("To resize, but keep the original aspect ratio unchanged, select another resolution mode: \"Custom (preserve aspect ratio)\"")
                 }
             }
             .font(.caption)
             .foregroundColor(.secondary)
-            
-            Divider()
-                .padding(.bottom, 2)
-            
-            HStack {
-                Text("Custom dimension")
-                    .padding(.top, 2)
-                
-                Spacer()
-                
-                Picker("", selection: $viewModel.userSettings.customExtentAxis) {
-                    ForEach(Axis.allCases, id: \.self) { axis in
-                        Text(axis.displayName)
-                            .tag(axis)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .fixedSize()
-            }
             
             Divider()
                 .padding(.bottom, 6)
@@ -60,22 +41,19 @@ struct FreeResolutionPickerPage: View {
                 
                 TextField("Width", value: $viewModel.userSettings.extentX, formatter: numberFormatter)
                     .textFieldStyle(.roundedBorder)
-                    .disabled(viewModel.userSettings.customExtentAxis != .horizontal)
                 
                 Text(" X ")
                     .bold()
                 
                 TextField("Height", value: $viewModel.userSettings.extentY, formatter: numberFormatter)
                     .textFieldStyle(.roundedBorder)
-                    .disabled(viewModel.userSettings.customExtentAxis != .vertical)
                 
                 Text("Height")
                     .font(.subheadline)
             }
             
-//            FreeResolutionPicker(resolution: customExtentBinding,
-//                                   aspectRatio: viewModel.userSettings.aspectRatio,
-//                                   customDimension: viewModel.userSettings.customExtentAxis)
+            FreeResolutionPicker(resolutionX: $viewModel.userSettings.extentX,
+                                 resolutionY: $viewModel.userSettings.extentY)
             
             
             Spacer()

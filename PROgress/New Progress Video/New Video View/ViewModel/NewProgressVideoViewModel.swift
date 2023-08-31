@@ -51,7 +51,7 @@ struct VideoProcessingUserSettings {
     private(set) var aspectRatio: Double!
     
     init(timeBetweenFrames: Double = 0.2,
-         resolution: Resolution = .customWidthPreservedAspectRatio,
+         resolution: Resolution = .custom,
          extentX: Double = 640,
          extentY: Double = 320,
          customExtentAxis: Axis? = .horizontal) {
@@ -69,9 +69,9 @@ struct VideoProcessingUserSettings {
     enum Resolution: String, CaseIterable {
         case tiny = "Tiny"
         case low = "Low"
-        case medium = "Medium"
-        case high = "High"
-        case ultra = "Ultra"
+        case medium = "Medium (HD)"
+        case high = "High (Full HD)"
+        case ultra = "Ultra (4K)"
         case customWidthPreservedAspectRatio = "Custom (preserve aspect ratio)"
         case custom = "Custom (both extents)"
         
@@ -88,10 +88,10 @@ struct VideoProcessingUserSettings {
         var maxExtentLength: Int? {
             switch self {
             case .tiny: return 480
-            case .low: return 640
-            case .medium: return 800
-            case .high: return 1280
-            case .ultra: return 1920
+            case .low: return 800
+            case .medium: return 1280
+            case .high: return 1920
+            case .ultra: return 4096
             default: return nil
             }
         }

@@ -13,6 +13,8 @@ extension NewProgressVideoView {
     struct VideoSettingsView: View {
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         
+        @State private var color = Color.white
+        
         var body: some View {
             Form {
                 Section("Basics") {
@@ -47,6 +49,19 @@ extension NewProgressVideoView {
                             customResolutionNavigationLinkLabel
                         }
                     }
+                    
+                    ColorPicker(selection: $color) {
+                        HStack {
+                            Text("Background fill color")
+                            
+                            Rectangle()
+                                .fill(color)
+                                .frame(width: 20, height: 20)
+                                .aspectRatio(1.0, contentMode: .fill)
+                                .cornerRadius(2)
+                                .shadow(color: .gray.opacity(0.4), radius: 8)
+                        }
+                    }
                 }
             }
             .navigationTitle("Video Settings")
@@ -57,7 +72,7 @@ extension NewProgressVideoView {
                 case .aspectRatioFixedCustomResolutionPicker:
                     AspectRatioFixedResolutionPickerPage()
                 case .freeCustomResolutionPicker:
-                    EmptyView()
+                    FreeResolutionPickerPage()
                 }
             }
         }
@@ -65,7 +80,7 @@ extension NewProgressVideoView {
         private var customResolutionNavigationLinkLabel: some View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Custom Dimensions")
-                Text("\(viewModel.userSettings.extentX, specifier: "%d") x \(viewModel.userSettings.extentY, specifier: "%d")")
+                Text("\(viewModel.userSettings.extentX, specifier: "%.0f") x \(viewModel.userSettings.extentY, specifier: "%.0f")")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

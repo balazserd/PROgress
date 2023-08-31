@@ -16,6 +16,9 @@ struct FreeResolutionPicker: View {
     
     @State private var dragGestureStartingBoundResolutions: (x: Double, y: Double)? = nil
     
+    @State private var arrowAnimationOffsetX = 0.0
+    @State private var arrowAnimationOffsetY = 0.0
+    
     init(resolutionX: Binding<Double>, resolutionY: Binding<Double>) {
         self._resolutionX = resolutionX
         self._resolutionY = resolutionY
@@ -68,6 +71,30 @@ struct FreeResolutionPicker: View {
         }
         .aspectRatio(1, contentMode: .fit)
         .padding([.bottom, .trailing], 16)
+        .overlay(alignment: .topTrailing) {
+            Image(systemName: "arrow.up.and.down")
+                .scaleEffect(of: 2)
+                .foregroundColor(.gray)
+                .opacity(0.3)
+                .offset(x: 0, y: arrowAnimationOffsetY)
+                .offset(x: -3)
+                .animation(.easeInOut(duration: 0.5).repeatForever(), value: arrowAnimationOffsetX)
+                .task { @MainActor in
+                    arrowAnimationOffsetY = 15
+                }
+        }
+        .overlay(alignment: .bottomLeading) {
+            Image(systemName: "arrow.left.and.right")
+                .scaleEffect(of: 2)
+                .foregroundColor(.gray)
+                .opacity(0.3)
+                .offset(x: arrowAnimationOffsetX, y: 0)
+                .offset(y: 5)
+                .animation(.easeInOut(duration: 0.5).repeatForever(), value: arrowAnimationOffsetX)
+                .task { @MainActor in
+                    arrowAnimationOffsetX = 15
+                }
+        }
     }
     
     private var boundResolutionX: Double { min(max(resolutionX, xRange.lowerBound), xRange.upperBound) }
@@ -92,7 +119,7 @@ struct FreeResolutionPicker_Previews: PreviewProvider {
     @MainActor
     struct ResolutionPickerPreview: View {
         @State private var resolutionX = 640.0
-        @State private var resolutionY = 640.0
+        @State private var resolutionY = 340.0
         
         var body: some View {
             FreeResolutionPicker(resolutionX: $resolutionX, resolutionY: $resolutionY)

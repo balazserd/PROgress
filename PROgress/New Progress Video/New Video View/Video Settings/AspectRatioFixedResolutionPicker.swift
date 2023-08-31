@@ -62,11 +62,7 @@ struct AspectRatioFixedResolutionPicker: View {
                     .scaleEffect(CGSize(width: scale, height: scale), anchor: .topLeading)
                     .contentShape(Rectangle())
             }
-            
-            ZStack(alignment: customDimension == .vertical ? .trailing : .bottom) {
-                Color.clear
-                
-            }
+            .aspectRatio(aspectRatio, contentMode: .fit)
             
             Color.clear
                 .contentShape(Rectangle())
@@ -94,14 +90,13 @@ struct AspectRatioFixedResolutionPicker: View {
                     }
                 )
         }
-        .aspectRatio(aspectRatio, contentMode: .fit)
         .padding([.bottom, .trailing], 16)
-        .overlay(alignment: .bottomLeading) {
+        .overlay(alignment: customDimension == .horizontal ? .bottomLeading : .topTrailing) {
             helperOverlayImage
         }
     }
     
-    @ViewBuilder
+    @ViewBuilder @MainActor
     private var helperOverlayImage: some View {
         if customDimension == .horizontal {
             Image(systemName: "arrow.left.and.right")
@@ -109,8 +104,9 @@ struct AspectRatioFixedResolutionPicker: View {
                 .foregroundColor(.gray)
                 .opacity(0.3)
                 .offset(x: arrowAnimationOffsetX, y: 0)
+                .offset(y: 10)
                 .animation(.easeInOut(duration: 0.5).repeatForever(), value: arrowAnimationOffsetX)
-                .onAppear {
+                .task { @MainActor in
                     arrowAnimationOffsetX = 15
                     arrowAnimationOffsetY = 0
                 }
@@ -120,11 +116,11 @@ struct AspectRatioFixedResolutionPicker: View {
                 .foregroundColor(.gray)
                 .opacity(0.3)
                 .offset(x: 0, y: arrowAnimationOffsetY)
-                .offset(y: 15)
+                .offset(x: -5, y: 5)
                 .animation(.easeInOut(duration: 0.5).repeatForever(), value: arrowAnimationOffsetY)
-                .onAppear {
-                    arrowAnimationOffsetY = 15
+                .task { @MainActor in
                     arrowAnimationOffsetX = 0
+                    arrowAnimationOffsetY = 15
                 }
         }
     }
@@ -172,7 +168,7 @@ struct AspectRatioFixedResolutionPicker_Previews: PreviewProvider {
         
         var body: some View {
             VStack {
-                Toggle(isOn: $aspectRatioToggle, label: { Text("Toggle") })
+                Toggle(isOn: $aspectRatioToggle, label: { Text("Dimension") })
                 AspectRatioFixedResolutionPicker(resolution: $resolution, aspectRatio: 16 / 9, customDimension: aspectRatioToggle ? .horizontal : .vertical)
             }
         }
