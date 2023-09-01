@@ -13,8 +13,6 @@ extension NewProgressVideoView {
     struct VideoSettingsView: View {
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         
-        @State private var color = Color.white
-        
         var body: some View {
             Form {
                 Section("Basics") {
@@ -50,12 +48,12 @@ extension NewProgressVideoView {
                         }
                     }
                     
-                    ColorPicker(selection: $color) {
+                    ColorPicker(selection: $viewModel.userSettings.backgroundColor) {
                         HStack {
                             Text("Background fill color")
                             
                             Rectangle()
-                                .fill(color)
+                                .fill(viewModel.userSettings.backgroundColor)
                                 .frame(width: 20, height: 20)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .cornerRadius(2)

@@ -17,12 +17,16 @@ final class ActivityManager: Sendable {
             throw ActivityManagementError.activitiesAreDisabled
         }
         
-        let activityInitialContent = ActivityContent(state: await activity.initialState, staleDate: await activity.staleDate())
-        let activityKitActivity = try Activity.request(attributes: await activity.attributes, content: activityInitialContent)
-        
-        await activity.setId(to: activityKitActivity.id)
-        
-        await activity.onStart()
+        let initialActivityContent = ActivityContent(state: await activity.initialState, staleDate: await activity.staleDate())
+        do {
+            let activityKitActivity = try Activity.request(attributes: await activity.attributes, content: initialActivityContent)
+            
+            await activity.setId(to: activityKitActivity.id)
+            await activity.onStart()
+        } catch let error {
+            PRLogger.activities.error("Activity could not be started! \(error)")
+            throw error
+        }
     }
     
     func updateActivity<A: ActivityProtocol>(_ activity: A,

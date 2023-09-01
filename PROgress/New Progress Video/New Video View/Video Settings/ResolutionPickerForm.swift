@@ -20,7 +20,7 @@ extension NewProgressVideoView.VideoSettingsView {
                         ForEach(resolutionCases, id: \.rawValue) { resolutionType in
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(resolutionType.displayName)
-                                    .foregroundColor(resolutionType.isFree || isPremiumUser ? .primary : .secondary)
+                                    .foregroundColor(resolutionType.isFreeTierOption || isPremiumUser ? .primary : .secondary)
                                     .lineLimit(1)
                                     .truncationMode(.middle)
                                 
@@ -30,7 +30,7 @@ extension NewProgressVideoView.VideoSettingsView {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            .conditionalTag(resolutionType.isFree || isPremiumUser, tag: resolutionType)
+                            .conditionalTag(resolutionType.isFreeTierOption || isPremiumUser, tag: resolutionType)
                         }
                     } label: {
                         EmptyView()

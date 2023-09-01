@@ -12,14 +12,13 @@ import os
 ///
 /// - Important: Always use the logger corresponding to the correct category for logging events.
 enum PRLogger {
-    static let app = Logger(subsystem: "com.ebuniapps.PROgress",
-                            category: "app")
-    static let imageProcessing = Logger(subsystem: "com.ebuniapps.PROgress",
-                                        category: "imageProcessing")
+    static let activities = Logger(subsystem: "com.ebuniapps.PROgress", category: "activities")
     
-    static let photoLibraryManagement = Logger(subsystem: "com.ebuniapps.PROgress",
-                                               category: "photoLibraryManagement")
+    static let app = Logger(subsystem: "com.ebuniapps.PROgress", category: "app")
     
-    static let photoConversion = Logger(subsystem: "com.ebuniapps.PROgress",
-                                        category: "photoConversion")
+    static let imageProcessing = Logger(subsystem: "com.ebuniapps.PROgress", category: "imageProcessing")
+    
+    static let photoConversion = Logger(subsystem: "com.ebuniapps.PROgress", category: "photoConversion")
+    
+    static let photoLibraryManagement = Logger(subsystem: "com.ebuniapps.PROgress", category: "photoLibraryManagement")
 }

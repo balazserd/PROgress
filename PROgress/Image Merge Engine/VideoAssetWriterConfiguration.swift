@@ -14,13 +14,13 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
     let inputAdaptor: AVAssetWriterInputPixelBufferAdaptor
     let outputUrl: URL!
     let videoId: UUID
-    let resolution: CGSize
+    let userSettings: VideoProcessingUserSettings
     
     /// Initializes a configuration object for the specified resolution.
     ///
     /// - Throws: An underlying AVFoundation error type or one of the cases in the ``VideoAssetWriterConfigurationError`` enum.
-    init(resolution: CGSize) throws {
-        self.resolution = resolution
+    init(settings: VideoProcessingUserSettings) throws {
+        self.userSettings = settings
         self.videoId = UUID()
         
         self.outputUrl = FileManager()
@@ -35,8 +35,8 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
         assetWriter = try AVAssetWriter(url: self.outputUrl, fileType: .mov)
         
         let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.h264,
-                                             AVVideoWidthKey: NSNumber(value: Int(resolution.width)),
-                                            AVVideoHeightKey: NSNumber(value: Int(resolution.height))]
+                                             AVVideoWidthKey: NSNumber(value: Int(settings.extentX)),
+                                            AVVideoHeightKey: NSNumber(value: Int(settings.extentY))]
         guard assetWriter.canApply(outputSettings: outputSettings, forMediaType: .video) else {
             throw VideoAssetWriterConfigurationError.cannotApplyOutputSettingsForMediaType
         }

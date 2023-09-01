@@ -13,107 +13,6 @@ import EBUniAppsKit
 import Factory
 import ActivityKit
 
-struct VideoProcessingUserSettings {
-    var timeBetweenFrames: Double
-    var resolution: Resolution {
-        didSet {
-            guard oldValue != resolution else { return }
-            
-            switch resolution {
-            case .customWidthPreservedAspectRatio:
-                customExtentAxis = .horizontal
-                aspectRatio = Double(extentX) / Double(extentY)
-                
-            case .custom:
-                customExtentAxis = nil
-                aspectRatio = nil
-                
-            default: break
-            }
-        }
-    }
-    var extentX: Double {
-        didSet {
-            guard customExtentAxis == .horizontal else { return }
-            extentY = extentX / aspectRatio
-        }
-    }
-    
-    var extentY: Double {
-        didSet {
-            guard customExtentAxis == .vertical else { return }
-            extentX = extentY * aspectRatio
-        }
-    }
-    
-    var customExtentAxis: Axis?
-    
-    private(set) var aspectRatio: Double!
-    
-    init(timeBetweenFrames: Double = 0.2,
-         resolution: Resolution = .custom,
-         extentX: Double = 640,
-         extentY: Double = 320,
-         customExtentAxis: Axis? = .horizontal) {
-        self.timeBetweenFrames = timeBetweenFrames
-        self.resolution = resolution
-        self.extentX = extentX
-        self.extentY = extentY
-        
-        self.customExtentAxis = customExtentAxis
-        if customExtentAxis != nil {
-            aspectRatio = extentX / extentY
-        }
-    }
-    
-    enum Resolution: String, CaseIterable {
-        case tiny = "Tiny"
-        case low = "Low"
-        case medium = "Medium (HD)"
-        case high = "High (Full HD)"
-        case ultra = "Ultra (4K)"
-        case customWidthPreservedAspectRatio = "Custom (preserve aspect ratio)"
-        case custom = "Custom (both extents)"
-        
-        var displayName: String { self.rawValue }
-        
-        var shortName: String {
-            switch self {
-            case .custom: return "Custom (free)"
-            case .customWidthPreservedAspectRatio: return "Custom (aspect fixed)"
-            default: return self.displayName
-            }
-        }
-        
-        var maxExtentLength: Int? {
-            switch self {
-            case .tiny: return 480
-            case .low: return 800
-            case .medium: return 1280
-            case .high: return 1920
-            case .ultra: return 4096
-            default: return nil
-            }
-        }
-        
-        var isFree: Bool {
-            switch self {
-            case .tiny, .low, .medium: return true
-            default: return false
-            }
-        }
-    }
-}
-
-extension Axis {
-    var displayName: String {
-        switch self {
-        case .horizontal: return "Width"
-        case .vertical: return "Height"
-        }
-    }
-}
-
 @MainActor
 class NewProgressVideoViewModel: ObservableObject {
     // MARK: - Injections
@@ -135,6 +34,7 @@ class NewProgressVideoViewModel: ObservableObject {
             
             Task.detached { [selectedItems] in
                 await self.loadImages(from: selectedItems)
+                await self.setInitialUserSettings()
             }
         }
     }
@@ -142,7 +42,7 @@ class NewProgressVideoViewModel: ObservableObject {
     @Published private(set) var imageLoadingState: ImageLoadingState = .undefined
     @Published var progressImages: [ProgressImage]?
     
-    @Published var userSettings = VideoProcessingUserSettings()
+    @Published var userSettings: VideoProcessingUserSettings!
     
     private var videoCreationLiveActivity: VideoCreationActivity?
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
@@ -157,6 +57,7 @@ class NewProgressVideoViewModel: ObservableObject {
             
             Task.detached {
                 await self.loadImages(for: self.selectedAlbum!)
+                await self.setInitialUserSettings()
             }
         }
     }
@@ -174,10 +75,6 @@ class NewProgressVideoViewModel: ObservableObject {
             return
         }
         
-        let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
-            CGSize(width: max($0.width, $1.originalSize.width),
-                   height: max($0.height, $1.originalSize.height))
-        }
         let assetIdentifiers = progressImages!.compactMap { $0.localIdentifier }
         let isConvertingAlbum = selectedAlbum != nil
         
@@ -190,7 +87,7 @@ class NewProgressVideoViewModel: ObservableObject {
             }
             
             do {
-                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable () -> () in
+                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
                         PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")
@@ -220,10 +117,10 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 try await self.activityManager.startActivity(activity)
                 
-                let options = ImageMergeEngine.MergeOptions(size: largestPhotoSize,
-                                                            customOrder: photoUserOrdering)
+                let settings = await self.userSettings!
+                let options = ImageMergeEngine.MergeOptions(customOrder: photoUserOrdering, userSettings: settings)
                 
-                PRLogger.app.info("The resulting video will be of size \(largestPhotoSize.debugDescription).")
+                PRLogger.app.info("The resulting video will be of size \(settings.extents.debugDescription).")
                 
                 var video: ProgressVideo
                 if isConvertingAlbum {
@@ -300,13 +197,27 @@ class NewProgressVideoViewModel: ObservableObject {
     private func initializeBindings() {
         // Pop the view if a resolution was picked.
         $userSettings
-            .map { $0.resolution }
+            .compactMap { $0?.resolution }
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] _ in
                 self?.navigationState.removeLast()
             }
             .store(in: &subscriptions)
+    }
+    
+    private func setInitialUserSettings() {
+        guard case .success = imageLoadingState else {
+            return
+        }
+        
+        let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
+            CGSize(width: max($0.width, $1.originalSize.width),
+                   height: max($0.height, $1.originalSize.height))
+        }
+        
+        self.userSettings = VideoProcessingUserSettings(extentX: largestPhotoSize.width,
+                                                        extentY: largestPhotoSize.height)
     }
     
     private nonisolated func loadImages(from selection: [PhotosPickerItem]) async {

@@ -12,6 +12,7 @@ import SwiftUI
 import Factory
 
 // MARK: - Protocol definition
+/// An engine that is capable of converting a specified form of image to raw bytes.
 protocol PhotoConversionEngine: Sendable {
     associatedtype Input: Hashable, Sendable
     
@@ -27,6 +28,7 @@ extension PhotoConversionEngine where Self == PHAssetConversionEngine {
 }
 
 class PHAssetConversionEngine: PhotoConversionEngine, @unchecked Sendable {
+    /// The local identifier of the photo, as provided by PhotoKit.
     typealias LocalIdentifier = String
     
     @Injected(\.photoLibraryManager) private var photoLibraryManager

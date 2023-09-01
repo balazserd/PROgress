@@ -94,7 +94,7 @@ actor ImageMergeEngine {
         
         let ciContext = CIContext()
         
-        let assetWriterConfig = try VideoAssetWriterConfiguration(resolution: options.size)
+        let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
         guard assetWriterConfig.assetWriter.startWriting() else {
             let error = assetWriterConfig.assetWriter.error
             let status = assetWriterConfig.assetWriter.status.rawValue
@@ -121,9 +121,7 @@ actor ImageMergeEngine {
                                                    context: ciContext)
             },
             serialPerformBlock: { [unowned self] sample in
-                while !assetWriterConfig.inputAdaptor.assetWriterInput.isReadyForMoreMediaData {
-                    try await Task.sleep(for: .milliseconds(100))
-                }
+                try await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
 
                 if !assetWriterConfig.inputAdaptor.append(sample.buffer, withPresentationTime: sample.time) {
                     PRLogger.imageProcessing.error("Frame was not appended to video!")
@@ -147,7 +145,7 @@ actor ImageMergeEngine {
         self.state.value = .finished
         return ProgressVideo(videoId: assetWriterConfig.videoId,
                              url: assetWriterConfig.outputUrl,
-                             resolution: assetWriterConfig.resolution)
+                             resolution: assetWriterConfig.userSettings.extents)
     }
     
     // MARK: - Private functions
@@ -196,12 +194,12 @@ actor ImageMergeEngine {
         }
         
         let scaledToFitImage = ciImage
-            .scaleToFitInContainerOfSize(config.resolution)
-            .positionInContainerOfSize(config.resolution)
+            .scaleToFitInContainerOfSize(config.userSettings.extents)
+            .positionInContainerOfSize(config.userSettings.extents)
         
         PRLogger.imageProcessing.debug("resizedImage extent: \(scaledToFitImage.extent.debugDescription)")
         
-        pixelBuffer.lockAndClear()
+        pixelBuffer.lockAndClear(with: config.userSettings.backgroundColorComponents)
         
         context.clearCaches() // Removes ciContext caches. Important!
         context.render(scaledToFitImage,

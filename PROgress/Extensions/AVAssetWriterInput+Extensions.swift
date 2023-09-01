@@ -9,22 +9,10 @@ import Foundation
 import AVFoundation
 
 extension AVAssetWriterInput {
-    func waitUntilReadyForMoreMediaData() async {
-        if self.isReadyForMoreMediaData {
-            return
-        }
-        
-        PRLogger.imageProcessing.debug("Not ready for more media data! Waiting...")
-        
-        let readinessChanged = self.publisher(for: \.isReadyForMoreMediaData,
-                                              options: [.initial, .new])
-        
-        for await ready in readinessChanged.values {
-            guard ready else { continue }
-            
-            PRLogger.imageProcessing.debug("Became ready for more media data.")
-            
-            return
+    func waitUntilReadyForMoreMediaData() async throws {
+        while !self.isReadyForMoreMediaData {
+            PRLogger.imageProcessing.debug("Not ready for more media data! Waiting...")
+            try await Task.sleep(for: .milliseconds(200))
         }
     }
 }
