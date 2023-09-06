@@ -11,7 +11,6 @@ import CoreImage
 extension CIImage {
     /// Transforms an image to fit in a container size.
     func scaleToFitInContainerOfSize(_ size: CGSize) -> CIImage {
-        
         let maximumHeightScale = size.height / self.extent.height
         let maximumWidthScale = size.width / self.extent.width
         

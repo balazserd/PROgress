@@ -10,7 +10,7 @@ import SwiftUI
 
 struct VideoProcessingUserSettings: Sendable {
     var timeBetweenFrames: Double
-    var resolution: Resolution {
+    var resolution: Resolution! {
         didSet {
             guard oldValue != resolution else { return }
             
@@ -23,7 +23,9 @@ struct VideoProcessingUserSettings: Sendable {
                 customExtentAxis = nil
                 aspectRatio = nil
                 
-            default: break
+            default:
+                extentX = min(extentX, resolution.maxExtentLength!)
+                extentY = min(extentY, resolution.maxExtentLength!)
             }
         }
     }
@@ -52,15 +54,22 @@ struct VideoProcessingUserSettings: Sendable {
                 rgbCgColor.numberOfComponents == 4,
                 let components = rgbCgColor.components
             {
-                backgroundColorComponents = components.map { UInt8(CGFloat(255) * $0) }
+                var rgbaCompontents = components.map { UInt8(CGFloat(255) * $0) }
+                let alpha = rgbaCompontents.removeLast()
+                rgbaCompontents.insert(alpha, at: 0)
+                
+                backgroundColorComponentsARGB = rgbaCompontents
             } else {
                 PRLogger.imageProcessing.notice("Will use fallback settings for background color.")
-                backgroundColorComponents = [0xFF, 0xFF, 0xFF, 0xFF]
+                backgroundColorComponentsARGB = [0xFF, 0xFF, 0xFF, 0xFF]
             }
         }
     }
     
-    private(set) var backgroundColorComponents: [UInt8]!
+    /// The background color's components as hex values.
+    ///
+    /// The order of components is as following: alpha, red, green, blue.
+    private(set) var backgroundColorComponentsARGB: [UInt8]!
     
     var customExtentAxis: Axis?
     
@@ -73,11 +82,11 @@ struct VideoProcessingUserSettings: Sendable {
          backgroundColor: Color = .white,
          customExtentAxis: Axis? = .horizontal) {
         self.timeBetweenFrames = timeBetweenFrames
-        self.resolution = resolution
         self.extentX = extentX
         self.extentY = extentY
         defer {
             self.backgroundColor = backgroundColor
+            self.resolution = resolution
         }
         
         self.customExtentAxis = customExtentAxis
@@ -106,7 +115,7 @@ struct VideoProcessingUserSettings: Sendable {
             }
         }
         
-        var maxExtentLength: Int? {
+        var maxExtentLength: Double? {
             switch self {
             case .tiny: return 480
             case .low: return 800

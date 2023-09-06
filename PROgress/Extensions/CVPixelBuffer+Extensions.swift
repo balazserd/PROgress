@@ -26,13 +26,13 @@ extension CVPixelBuffer {
         if error != kvImageNoError {
             PRLogger.imageProcessing.error("Image Buffer could not be filled! [\(error)]")
         }
-        
-//        memset_pattern16(CVPixelBufferGetBaseAddress(self),
-//                         [0, 0, 0, 0xFF],
-//                         CVPixelBufferGetBytesPerRow(self) * CVPixelBufferGetHeight(self))
     }
     
-    func unlock() {
-        CVPixelBufferUnlockBaseAddress(self, [])
+    func lock(flags: CVPixelBufferLockFlags = []) {
+        CVPixelBufferLockBaseAddress(self, flags)
+    }
+    
+    func unlock(flags: CVPixelBufferLockFlags = []) {
+        CVPixelBufferUnlockBaseAddress(self, flags)
     }
 }

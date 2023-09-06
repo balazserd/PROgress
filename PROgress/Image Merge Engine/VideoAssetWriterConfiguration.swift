@@ -8,7 +8,7 @@
 import Foundation
 import AVFoundation
 
-/// A configuration object that contains information necessary to produce progress videos with ``ImageMergeEngine`` by utilizing an `AVFoundation.AVAssetWriter`.
+/// A configuration object that contains information necessary to produce progress videos with ``ImageMergeEngine`` by utilizing an ``AVFoundation/AVAssetWriter``.
 class VideoAssetWriterConfiguration: @unchecked Sendable {
     let assetWriter: AVAssetWriter
     let inputAdaptor: AVAssetWriterInputPixelBufferAdaptor
@@ -34,7 +34,7 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
         
         assetWriter = try AVAssetWriter(url: self.outputUrl, fileType: .mov)
         
-        let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.h264,
+        let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.hevcWithAlpha,
                                              AVVideoWidthKey: NSNumber(value: Int(settings.extentX)),
                                             AVVideoHeightKey: NSNumber(value: Int(settings.extentY))]
         guard assetWriter.canApply(outputSettings: outputSettings, forMediaType: .video) else {
@@ -50,7 +50,7 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
         inputAdaptor = AVAssetWriterInputPixelBufferAdaptor(
             assetWriterInput: input,
             sourcePixelBufferAttributes:
-                [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+                [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32ARGB)]
         )
     }
     

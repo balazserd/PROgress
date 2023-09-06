@@ -92,8 +92,6 @@ actor ImageMergeEngine {
             indexedImages = order.map { indexedImages[$0] }
         }
         
-        let ciContext = CIContext()
-        
         let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
         guard assetWriterConfig.assetWriter.startWriting() else {
             let error = assetWriterConfig.assetWriter.error
@@ -118,7 +116,7 @@ actor ImageMergeEngine {
                                                    with: engine,
                                                    indexed: index,
                                                    config: assetWriterConfig,
-                                                   context: ciContext)
+                                                   context: CIContext())
             },
             serialPerformBlock: { [unowned self] sample in
                 try await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
@@ -182,15 +180,11 @@ actor ImageMergeEngine {
             throw MergeError.ciImageCreationFailure
         }
         
-        guard let pixelBufferPool = config.inputAdaptor.pixelBufferPool else {
-            PRLogger.imageProcessing.error("PixelBufferPool is unexpectedly nil!")
-            throw MergeError.missingPixelBufferPool
-        }
-        
         var pixelBuffer: CVPixelBuffer!
-        let success = CVPixelBufferPoolCreatePixelBuffer(nil, pixelBufferPool, &pixelBuffer)
+        let success = CVPixelBufferPoolCreatePixelBuffer(nil, config.inputAdaptor.pixelBufferPool!, &pixelBuffer)
         if success != kCVReturnSuccess {
             PRLogger.imageProcessing.error("Failed to create pixel buffer! \(success)")
+            throw MergeError.pixelBufferCreationError
         }
         
         let scaledToFitImage = ciImage
@@ -199,15 +193,24 @@ actor ImageMergeEngine {
         
         PRLogger.imageProcessing.debug("resizedImage extent: \(scaledToFitImage.extent.debugDescription)")
         
-        pixelBuffer.lockAndClear(with: config.userSettings.backgroundColorComponents)
+        pixelBuffer.lock()
         
-        context.clearCaches() // Removes ciContext caches. Important!
-        context.render(scaledToFitImage,
+        let base = CIImage(color: .white)
+        let backgroundColor = CIColor(argbComponents: config.userSettings.backgroundColorComponentsARGB)
+        let background = CIImage(color: backgroundColor)
+        
+        let finalImage = scaledToFitImage // Video frame.
+            .composited(over: background) // Actual background color.
+            .composited(over: base) // Overwrites base black background, allowing for background colors with alpha.
+        
+        context.clearCaches() // Removes CIContext caches. Important!
+        context.render(finalImage,
                        to: pixelBuffer,
-                       bounds: scaledToFitImage.extent,
-                       colorSpace: CGColorSpaceCreateDeviceRGB()) // Not setting the color space produces a dark image!!!
-        
-        let time = CMTime(value: Int64(index), timescale: 5)
+                       bounds: finalImage.extent,
+                       colorSpace: CGColorSpace(name: CGColorSpace.sRGB)) // Not setting the color space produces a dark image!!!
+
+        let time = CMTime(value: Int64(index) * Int64(config.userSettings.timeBetweenFrames / 0.05),
+                          timescale: 20)
         return Sample(index: index, time: time, buffer: pixelBuffer)
     }
     

@@ -31,6 +31,9 @@
 		562527B52AA2001700197E10 /* Axis+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B42AA2001700197E10 /* Axis+Extensions.swift */; };
 		562527B62AA2001700197E10 /* Axis+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B42AA2001700197E10 /* Axis+Extensions.swift */; };
 		562527B72AA2001700197E10 /* Axis+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B42AA2001700197E10 /* Axis+Extensions.swift */; };
+		562527B92AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
+		562527BA2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
+		562527BB2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
@@ -124,6 +127,9 @@
 		56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
 		56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
 		56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554992A949E3F00E99F65 /* ActivityManager.swift */; };
+		56BC80BC2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC80BB2AA8531900DCA75D /* CIColor+Extensions.swift */; };
+		56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC80BB2AA8531900DCA75D /* CIColor+Extensions.swift */; };
+		56BC80BE2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC80BB2AA8531900DCA75D /* CIColor+Extensions.swift */; };
 		56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
 		56BF34C62A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
 		56BF34C72A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */; };
@@ -191,6 +197,7 @@
 		56217F272AA07B6700A79CA0 /* FreeResolutionPickerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeResolutionPickerPage.swift; sourceTree = "<group>"; };
 		562527B02AA1FFD900197E10 /* VideoProcessingUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessingUserSettings.swift; sourceTree = "<group>"; };
 		562527B42AA2001700197E10 /* Axis+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Axis+Extensions.swift"; sourceTree = "<group>"; };
+		562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+Sendable.swift"; sourceTree = "<group>"; };
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressApp.swift; sourceTree = "<group>"; };
 		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
@@ -241,6 +248,7 @@
 		56A554892A9210A300E99F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationLiveActivityAttributes.swift; sourceTree = "<group>"; };
 		56A554992A949E3F00E99F65 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
+		56BC80BB2AA8531900DCA75D /* CIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIColor+Extensions.swift"; sourceTree = "<group>"; };
 		56BF34C42A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationActivityThumbnailData.swift; sourceTree = "<group>"; };
 		56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+VideoCreationThumbnailActivityError.swift"; sourceTree = "<group>"; };
 		56BF34CC2A953F5900AFA9E4 /* PROgress.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROgress.entitlements; sourceTree = "<group>"; };
@@ -430,12 +438,12 @@
 		568B60AC2A84C45E00D5B5D3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				56BC80BA2AA8530300DCA75D /* Core Image */,
 				56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */,
-				56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */,
 				56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */,
 				568B60AD2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift */,
 				56BF34D82A98FD2700AFA9E4 /* Photos+Sendable.swift */,
-				56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */,
+				562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */,
 				562527B42AA2001700197E10 /* Axis+Extensions.swift */,
 			);
 			path = Extensions;
@@ -521,6 +529,16 @@
 				56BF34D32A97EE3A00AFA9E4 /* ActivityProtocol implementations */,
 			);
 			path = Activities;
+			sourceTree = "<group>";
+		};
+		56BC80BA2AA8530300DCA75D /* Core Image */ = {
+			isa = PBXGroup;
+			children = (
+				56A554452A8BE9A200E99F65 /* CIImage+Extensions.swift */,
+				56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */,
+				56BC80BB2AA8531900DCA75D /* CIColor+Extensions.swift */,
+			);
+			path = "Core Image";
 			sourceTree = "<group>";
 		};
 		56BF34CE2A96A6AF00AFA9E4 /* Data Structures */ = {
@@ -741,6 +759,7 @@
 				56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
 				56A554352A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56BF34D02A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
+				562527B92AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */,
 				56217F1A2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
 				56A554612A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
 				562527B12AA1FFD900197E10 /* VideoProcessingUserSettings.swift in Sources */,
@@ -749,6 +768,7 @@
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				5604B1142A9B89C800B0DA4B /* NewProgressVideoView+VideoSettingsView.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
+				56BC80BC2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				5604B1182A9D054500B0DA4B /* AspectRatioFixedResolutionPicker.swift in Sources */,
@@ -791,6 +811,7 @@
 				56A5544B2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				562527B22AA1FFD900197E10 /* VideoProcessingUserSettings.swift in Sources */,
+				562527BA2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */,
 				568B60752A7AD98400D5B5D3 /* PROgressTests.swift in Sources */,
 				56BF34D62A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,
 				56A554432A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
@@ -810,6 +831,7 @@
 				5604B1192A9D054500B0DA4B /* AspectRatioFixedResolutionPicker.swift in Sources */,
 				56217F292AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
 				56BF34D12A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
+				56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 				56217F1B2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
@@ -828,6 +850,7 @@
 				56A5542F2A87F0FE00E99F65 /* NewProgressVideoView+ReorderImagesDropDelegate.swift in Sources */,
 				56A5545F2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554332A87F23E00E99F65 /* NewProgressVideoView+ImageLoadingSuccessView.swift in Sources */,
+				56BC80BE2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56217F1C2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
 				561D66AD2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
@@ -854,6 +877,7 @@
 				56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				56BF34C72A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
+				562527BB2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */,
 				56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
 			);

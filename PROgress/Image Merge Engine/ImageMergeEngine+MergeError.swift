@@ -9,12 +9,13 @@ import Foundation
 
 extension ImageMergeEngine {
     enum MergeError: Error {
-        case unknown
-        case dataConversionFailure
-        case taskNotFound
         case assetWriterStartFailure
+        case ciImageCreationFailure
+        case dataConversionFailure
         case missingPixelBufferPool
         case missingSample
-        case ciImageCreationFailure
+        case pixelBufferCreationError
+        case taskNotFound
+        case unknown
     }
 }
