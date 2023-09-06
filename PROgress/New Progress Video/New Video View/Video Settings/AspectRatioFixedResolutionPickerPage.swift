@@ -97,7 +97,7 @@ struct AspectRatioFixedResolutionPickerPage_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             AspectRatioFixedResolutionPickerPage()
-                .environmentObject(NewProgressVideoViewModel())
+                .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
         }
     }
 }

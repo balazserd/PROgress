@@ -34,7 +34,6 @@ class NewProgressVideoViewModel: ObservableObject {
             
             Task.detached { [selectedItems] in
                 await self.loadImages(from: selectedItems)
-                await self.setInitialUserSettings()
             }
         }
     }
@@ -57,7 +56,6 @@ class NewProgressVideoViewModel: ObservableObject {
             
             Task.detached {
                 await self.loadImages(for: self.selectedAlbum!)
-                await self.setInitialUserSettings()
             }
         }
     }
@@ -207,10 +205,6 @@ class NewProgressVideoViewModel: ObservableObject {
     }
     
     private func setInitialUserSettings() {
-        guard case .success = imageLoadingState else {
-            return
-        }
-        
         let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
             CGSize(width: max($0.width, $1.originalSize.width),
                    height: max($0.height, $1.originalSize.height))
@@ -241,6 +235,7 @@ class NewProgressVideoViewModel: ObservableObject {
             
             PRLogger.app.debug("Successfully imported \(progressImages.count) photos")
             await setProgressImages(to: progressImages)
+            await setInitialUserSettings()
             await updateState(to: .success)
         } catch let error {
             PRLogger.app.error("Failed to fetch images! [\(error)]")
@@ -260,6 +255,7 @@ class NewProgressVideoViewModel: ObservableObject {
             
             PRLogger.app.debug("Successfully imported \(album.imageCount) photos")
             await setProgressImages(to: progressImages)
+            await setInitialUserSettings()
             await updateState(to: .success)
         } catch let error {
             PRLogger.app.error("Failed to fetch images! [\(error)]")
@@ -315,4 +311,21 @@ class NewProgressVideoViewModel: ObservableObject {
         case success(albums: [PhotoAlbum])
         case failure
     }
+}
+
+extension NewProgressVideoViewModel {
+    static var previewForLoadedImagesView: NewProgressVideoViewModel = {
+        let vm = NewProgressVideoViewModel()
+        vm.userSettings = VideoProcessingUserSettings()
+        vm.progressImages = []
+        
+        return vm
+    }()
+    
+    static var previewForVideoSettings: NewProgressVideoViewModel = {
+        let vm = NewProgressVideoViewModel()
+        vm.userSettings = VideoProcessingUserSettings()
+        
+        return vm
+    }()
 }

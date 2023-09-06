@@ -46,7 +46,7 @@ struct VideoProcessingUserSettings: Sendable {
         }
     }
     
-    var backgroundColor: Color! {
+    var backgroundColor: Color = .white {
         didSet {
             if  let rgbCgColor = UIColor(backgroundColor)
                     .cgColor
@@ -112,6 +112,17 @@ struct VideoProcessingUserSettings: Sendable {
             case .custom: return "Custom (free)"
             case .customWidthPreservedAspectRatio: return "Custom (aspect fixed)"
             default: return self.displayName
+            }
+        }
+        
+        var extraShortName: String {
+            switch self {
+            case .tiny: return "Tiny"
+            case .low: return "Low"
+            case .medium: return "Medium"
+            case .high: return "High"
+            case .ultra: return "Ultra"
+            case .custom, .customWidthPreservedAspectRatio: return "Custom"
             }
         }
         
