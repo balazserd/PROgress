@@ -17,6 +17,7 @@ struct PROgressApp: App {
         WindowGroup {
             MainWindow()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(GlobalSettings())
         }
     }
 }
@@ -32,6 +33,11 @@ struct MainWindow: View {
             NewProgressVideoView()
                 .tabItem {
                     Label("New", systemImage: "plus.square")
+                }
+            
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.2")
                 }
         }
     }

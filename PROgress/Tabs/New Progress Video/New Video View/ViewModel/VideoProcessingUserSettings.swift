@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 struct VideoProcessingUserSettings: Sendable {
+    var hideLogo: Bool = false
+    var addBeforeAfterFinalImage: Bool = false
+    
     var timeBetweenFrames: Double
     var resolution: Resolution! {
         didSet {

@@ -9,8 +9,7 @@ import SwiftUI
 
 struct ResolutionPickerForm: View {
     @EnvironmentObject private var viewModel: NewProgressVideoViewModel
-    
-    @State private var isPremiumUser: Bool = true
+    @EnvironmentObject private var globalSettings: GlobalSettings
     
     var body: some View {
         Form {
@@ -19,7 +18,7 @@ struct ResolutionPickerForm: View {
                     ForEach(resolutionCases, id: \.rawValue) { resolutionType in
                         VStack(alignment: .leading, spacing: 3) {
                             Text(resolutionType.displayName)
-                                .foregroundColor(resolutionType.isFreeTierOption || isPremiumUser ? .primary : .secondary)
+                                .foregroundColor(resolutionType.isFreeTierOption || globalSettings.isPremiumUser ? .primary : .secondary)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                             
@@ -29,7 +28,7 @@ struct ResolutionPickerForm: View {
                                     .foregroundColor(.secondary)
                             }
                         }
-                        .conditionalTag(resolutionType.isFreeTierOption || isPremiumUser,
+                        .conditionalTag(resolutionType.isFreeTierOption || globalSettings.isPremiumUser,
                                         tag: resolutionType as VideoProcessingUserSettings.Resolution?)
                     }
                 } label: {
@@ -42,7 +41,7 @@ struct ResolutionPickerForm: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("PROgress cannot upscale your images, even if you select a larger resolution.")
                     
-                    if !isPremiumUser {
+                    if !globalSettings.isPremiumUser {
                         Text(footnoteAttributedString)
                     }
                 }
@@ -66,5 +65,6 @@ struct ResolutionPickerForm_Previews: PreviewProvider {
     static var previews: some View {
         ResolutionPickerForm()
             .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
+            .environmentObject(GlobalSettings())
     }
 }
