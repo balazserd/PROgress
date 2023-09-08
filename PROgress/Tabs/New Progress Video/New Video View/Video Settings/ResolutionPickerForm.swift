@@ -36,7 +36,7 @@ struct ResolutionPickerForm: View {
                 }
                 .pickerStyle(.inline)
             } header: {
-                Text("Resolution Types")
+                Text("Options")
             } footer: {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("PROgress cannot upscale your images, even if you select a larger resolution.")
@@ -47,7 +47,7 @@ struct ResolutionPickerForm: View {
                 }
             }
         }
-        .navigationTitle("Resolution Picker")
+        .navigationTitle("Resolution")
     }
     
     private var footnoteAttributedString: AttributedString = {
@@ -63,8 +63,10 @@ struct ResolutionPickerForm: View {
 
 struct ResolutionPickerForm_Previews: PreviewProvider {
     static var previews: some View {
-        ResolutionPickerForm()
-            .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
-            .environmentObject(GlobalSettings())
+        NavigationStack {
+            ResolutionPickerForm()
+                .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
+                .environmentObject(GlobalSettings())
+        }
     }
 }

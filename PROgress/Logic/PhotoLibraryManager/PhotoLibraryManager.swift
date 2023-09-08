@@ -9,6 +9,7 @@ import Foundation
 import Photos
 import SwiftUI
 import UIKit
+import AVFoundation
 
 actor PhotoLibraryManager {
     var authorizationStatus: PHAuthorizationStatus
@@ -32,6 +33,91 @@ actor PhotoLibraryManager {
         }
         
         return assetCollections.firstObject
+    }
+    
+    struct VideoAsset: Sendable {
+        var firstImage: UIImage?
+        var lastImage: UIImage?
+        var name: String?
+        var length: Double?
+        var index: Int
+    }
+    
+    struct IndexedAVAsset: @unchecked Sendable {
+        let asset: AVAsset
+        var index: Int
+    }
+    
+    /// Returns all videos in the PROgress app's designated video folder.
+    nonisolated func getAllVideosOfAlbum(assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void,
+                                         assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void)
+    async throws -> [VideoAsset] {
+        guard let videoLibrary = videoLibraryAssetCollection else {
+            PRLogger.photoLibraryManagement.error("Did not find the designated video library!")
+            throw OperationError.videoLibraryNotFound
+        }
+        
+        typealias VideoAssetSource = (
+            imageGenerator: AVAssetImageGenerator,
+            length: Double,
+            name: String
+        )
+        
+        let rawVideoAssets = PHAsset.fetchAssets(in: videoLibrary, options: self.videosInAlbumFetchOptions)
+        let progressUnit = 1.0 / Double(rawVideoAssets.count)
+        
+        let videoAssetSources = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                var _indexedVideoAssetSources = [IndexedAVAsset]()
+                
+                let requestOptions = PHVideoRequestOptions()
+                requestOptions.deliveryMode = .fastFormat
+                requestOptions.version = .current
+                
+                rawVideoAssets.enumerateObjects { asset, index, _ in
+                    PHImageManager.default()
+                        .requestAVAsset(forVideo: asset, options: requestOptions) { avAsset, _, resultInfo in
+                            defer { Task {
+                                assetRetrievalProgressBlock(progressUnit)
+                            }}
+                            
+                            guard let avAsset else {
+                                let info = resultInfo ?? [:]
+                                PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
+                                
+                                return
+                            }
+                            
+                            let indexedAsset = IndexedAVAsset(asset: avAsset, index: index)
+                            _indexedVideoAssetSources.append(indexedAsset)
+                        }
+                }
+                
+                continuation.resume(returning: _indexedVideoAssetSources)
+            }
+        }
+        
+        let indexedVideoAssets = try await withThrowingTaskGroup(of: VideoAsset.self) { group in
+            for item in videoAssetSources {
+                group.addTask {
+                    let imageGenerator = AVAssetImageGenerator(asset: item.asset)
+                    
+                    let videoLength = try await item.asset.load(.duration)
+                    let firstImage = try await imageGenerator.image(at: .zero).image
+                    let lastImage = try await imageGenerator.image(at: videoLength).image
+                    
+                    assetProcessingProgressBlock(progressUnit)
+                    return VideoAsset(firstImage: UIImage(cgImage: firstImage),
+                                      lastImage: UIImage(cgImage: lastImage),
+                                      length: videoLength.seconds,
+                                      index: item.index)
+                }
+            }
+            
+            return try await group.reduce(into: []) { $0.append($1) }
+        }
+        
+        return indexedVideoAssets.sorted(by: { $0.index < $1.index })
     }
     
     nonisolated func getAllPhotosOfAlbum(_ photoAlbum: PhotoAlbum,
@@ -58,11 +144,9 @@ actor PhotoLibraryManager {
                     
                     PHImageManager.default()
                         .requestImageDataAndOrientation(for: asset, options: imageRequestOptions) { data, _, _, resultInfo in
-                            defer {
-                                Task {
-                                    progressBlock()
-                                }
-                            }
+                            defer { Task {
+                                progressBlock()
+                            }}
                             
                             guard
                                 let data,
@@ -180,6 +264,15 @@ actor PhotoLibraryManager {
         return fetchOptions
     }
     
+    /// The `PHFetchOptions` object that wants to fetch only videos from an asset collection.
+    nonisolated var videosInAlbumFetchOptions: PHFetchOptions {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+        
+        return fetchOptions
+    }
+    
     // MARK: - Saving video to designated album
     nonisolated func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws {
         switch await self.authorizationStatus {
@@ -270,6 +363,7 @@ actor PhotoLibraryManager {
     // MARK: - Error types
     enum OperationError: Error {
         case videoLibraryCreationFailed(underlyingError: Error)
+        case videoLibraryNotFound
         case videoSaveFailed(underlyingError: Error)
         case albumNotFoundWithLocalIdentifier
         case assetNotFoundWithLocalIdentifier
