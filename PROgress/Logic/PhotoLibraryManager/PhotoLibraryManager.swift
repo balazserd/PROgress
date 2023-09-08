@@ -22,7 +22,7 @@ actor PhotoLibraryManager {
     
     // MARK: - Working with albums
     /// The PROgress app's designated video folder.
-    nonisolated var videoLibraryAssetCollection: PHAssetCollection? {
+    nonisolated var PROgressMediaLibraryAssetCollection: PHAssetCollection? {
         let options = PHFetchOptions()
         options.predicate = NSPredicate(format: "title LIKE %@", Self.videoLibraryTitle)
         
@@ -35,24 +35,12 @@ actor PhotoLibraryManager {
         return assetCollections.firstObject
     }
     
-    struct VideoAsset: Sendable {
-        var firstImage: UIImage?
-        var lastImage: UIImage?
-        var name: String?
-        var length: Double?
-        var index: Int
-    }
-    
-    struct IndexedAVAsset: @unchecked Sendable {
-        let asset: AVAsset
-        var index: Int
-    }
-    
     /// Returns all videos in the PROgress app's designated video folder.
-    nonisolated func getAllVideosOfAlbum(assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void,
-                                         assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void)
-    async throws -> [VideoAsset] {
-        guard let videoLibrary = videoLibraryAssetCollection else {
+    nonisolated func getAllVideosOfPROgressMediaLibrary(
+        retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void,
+        processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void
+    ) async throws -> [VideoAsset] {
+        guard let videoLibrary = PROgressMediaLibraryAssetCollection else {
             PRLogger.photoLibraryManagement.error("Did not find the designated video library!")
             throw OperationError.videoLibraryNotFound
         }
@@ -66,43 +54,53 @@ actor PhotoLibraryManager {
         let rawVideoAssets = PHAsset.fetchAssets(in: videoLibrary, options: self.videosInAlbumFetchOptions)
         let progressUnit = 1.0 / Double(rawVideoAssets.count)
         
-        let videoAssetSources = await withCheckedContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async {
-                var _indexedVideoAssetSources = [IndexedAVAsset]()
-                
-                let requestOptions = PHVideoRequestOptions()
-                requestOptions.deliveryMode = .fastFormat
-                requestOptions.version = .current
-                
-                rawVideoAssets.enumerateObjects { asset, index, _ in
-                    PHImageManager.default()
-                        .requestAVAsset(forVideo: asset, options: requestOptions) { avAsset, _, resultInfo in
-                            defer { Task {
-                                assetRetrievalProgressBlock(progressUnit)
-                            }}
-                            
-                            guard let avAsset else {
-                                let info = resultInfo ?? [:]
-                                PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
-                                
-                                return
+        let videoAssetSourcesTask = Task.detached {
+            var indexedVideoAssetSourceTasks = [Task<IndexedAVAsset, Never>]()
+            
+            rawVideoAssets.enumerateObjects { asset, index, _ in
+                indexedVideoAssetSourceTasks.append(Task {
+                    return await withCheckedContinuation { continuation in
+                        let requestOptions = PHVideoRequestOptions()
+                        requestOptions.deliveryMode = .fastFormat
+                        requestOptions.version = .current
+                        
+                        PHImageManager.default()
+                            .requestAVAsset(forVideo: asset, options: requestOptions) { avAsset, _, resultInfo in
+                                defer { Task {
+                                    assetRetrievalProgressBlock(progressUnit)
+                                }}
+    
+                                guard let avAsset else {
+                                    let info = resultInfo ?? [:]
+                                    PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
+    
+                                    return
+                                }
+    
+                                let indexedAsset = IndexedAVAsset(asset: avAsset, index: index)
+                                continuation.resume(returning: indexedAsset)
                             }
-                            
-                            let indexedAsset = IndexedAVAsset(asset: avAsset, index: index)
-                            _indexedVideoAssetSources.append(indexedAsset)
-                        }
-                }
-                
-                continuation.resume(returning: _indexedVideoAssetSources)
+                    }
+                })
             }
+            
+            var indexedVideoAssetSources = [IndexedAVAsset]()
+            for task in indexedVideoAssetSourceTasks {
+                let result = await task.value
+                indexedVideoAssetSources.append(result)
+            }
+            
+            return indexedVideoAssetSources.sorted(by: { $0.index < $1.index })
         }
         
         let indexedVideoAssets = try await withThrowingTaskGroup(of: VideoAsset.self) { group in
+            let videoAssetSources = await videoAssetSourcesTask.value
             for item in videoAssetSources {
                 group.addTask {
                     let imageGenerator = AVAssetImageGenerator(asset: item.asset)
                     
-                    let videoLength = try await item.asset.load(.duration)
+                    let (videoLength, creationDateMetaData) = try await item.asset.load(.duration, .creationDate)
+                    let creationDate = try await creationDateMetaData?.load(.dateValue)
                     let firstImage = try await imageGenerator.image(at: .zero).image
                     let lastImage = try await imageGenerator.image(at: videoLength).image
                     
@@ -110,11 +108,14 @@ actor PhotoLibraryManager {
                     return VideoAsset(firstImage: UIImage(cgImage: firstImage),
                                       lastImage: UIImage(cgImage: lastImage),
                                       length: videoLength.seconds,
-                                      index: item.index)
+                                      index: item.index,
+                                      creationDate: creationDate)
                 }
             }
             
-            return try await group.reduce(into: []) { $0.append($1) }
+            return try await group.reduce(into: []) {
+                $0.append($1)
+            }
         }
         
         return indexedVideoAssets.sorted(by: { $0.index < $1.index })
@@ -293,7 +294,7 @@ actor PhotoLibraryManager {
             throw AuthorizationError.unknown
         }
         
-        if self.videoLibraryAssetCollection == nil {
+        if self.PROgressMediaLibraryAssetCollection == nil {
             try await self.createPROgressMediaLibrary()
         }
         
@@ -304,7 +305,7 @@ actor PhotoLibraryManager {
                     return
                 }
                 
-                guard let videoLibrary = self.videoLibraryAssetCollection else {
+                guard let videoLibrary = self.PROgressMediaLibraryAssetCollection else {
                     PRLogger.photoLibraryManagement.fault("PROgress video library asset collection not found!")
                     return
                 }
@@ -328,7 +329,7 @@ actor PhotoLibraryManager {
     }
     
     nonisolated func createPROgressMediaLibrary() async throws {
-        guard self.videoLibraryAssetCollection == nil else {
+        guard self.PROgressMediaLibraryAssetCollection == nil else {
             PRLogger.photoLibraryManagement.fault("Attempted to recreate the PROgress video library!")
             return
         }
@@ -396,4 +397,18 @@ extension PHImageRequestOptions {
         
         return requestOptions
     }
+}
+
+struct VideoAsset: Sendable {
+    var firstImage: UIImage
+    var lastImage: UIImage
+    var name: String?
+    var length: Double
+    var index: Int
+    var creationDate: Date?
+}
+
+struct IndexedAVAsset: @unchecked Sendable {
+    let asset: AVAsset
+    var index: Int
 }
