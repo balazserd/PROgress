@@ -10,19 +10,21 @@ import SwiftUI
 struct ProgressVideosCollectionView: View {
     @StateObject private var viewModel = ProgressVideosCollectionViewModel()
     
+    private static var largeProgressImageSize = 80.0
+    
     var body: some View {
         NavigationStack {
             VStack {
                 if let videos = viewModel.videos {
                     List {
                         ForEach(videos, id: \.index) { video in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(video.name ?? "Progress Video [\(video.index)]")
-                                        .font(.title3)
-                                        .bold()
-                                        .lineLimit(1)
-                                    
+                            VStack(alignment: .leading) {
+                                Text(video.name ?? "Progress Video [\(video.index)]")
+                                    .font(.title3)
+                                    .bold()
+                                    .lineLimit(1)
+                                
+                                HStack(alignment: .top) {
                                     if let date = video.creationDate {
                                         Text(viewModel.videoDateFormatter.string(from: date))
                                             .font(.caption)
@@ -30,37 +32,40 @@ struct ProgressVideosCollectionView: View {
                                     
                                     Spacer()
                                     
-                                    Text("Duration: \(viewModel.videoDurationFormatter.string(from: video.length) ?? "0:00")")
+                                    Text("Duration: \(viewModel.videoDurationFormatter.string(from: video.length) ?? "00:00")")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
-                                .padding(.vertical, 4)
                                 
-                                Spacer()
-                                
-                                Rectangle()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .overlay {
-                                        Image(uiImage: video.firstImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                    }
-                                    .cornerRadius(4)
-                                    .clipped()
-                                    .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-                                    .frame(maxWidth: 70, maxHeight: 70)
-                                
-                                Rectangle()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .overlay {
-                                        Image(uiImage: video.lastImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                    }
-                                    .cornerRadius(4)
-                                    .clipped()
-                                    .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-                                    .frame(maxWidth: 70, maxHeight: 70)
+                                HStack {
+                                    Rectangle()
+                                        .aspectRatio(1, contentMode: .fill)
+                                        .overlay {
+                                            Image(uiImage: video.firstImage)
+                                                .resizable()
+                                                .scaledToFill()
+                                        }
+                                        .cornerRadius(4)
+                                        .clipped()
+                                        .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
+                                        .frame(maxWidth: Self.largeProgressImageSize,
+                                               maxHeight: Self.largeProgressImageSize)
+                                    
+                                    Spacer()
+                                    
+                                    Rectangle()
+                                        .aspectRatio(1, contentMode: .fill)
+                                        .overlay {
+                                            Image(uiImage: video.lastImage)
+                                                .resizable()
+                                                .scaledToFill()
+                                        }
+                                        .cornerRadius(4)
+                                        .clipped()
+                                        .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
+                                        .frame(maxWidth: Self.largeProgressImageSize,
+                                               maxHeight: Self.largeProgressImageSize)
+                                }
                             }
                         }
                     }

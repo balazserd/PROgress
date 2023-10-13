@@ -51,7 +51,7 @@ actor PhotoLibraryManager {
             name: String
         )
         
-        let rawVideoAssets = PHAsset.fetchAssets(in: videoLibrary, options: self.videosInAlbumFetchOptions)
+        let rawVideoAssets = PHAsset.fetchAssets(in: videoLibrary, options: .videosInAlbum)
         let progressUnit = 1.0 / Double(rawVideoAssets.count)
         
         let videoAssetSourcesTask = Task.detached {
@@ -126,7 +126,7 @@ actor PhotoLibraryManager {
                                          progressBlock: @escaping @Sendable () -> Void)
     async throws -> [ProgressImage] {
         let album = try self.assetCollectionForAlbum(photoAlbum)
-        let assets = PHAsset.fetchAssets(in: album, options: self.imagesInAlbumFetchOptions)
+        let assets = PHAsset.fetchAssets(in: album, options: .imagesInAlbum)
         
         let indexedPhotos = await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {
@@ -187,7 +187,7 @@ actor PhotoLibraryManager {
             tasks.append(Task {
                 let name = assetCollection.localizedTitle ?? "[Anonymous Album]"
                 
-                let assets = PHAsset.fetchAssets(in: assetCollection, options: self.imagesInAlbumFetchOptions)
+                let assets = PHAsset.fetchAssets(in: assetCollection, options: .imagesInAlbum)
                 guard let thumbnailAsset = assets.firstObject else {
                     PRLogger.photoLibraryManagement.notice("Library \(name, privacy: .private(mask: .hash)) has no images, skipping it.")
                     return nil
@@ -254,24 +254,6 @@ actor PhotoLibraryManager {
         }
         
         return asset
-    }
-    
-    /// The `PHFetchOptions` object that wants to fetch only images from an asset collection.
-    nonisolated var imagesInAlbumFetchOptions: PHFetchOptions {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
-        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
-        
-        return fetchOptions
-    }
-    
-    /// The `PHFetchOptions` object that wants to fetch only videos from an asset collection.
-    nonisolated var videosInAlbumFetchOptions: PHFetchOptions {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
-        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
-        
-        return fetchOptions
     }
     
     // MARK: - Saving video to designated album
@@ -376,6 +358,26 @@ actor PhotoLibraryManager {
         
         /// The authorization value was added in a later OS version. Photo management will err on the safe side and will not happen.
         case unknown
+    }
+}
+
+extension PHFetchOptions {
+    /// The `PHFetchOptions` object that wants to fetch only images from an asset collection.
+    static var imagesInAlbum: Self {
+        let fetchOptions = Self()
+        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+        
+        return fetchOptions
+    }
+    
+    /// The `PHFetchOptions` object that wants to fetch only videos from an asset collection.
+    static var videosInAlbum: Self {
+        let fetchOptions = Self()
+        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+        fetchOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+        
+        return fetchOptions
     }
 }
 

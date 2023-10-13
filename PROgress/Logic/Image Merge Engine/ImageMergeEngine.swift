@@ -87,10 +87,11 @@ actor ImageMergeEngine {
         by engine: ConversionEngine,
         options: MergeOptions
     ) async throws -> ProgressVideo {
-        var indexedImages = _images.map { ($0, _images.firstIndex(of: $0)!) }
+        var images = _images
         if let order = options.customOrder {
-            indexedImages = order.map { indexedImages[$0] }
+            images = order.map { images[$0] }
         }
+        let indexedImages = images.map { ($0, images.firstIndex(of: $0)!) }
         
         let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
         guard assetWriterConfig.assetWriter.startWriting() else {

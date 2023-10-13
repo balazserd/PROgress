@@ -41,8 +41,8 @@ struct VideoCreationLiveActivity: Widget {
                         .padding(.horizontal, 10)
                 }
             } compactLeading: {
-                compactTrailingContent(firstImage: context.attributes.firstImage,
-                                       lastImage: context.attributes.lastImage)
+                compactLeadingContent(firstImage: context.attributes.firstImage,
+                                      lastImage: context.attributes.lastImage)
             } compactTrailing: {
                 minimalContent(progress: context.state.progress)
                     .transition(.identity)
@@ -85,7 +85,7 @@ struct VideoCreationLiveActivity: Widget {
     }
     
     // MARK: - Compact presentation components
-    private func compactTrailingContent(firstImage: URL?, lastImage: URL?) -> some View {
+    private func compactLeadingContent(firstImage: URL?, lastImage: URL?) -> some View {
         HStack(spacing: 4) {
             thumbnailImage(url: firstImage, scale: .medium)
                 .frame(height: 25)
