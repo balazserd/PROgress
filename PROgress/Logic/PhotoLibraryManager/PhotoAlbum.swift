@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct PhotoAlbum: @unchecked Sendable {
+struct PhotoAlbum: Sendable {
     var index: Int
     var imageCount: Int
     var photoKitIdentifier: String

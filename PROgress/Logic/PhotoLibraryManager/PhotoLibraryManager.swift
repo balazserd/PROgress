@@ -132,7 +132,7 @@ actor PhotoLibraryManager {
             DispatchQueue.global(qos: .userInitiated).async {
                 var _indexedPhotos = [(index: Int, image: ProgressImage)]()
                 
-                assets.enumerateObjects { asset, index, _ in // it's disgusting that this is sync but @escaping :) - cannot use TaskGroup
+                assets.enumerateObjects { asset, index, _ in
                     var imageRequestOptions: PHImageRequestOptions
                     switch fetchReason {
                     case .display:

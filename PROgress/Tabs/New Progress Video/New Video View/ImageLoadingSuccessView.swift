@@ -32,13 +32,34 @@ struct ImageLoadingSuccessView: View {
                     Spacer()
                     
                     NavigationLink(value: NavigationDestination.settings) {
-                        Text("Change")
+                        Text("Change \(Image(systemName: "chevron.right"))")
+                            .font(.body)
                     }
                 }
                 
                 HStack {
                     VStack {
-                        Text("Background").settingsColumnHeaderStyle()
+                        HStack {
+                            Text("Frame Length").font(.subheadline)
+                            Spacer()
+                            Text("\(viewModel.userSettings.timeBetweenFrames, specifier: "%.2f")s")
+                                .settingsColumnDataStyle()
+                        }
+                        
+                        HStack {
+                            Text("Resolution").font(.subheadline)
+                            Spacer()
+                            Text("\(viewModel.userSettings.resolution.extraShortName)")
+                                .settingsColumnDataStyle()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    Divider()
+                        .padding(.leading, 8)
+                    
+                    VStack {
+                        Text("Background").font(.subheadline)
                         Spacer()
                         Rectangle()
                             .fill(viewModel.userSettings.backgroundColor)
@@ -47,40 +68,26 @@ struct ImageLoadingSuccessView: View {
                             .cornerRadius(2)
                             .shadow(color: .gray.opacity(0.4), radius: 8)
                     }
-                    .frame(maxWidth: .infinity)
-                    
-                    Divider()
-                    
-                    VStack {
-                        Text("Resolution").settingsColumnHeaderStyle()
-                        Spacer()
-                        Text("\(viewModel.userSettings.resolution.extraShortName)")
-                            .settingsColumnDataStyle()
-                    }
-                    .frame(maxWidth: .infinity)
-                    
-                    Divider()
-                    
-                    VStack {
-                        Text("Frame Length").settingsColumnHeaderStyle()
-                        Spacer()
-                        Text("\(viewModel.userSettings.timeBetweenFrames, specifier: "%.2f")")
-                            .settingsColumnDataStyle()
-                    }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: 110)
                 }
                 .frame(maxWidth: .infinity)
                 
                 Divider()
                 
-                Text("Selected photos (\(viewModel.progressImages!.count))")
+                Text("Selected photos: \(viewModel.progressImages!.count)")
                     .font(.title3)
                     .bold()
                     .padding(.bottom, -2)
                 
-                Text("Tip: long press and drag an image to reorder it.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                HStack(spacing: 0) {
+                    Text("💡")
+                        .font(.caption2)
+                        .padding(.leading, -2)
+                    Text("Long press and drag an image to reorder it.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
                 
                 LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
                     ForEach(viewModel.progressImages!) { progressImage in

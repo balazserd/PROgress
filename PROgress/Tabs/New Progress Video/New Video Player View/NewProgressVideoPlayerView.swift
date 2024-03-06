@@ -48,8 +48,37 @@ struct NewProgressVideoPlayerView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            Button(action: { viewModel.saveVideo(video) }) {
-                Image(systemName: "arrow.down.circle")
+            switch viewModel.saveStatus {
+            case .inProgress:
+                ProgressView()
+                    .transition(.opacity)
+                
+            case .finished:
+                Button(action: {}) {
+                    Image(systemName: "arrow.down.circle")
+                        .overlay(alignment: .topTrailing) {
+                            ZStack {
+                                Circle().foregroundStyle(.white)
+                                
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                            }
+                            .scaleEffect(of: 0.75)
+                            .offset(x: 10, y: -8)
+                        }
+                }
+                .disabled(true)
+                .transition(.opacity)
+                
+            case .none:
+                Button(action: { viewModel.saveVideo(video) }) {
+                    Image(systemName: "arrow.down.circle")
+                }
+                .transition(.opacity)
+                
+            default:
+                EmptyView()
+                    .transition(.opacity)
             }
         }
         
@@ -57,6 +86,7 @@ struct NewProgressVideoPlayerView: View {
             Button(action: { /* viewModel.share() */ }) {
                 Image(systemName: "square.and.arrow.up")
             }
+            .padding(.top, -3)
         }
     }
 }
@@ -67,7 +97,7 @@ struct NewProgressVideoPlayerView_Previews: PreviewProvider {
             NewProgressVideoPlayerView(video:
                 ProgressVideo(videoId: UUID(),
                               url: URL(string: FileManager().currentDirectoryPath)!,
-                              resolution: CGSize(width: 640, height: 640))
+                              resolution: CGSize(width: 640, height: 2560))
             )
         }
     }

@@ -208,19 +208,20 @@ actor ImageMergeEngine {
         context.render(finalImage,
                        to: pixelBuffer,
                        bounds: finalImage.extent,
-                       colorSpace: CGColorSpace(name: CGColorSpace.sRGB)) // Not setting the color space produces a dark image!!!
+                       colorSpace: CGColorSpace(name: CGColorSpace.sRGB)) // Not setting the color space produces a dark image.
 
         let time = CMTime(value: Int64(index) * Int64(config.userSettings.timeBetweenFrames / 0.05),
                           timescale: 20)
+        
         return Sample(index: index, time: time, buffer: pixelBuffer)
     }
     
     // MARK: - Typealias Sample
-    private typealias Sample = (
-        index: Int,
-        time: CMTime,
-        buffer: CVPixelBuffer
-    )
+    private struct Sample: @unchecked Sendable {
+        var index: Int
+        var time: CMTime
+        var buffer: CVPixelBuffer // sample should only be accessed on a serial queue to be Sendable.
+    }
 }
 
 

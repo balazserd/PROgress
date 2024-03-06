@@ -8,7 +8,7 @@
 import Foundation
 
 class GlobalSettings: ObservableObject {
-    var subscriptionType: SubscriptionType = .free
+    var subscriptionType: SubscriptionType = .premium
     
     // MARK: - Convenience computed variables
     var isPremiumUser: Bool { self.subscriptionType == .premium }

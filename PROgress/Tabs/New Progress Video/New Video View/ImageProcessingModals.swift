@@ -35,25 +35,24 @@ struct VideoProcessingFinishedView: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Your video is ready!")
                     .font(.title2).bold()
                 
-                Text("🎉🎉🎉")
+                Text("Your progress video is done processing. You can now view, save and share it or continue editing.")
                     .font(.caption)
                     .foregroundColor(.secondary)
-            }
-            
-            VStack(spacing: 12) {
+                
                 Button(
                     action: action,
                     label: {
-                        Text("Let me see")
+                        Text("See video")
                             .bold()
                             .frame(maxWidth: .infinity)
                     }
                 )
                 .buttonStyle(.borderedProminent)
+                .padding(.top)
             }
         }
         .frame(maxWidth: 275)

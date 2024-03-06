@@ -7,6 +7,7 @@
 
 import Foundation
 import Factory
+import SwiftUI
 
 @MainActor
 class NewProgressVideoPlayerViewModel: ObservableObject {
@@ -30,7 +31,9 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
     }
     
     func setSaveVideoStatus(to status: SaveStatus) {
-        self.saveStatus = status
+        withAnimation(.easeInOut) {
+            self.saveStatus = status
+        }
     }
     
     enum SaveStatus {

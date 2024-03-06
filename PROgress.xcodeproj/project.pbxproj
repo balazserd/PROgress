@@ -160,6 +160,7 @@
 		56BF34DD2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DE2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DF2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
+		56F533A02B98F5E3001D9A58 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F5339F2B98F5E3001D9A58 /* StatusBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -273,6 +274,7 @@
 		56BF34D42A97EE5B00AFA9E4 /* VideoCreationActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationActivity.swift; sourceTree = "<group>"; };
 		56BF34D82A98FD2700AFA9E4 /* Photos+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos+Sendable.swift"; sourceTree = "<group>"; };
 		56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreImage+Sendable.swift"; sourceTree = "<group>"; };
+		56F5339F2B98F5E3001D9A58 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +313,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		560330992B98ECC2004441EC /* Accessory Views */ = {
+			isa = PBXGroup;
+			children = (
+				56F5339F2B98F5E3001D9A58 /* StatusBar.swift */,
+			);
+			path = "Accessory Views";
+			sourceTree = "<group>";
+		};
 		561D66AE2A9D246E000A7E7C /* Video Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -367,6 +377,7 @@
 		568B605C2A7AD98300D5B5D3 /* PROgress */ = {
 			isa = PBXGroup;
 			children = (
+				560330992B98ECC2004441EC /* Accessory Views */,
 				56BF34CC2A953F5900AFA9E4 /* PROgress.entitlements */,
 				568B60A82A840C1100D5B5D3 /* Factory */,
 				568B60902A7B8C0500D5B5D3 /* Logging */,
@@ -826,6 +837,7 @@
 				568B60942A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift in Sources */,
 				56A5543A2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5544A2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
+				56F533A02B98F5E3001D9A58 /* StatusBar.swift in Sources */,
 				56BF34D52A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,
 				568B60B12A85034A00D5B5D3 /* ImageProcessingModals.swift in Sources */,
 				568B60AA2A840C2200D5B5D3 /* Container.swift in Sources */,
