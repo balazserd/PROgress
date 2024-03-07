@@ -43,6 +43,7 @@ struct NewProgressVideoView: View {
                     }
                 }
                 .navigationTitle("New progress video")
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: ProgressVideo.self) { progressVideo in
                     NewProgressVideoPlayerView(video: progressVideo)
                 }

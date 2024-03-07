@@ -83,15 +83,11 @@ actor ImageMergeEngine {
     }
     
     func mergeImages<ConversionEngine: PhotoConversionEngine>(
-        _ _images: [ConversionEngine.Input],
+        _ images: [ConversionEngine.Input],
         by engine: ConversionEngine,
         options: MergeOptions
     ) async throws -> ProgressVideo {
-        var images = _images
-        if let order = options.customOrder {
-            images = order.map { images[$0] }
-        }
-        let indexedImages = images.map { ($0, images.firstIndex(of: $0)!) }
+        let indexedImages = images.enumerated().map { ($1, $0) }
         
         let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
         guard assetWriterConfig.assetWriter.startWriting() else {
@@ -109,6 +105,8 @@ actor ImageMergeEngine {
         
         let taskLimit = ProcessInfo.recommendedMaximumConcurrency
         let count = indexedImages.count
+        let reusableContext = CIContext()
+        
         try await indexedImages.mapConcurrentlyThenPerformSeriallyAsync(
             maxConcurrencyCount: taskLimit,
             mapPriority: .userInitiated,
@@ -117,7 +115,7 @@ actor ImageMergeEngine {
                                                    with: engine,
                                                    indexed: index,
                                                    config: assetWriterConfig,
-                                                   context: CIContext())
+                                                   context: reusableContext)
             },
             serialPerformBlock: { [unowned self] sample in
                 try await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()

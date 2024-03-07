@@ -33,6 +33,8 @@ struct VideoProcessingUserSettings: Sendable {
         }
     }
     
+    var shape: Shape = .automatic
+    
     var extents: CGSize { CGSize(width: extentX, height: extentY) }
     
     var extentX: Double {
@@ -144,6 +146,30 @@ struct VideoProcessingUserSettings: Sendable {
             switch self {
             case .tiny, .low, .medium: return true
             default: return false
+            }
+        }
+    }
+    
+    // MARK: - Format
+    enum Shape: String, CaseIterable {
+        case automatic = "Automatic"
+        case reel = "Reel"
+        case video_4_3 = "4:3 Video"
+        case video_16_9 = "16:9 Video"
+        case video_1_1 = "Square Video"
+        
+        var complimentaryText: String {
+            switch self {
+            case .automatic:
+                "The video will expand to fit the largest extent in both axis, and place all other images centered."
+            case .reel:
+                "The video will be shaped like social media reels (larger vertical axis, shorter horizontal)."
+            case .video_4_3:
+                "The video will have a standard 4:3 ratio."
+            case .video_16_9:
+                "The video will have a standard 16:9 ratio."
+            case .video_1_1:
+                "The video shape will be a square."
             }
         }
     }

@@ -46,19 +46,28 @@ struct VideoSettingsView: View {
                     NavigationLink(value: SubSetting.freeCustomResolutionPicker) {
                         customResolutionNavigationLinkLabel
                     }
+                } else {
+                    VStack(alignment: .leading) {
+                        Picker("Shape", selection: $viewModel.userSettings.shape) {
+                            ForEach(shapeCases, id: \.rawValue) { shapeType in
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(shapeType.rawValue)
+                                    
+                                    
+                                }
+                                .tag(shapeType)
+                            }
+                        }
+                        
+                        Text(viewModel.userSettings.shape.complimentaryText)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, -4)
                 }
                 
                 ColorPicker(selection: $viewModel.userSettings.backgroundColor) {
-                    HStack {
-                        Text("Background fill color")
-                        
-                        Rectangle()
-                            .fill(viewModel.userSettings.backgroundColor)
-                            .frame(width: 20, height: 20)
-                            .aspectRatio(1.0, contentMode: .fill)
-                            .cornerRadius(2)
-                            .shadow(color: .gray.opacity(0.4), radius: 8)
-                    }
+                    Text("Background fill color")
                 }
             }
             
@@ -122,6 +131,8 @@ struct VideoSettingsView: View {
     private var framesPerSecond: Double {
         1.0 / viewModel.userSettings.timeBetweenFrames
     }
+    
+    private var shapeCases = VideoProcessingUserSettings.Shape.allCases
 }
 
 fileprivate enum SubSetting {

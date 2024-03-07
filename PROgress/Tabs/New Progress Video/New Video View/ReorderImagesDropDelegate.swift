@@ -21,23 +21,29 @@ struct ReorderImagesDropDelegate: DropDelegate {
     @Binding var currentlyMovedImage: ProgressImage?
     
     func dropEntered(info: DropInfo) {
-        if parent != currentlyMovedImage {
-            guard
-                currentlyMovedImage != nil,
-                allProgressImages != nil,
-                let dragIndex = allProgressImages!.firstIndex(of: currentlyMovedImage!),
-                let dropIndex = allProgressImages!.firstIndex(of: parent)
-            else {
-                PRLogger.app.error("DropDelegate misses items!")
-                return
-            }
-            
-            allProgressImages!.move(fromOffsets: IndexSet([dragIndex]),
-                                    toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
-            
-            photoUserOrdering.move(fromOffsets: IndexSet([dragIndex]),
-                                   toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
+        guard parent != currentlyMovedImage else {
+            return
         }
+        
+        guard
+            currentlyMovedImage != nil,
+            allProgressImages != nil,
+            let dragIndex = allProgressImages!.firstIndex(of: currentlyMovedImage!),
+            let dropIndex = allProgressImages!.firstIndex(of: parent)
+        else {
+            PRLogger.app.error("DropDelegate misses items!")
+            return
+        }
+        
+        print("Before: \(photoUserOrdering)")
+        
+        allProgressImages!.move(fromOffsets: IndexSet([dragIndex]),
+                                toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
+        
+        photoUserOrdering.move(fromOffsets: IndexSet([dragIndex]),
+                               toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
+        
+        print("After: \(photoUserOrdering)")
     }
     
     func performDrop(info: DropInfo) -> Bool {

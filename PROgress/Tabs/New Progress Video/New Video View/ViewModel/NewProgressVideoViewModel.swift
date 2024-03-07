@@ -122,11 +122,17 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 var video: ProgressVideo
                 if isConvertingAlbum {
+                    // Order is automatically included here.
                     video = try await self.imageMergeEngine.mergeImages(assetIdentifiers,
                                                                         by: .phAssetEngine(options: .detailed),
                                                                         options: options)
                 } else {
-                    video = try await self.imageMergeEngine.mergeImages(selectedItems,
+                    var images = selectedItems
+                    if let order = options.customOrder {
+                        images = order.map { images[$0] }
+                    }
+                    
+                    video = try await self.imageMergeEngine.mergeImages(images,
                                                                         by: .photosPickerItemEngine,
                                                                         options: options)
                 }
