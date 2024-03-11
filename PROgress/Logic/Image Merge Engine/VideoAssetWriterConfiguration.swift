@@ -35,8 +35,8 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
         assetWriter = try AVAssetWriter(url: self.outputUrl, fileType: .mov)
         
         let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecType.hevcWithAlpha,
-                                             AVVideoWidthKey: NSNumber(value: Int(settings.extentX)),
-                                            AVVideoHeightKey: NSNumber(value: Int(settings.extentY))]
+                                             AVVideoWidthKey: NSNumber(value: Int(settings.extents.width)),
+                                            AVVideoHeightKey: NSNumber(value: Int(settings.extents.height))]
         guard assetWriter.canApply(outputSettings: outputSettings, forMediaType: .video) else {
             throw VideoAssetWriterConfigurationError.cannotApplyOutputSettingsForMediaType
         }

@@ -11,7 +11,7 @@ import os
 /// The collection of `Logger` instances the app uses.
 ///
 /// - Important: Always use the logger corresponding to the correct category for logging events.
-enum PRLogger {
+actor PRLogger {
     static let activities = Logger(subsystem: "com.ebuniapps.PROgress", category: "activities")
     
     static let app = Logger(subsystem: "com.ebuniapps.PROgress", category: "app")

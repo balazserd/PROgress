@@ -85,7 +85,7 @@ class NewProgressVideoViewModel: ObservableObject {
             }
             
             do {
-                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) {
+                backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable in
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
                         PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")

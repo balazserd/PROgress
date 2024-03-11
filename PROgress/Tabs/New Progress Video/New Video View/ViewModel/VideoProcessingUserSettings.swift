@@ -35,7 +35,25 @@ struct VideoProcessingUserSettings: Sendable {
     
     var shape: Shape = .automatic
     
-    var extents: CGSize { CGSize(width: extentX, height: extentY) }
+    var extents: CGSize {
+        let defaultExtents = CGSize(width: extentX, height: extentY)
+        guard shape != .automatic else {
+            return defaultExtents
+        }
+        
+        let aspectRatioModifier = shape.aspectRatio!
+        
+        switch extentX / extentY {
+        case let extentRatio where extentRatio > aspectRatioModifier:
+            return .init(width: extentY * aspectRatioModifier, height: extentY)
+            
+        case let extentRatio where extentRatio <= aspectRatioModifier:
+            return .init(width: extentX, height: extentX / aspectRatioModifier)
+            
+        default:
+            return defaultExtents
+        }
+    }
     
     var extentX: Double {
         didSet {
@@ -150,7 +168,7 @@ struct VideoProcessingUserSettings: Sendable {
         }
     }
     
-    // MARK: - Format
+    // MARK: - Shape
     enum Shape: String, CaseIterable {
         case automatic = "Automatic"
         case reel = "Reel"
@@ -170,6 +188,16 @@ struct VideoProcessingUserSettings: Sendable {
                 "The video will have a standard 16:9 ratio."
             case .video_1_1:
                 "The video shape will be a square."
+            }
+        }
+        
+        var aspectRatio: Double? {
+            switch self {
+            case .automatic:    return nil
+            case .reel:         return 1080 / 2160
+            case .video_4_3:    return 4 / 3
+            case .video_16_9:   return 16 / 9
+            case .video_1_1:    return 1
             }
         }
     }
