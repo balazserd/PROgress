@@ -13,6 +13,8 @@ import Combine
 struct NewProgressVideoPlayerView: View {
     @StateObject private var viewModel = NewProgressVideoPlayerViewModel()
     
+    @State private var showShareSheet = false
+    
     var video: ProgressVideo
     private let avPlayer: AVPlayer
     
@@ -42,7 +44,9 @@ struct NewProgressVideoPlayerView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
         }
+        .padding(.vertical)
         .navigationTitle(video.name)
+        .shareView(with: [video.url], isPresented: $showShareSheet)
     }
     
     @ToolbarContentBuilder
@@ -83,7 +87,7 @@ struct NewProgressVideoPlayerView: View {
         }
         
         ToolbarItem(placement: .primaryAction) {
-            Button(action: { /* viewModel.share() */ }) {
+            Button(action: { showShareSheet = true }) {
                 Image(systemName: "square.and.arrow.up")
             }
             .padding(.top, -3)

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import PhotosUI
 import CoreImage
-import AVFoundation
+@preconcurrency import AVFoundation
 import EBUniAppsKit
 import Combine
 

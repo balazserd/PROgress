@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		560049CC2BA0ED9B00D373BB /* ProgressImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60962A82B3C900D5B5D3 /* ProgressImage.swift */; };
+		560049CD2BA0EDA400D373BB /* PRLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60912A7B8C1600D5B5D3 /* PRLogger.swift */; };
+		560049CE2BA0EDB900D373BB /* ImageMergeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60A12A84099100D5B5D3 /* ImageMergeEngine.swift */; };
+		560049CF2BA0EDC300D373BB /* NewProgressVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */; };
+		560049D02BA0EDC900D373BB /* ProgressVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60A52A840A6E00D5B5D3 /* ProgressVideo.swift */; };
+		560049D12BA0EDD600D373BB /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60A92A840C2200D5B5D3 /* Container.swift */; };
+		560049D22BA0EDE200D373BB /* ProcessInfo+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60AD2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift */; };
+		560049D32BA0EDEA00D373BB /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
+		560049D42BA0EDFE00D373BB /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
+		560049D52BA0EE1400D373BB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
+		560049D62BA0EE1900D373BB /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
+		560049D72BA0EE1F00D373BB /* ImageProcessingModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60B02A85034A00D5B5D3 /* ImageProcessingModals.swift */; };
+		560049D92BA0EE6400D373BB /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 560049D82BA0EE6400D373BB /* Factory */; };
+		560049DB2BA0EE6700D373BB /* EBUniAppsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 560049DA2BA0EE6700D373BB /* EBUniAppsKit */; };
 		5604B1142A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* VideoSettingsView.swift */; };
 		5604B1152A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* VideoSettingsView.swift */; };
 		5604B1162A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5604B1132A9B89C800B0DA4B /* VideoSettingsView.swift */; };
@@ -34,6 +48,12 @@
 		562527B92AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
 		562527BA2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
 		562527BB2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */; };
+		56853BCF2BA0EC7D00CF0F14 /* PRLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60912A7B8C1600D5B5D3 /* PRLogger.swift */; };
+		56853BD12BA0ECB900CF0F14 /* NewProgressVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */; };
+		56853BD22BA0ECCD00CF0F14 /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
+		56853BD32BA0ECD900CF0F14 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
+		56853BD42BA0ECE300CF0F14 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
+		56853BD52BA0ECEC00CF0F14 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
@@ -160,6 +180,7 @@
 		56BF34DD2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DE2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DF2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
+		56EEDFCE2BA0E61F0096D8BA /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */; };
 		56F533A02B98F5E3001D9A58 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F5339F2B98F5E3001D9A58 /* StatusBar.swift */; };
 /* End PBXBuildFile section */
 
@@ -274,6 +295,7 @@
 		56BF34D42A97EE5B00AFA9E4 /* VideoCreationActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationActivity.swift; sourceTree = "<group>"; };
 		56BF34D82A98FD2700AFA9E4 /* Photos+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos+Sendable.swift"; sourceTree = "<group>"; };
 		56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreImage+Sendable.swift"; sourceTree = "<group>"; };
+		56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		56F5339F2B98F5E3001D9A58 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -298,6 +320,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				560049D92BA0EE6400D373BB /* Factory in Frameworks */,
+				560049DB2BA0EE6700D373BB /* EBUniAppsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +340,7 @@
 		560330992B98ECC2004441EC /* Accessory Views */ = {
 			isa = PBXGroup;
 			children = (
+				56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */,
 				56F5339F2B98F5E3001D9A58 /* StatusBar.swift */,
 			);
 			path = "Accessory Views";
@@ -682,6 +707,10 @@
 				568B607C2A7AD98400D5B5D3 /* PBXTargetDependency */,
 			);
 			name = PROgressUITests;
+			packageProductDependencies = (
+				560049D82BA0EE6400D373BB /* Factory */,
+				560049DA2BA0EE6700D373BB /* EBUniAppsKit */,
+			);
 			productName = PROgressUITests;
 			productReference = 568B607A2A7AD98400D5B5D3 /* PROgressUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -828,6 +857,7 @@
 				5604B1142A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56BC80BC2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
+				56EEDFCE2BA0E61F0096D8BA /* ShareView.swift in Sources */,
 				56BF34C52A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				5604B1182A9D054500B0DA4B /* AspectRatioFixedResolutionPicker.swift in Sources */,
@@ -868,9 +898,11 @@
 				56A5543B2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				56A5543F2A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56BC80C42AA9AB2900DCA75D /* SettingsView.swift in Sources */,
+				56853BD22BA0ECCD00CF0F14 /* PhotoTransferingError.swift in Sources */,
 				56A554362A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A5544F2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				56A5544B2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
+				56853BD32BA0ECD900CF0F14 /* PROgressApp.swift in Sources */,
 				56BC80C82AA9B8DB00DCA75D /* UserDefaultKeys.swift in Sources */,
 				56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				562527B22AA1FFD900197E10 /* VideoProcessingUserSettings.swift in Sources */,
@@ -882,8 +914,10 @@
 				56A5545E2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
 				56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				5604B1152A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
+				56853BD12BA0ECB900CF0F14 /* NewProgressVideoViewModel.swift in Sources */,
 				56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
+				56853BD52BA0ECEC00CF0F14 /* Persistence.swift in Sources */,
 				56217F232AA06AB100A79CA0 /* FreeResolutionPicker.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
 				568B60B22A85034A00D5B5D3 /* ImageProcessingModals.swift in Sources */,
@@ -898,6 +932,8 @@
 				56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
+				56853BCF2BA0EC7D00CF0F14 /* PRLogger.swift in Sources */,
+				56853BD42BA0ECE300CF0F14 /* NewProgressVideoView.swift in Sources */,
 				56217F1B2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
 				56A554622A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
 			);
@@ -913,14 +949,19 @@
 				5604B1162A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
 				56A5542F2A87F0FE00E99F65 /* ReorderImagesDropDelegate.swift in Sources */,
 				56A5545F2A8CB3D100E99F65 /* ProgressVideosCollectionView.swift in Sources */,
+				560049D02BA0EDC900D373BB /* ProgressVideo.swift in Sources */,
 				56A554332A87F23E00E99F65 /* ImageLoadingSuccessView.swift in Sources */,
 				56BC80BE2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56217F1C2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
+				560049CE2BA0EDB900D373BB /* ImageMergeEngine.swift in Sources */,
+				560049D12BA0EDD600D373BB /* Container.swift in Sources */,
 				561D66AD2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
+				560049D32BA0EDEA00D373BB /* PhotoTransferingError.swift in Sources */,
 				568B60812A7AD98400D5B5D3 /* PROgressUITestsLaunchTests.swift in Sources */,
 				562527B32AA1FFD900197E10 /* VideoProcessingUserSettings.swift in Sources */,
 				56A5543C2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
+				560049D42BA0EDFE00D373BB /* PROgressApp.swift in Sources */,
 				56A5542B2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
 				56BC80D12AAA46FE00DCA75D /* ProgressVideosCollectionViewModel.swift in Sources */,
 				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
@@ -928,25 +969,32 @@
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
 				56A5546F2A8E8F4600E99F65 /* AlbumSelectorView.swift in Sources */,
 				56BF34D72A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,
+				560049D62BA0EE1900D373BB /* NewProgressVideoView.swift in Sources */,
 				56BF34DB2A98FD2700AFA9E4 /* Photos+Sendable.swift in Sources */,
 				5604B11A2A9D054500B0DA4B /* AspectRatioFixedResolutionPicker.swift in Sources */,
 				56A554542A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift in Sources */,
 				56217F242AA06AB100A79CA0 /* FreeResolutionPicker.swift in Sources */,
 				56A554672A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
+				560049D22BA0EDE200D373BB /* ProcessInfo+Extensions.swift in Sources */,
 				56A554742A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				56BF34D22A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56BF34DF2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */,
+				560049D52BA0EE1400D373BB /* Persistence.swift in Sources */,
 				56BC80C92AA9B8DB00DCA75D /* UserDefaultKeys.swift in Sources */,
 				56A554632A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
+				560049CC2BA0ED9B00D373BB /* ProgressImage.swift in Sources */,
+				560049CF2BA0EDC300D373BB /* NewProgressVideoViewModel.swift in Sources */,
 				56217F2A2AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
 				56A5549C2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				56BC80CD2AA9BD1200DCA75D /* GlobalSettings.swift in Sources */,
 				56A554502A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift in Sources */,
 				56BF34C72A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
 				562527BB2AA34EAE00197E10 /* SwiftUI+Sendable.swift in Sources */,
+				560049D72BA0EE1F00D373BB /* ImageProcessingModals.swift in Sources */,
 				56A554402A8957EB00E99F65 /* NewProgressVideoPlayerViewModel.swift in Sources */,
 				56A554442A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift in Sources */,
+				560049CD2BA0EDA400D373BB /* PRLogger.swift in Sources */,
 				56BC80C52AA9AB2900DCA75D /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1374,6 +1422,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		560049D82BA0EE6400D373BB /* Factory */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 568B609D2A84091000D5B5D3 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = Factory;
+		};
+		560049DA2BA0EE6700D373BB /* EBUniAppsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 568B608D2A7ADE2400D5B5D3 /* XCRemoteSwiftPackageReference "EBUniAppsKit" */;
+			productName = EBUniAppsKit;
+		};
 		568B608E2A7ADE2400D5B5D3 /* EBUniAppsKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 568B608D2A7ADE2400D5B5D3 /* XCRemoteSwiftPackageReference "EBUniAppsKit" */;
