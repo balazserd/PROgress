@@ -20,6 +20,8 @@ struct NewProgressVideoView: View {
     @State private var isShowingPhotoPicker: Bool = false
     @State private var isShowingPhotoAlbumPicker: Bool = false
     
+    @State private var isShowingVideoNameEditor: Bool = false
+    
     @StateObject private var viewModel = NewProgressVideoViewModel()
     
     var body: some View {
@@ -36,29 +38,19 @@ struct NewProgressVideoView: View {
                         loadingView(progress)
                         
                     case .failure:
-                        Text("Loading the image failed!")
+                        ContentUnavailableView {
+                            Label("Loading the image failed!", systemImage: "xmark.circle.fill")
+                        } description: {
+                            Text("Try restarting the app.")
+                                .foregroundStyle(.secondary)
+                        }
                         
                     case .success:
-                        ImageLoadingSuccessView()
+                        VideoSettingsView()
                     }
-                }
-                .navigationTitle("New progress video")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: ProgressVideo.self) { progressVideo in
-                    NewProgressVideoPlayerView(video: progressVideo)
                 }
                 .toolbar { toolbar }
-                .overlay(alignment: .bottom) {
-                    if viewModel.video != nil {
-                        Button(action: { viewModel.watchVideo() }) {
-                            Text("Watch video")
-                                .bold()
-                                .frame(maxWidth: .infinity, minHeight: 32)
-                        }
-                        .padding(8)
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
+                .navigationTitle($viewModel.videoName)
                 .photosPicker(isPresented: $isShowingPhotoPicker,
                               selection: $viewModel.selectedItems,
                               matching: .any(of: [.images, .screenshots]))
@@ -66,6 +58,16 @@ struct NewProgressVideoView: View {
                        onDismiss: { isShowingPhotoAlbumPicker = false }) {
                     AlbumSelectorView(selectedAlbum: $viewModel.selectedAlbum)
                 }
+               .alert(
+                "Change video title",
+                isPresented: $isShowingVideoNameEditor,
+                actions: {
+                    TextField("Video title", text: $viewModel.videoName)
+                    Button("OK", action: { isShowingVideoNameEditor = false })
+                },
+                message: {
+                    Text("Change the name of your video. This is the name by which it will be saved and later shown to you.")
+                })
             }
                 
             switch viewModel.videoProcessingState {
@@ -94,6 +96,7 @@ struct NewProgressVideoView: View {
         .environmentObject(self.viewModel)
     }
     
+    // MARK: - Subviews
     private func loadingView(_ progress: Double) -> some View {
         VStack(alignment: .leading) {
             ProgressView(value: progress) {
@@ -124,8 +127,15 @@ struct NewProgressVideoView: View {
         }
     }
     
+    // MARK: - Toolbar
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigation) {
+            Button(action: { isShowingVideoNameEditor = true }) {
+                Image(systemName: "pencil")
+            }
+        }
+        
         ToolbarItem(placement: .primaryAction) {
             photoSelectionMenu {
                 Image(systemName: "plus")
@@ -142,9 +152,18 @@ struct NewProgressVideoView: View {
                 .disabled(!viewModel.imageLoadingState.isSuccess)
             }
         }
+        
+        if let video = viewModel.video {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { viewModel.watchVideo() }) {
+                    Image(systemName: "video.fill")
+                }
+            }
+        }
     }
 }
 
+// MARK: - Preview
 struct NewProgressVideoView_Previews: PreviewProvider {
     static var previews: some View {
         NewProgressVideoView()

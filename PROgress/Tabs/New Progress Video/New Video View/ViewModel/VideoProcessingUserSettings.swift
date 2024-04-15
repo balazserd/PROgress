@@ -96,6 +96,8 @@ struct VideoProcessingUserSettings: Sendable {
     
     var customExtentAxis: Axis?
     
+    var videoName: String = "New Progress Video"
+    
     private(set) var aspectRatio: Double!
     
     init(timeBetweenFrames: Double = 0.2,

@@ -46,6 +46,11 @@ class NewProgressVideoViewModel: ObservableObject {
     private var videoCreationLiveActivity: VideoCreationActivity?
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
     @Published private(set) var video: ProgressVideo?
+    @Published var videoName: String = "New progress video" {
+        didSet {
+            video?.name = videoName
+        }
+    }
     
     @Published private(set) var photoAlbumsLoadingState: PhotoAlbumsLoadingState = .undefined
     @Published private(set) var photoAlbums: [PhotoAlbum]?
@@ -98,11 +103,13 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 var thumbnails: VideoCreationActivityThumbnailData
                 if isConvertingAlbum {
-                    thumbnails = try await self.imageMergeEngine.provideVideoCreationActivityThumbnails(from: assetIdentifiers,
-                                                                                                        by: .phAssetEngine(options: .detailed))
+                    thumbnails = try await self.imageMergeEngine
+                        .provideVideoCreationActivityThumbnails(from: assetIdentifiers,
+                                                                by: .phAssetEngine(options: .detailed))
                 } else {
-                    thumbnails = try await self.imageMergeEngine.provideVideoCreationActivityThumbnails(from: selectedItems,
-                                                                                                        by: .photosPickerItemEngine)
+                    thumbnails = try await self.imageMergeEngine
+                        .provideVideoCreationActivityThumbnails(from: selectedItems,
+                                                                by: .photosPickerItemEngine)
                 }
                 
                 let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
@@ -137,6 +144,7 @@ class NewProgressVideoViewModel: ObservableObject {
                                                                         options: options)
                 }
                 
+                video.name = await self.videoName
                 await self.addVideoToView(video)
                 
                 if await UIApplication.shared.applicationState == .background {

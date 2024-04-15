@@ -107,6 +107,7 @@ actor PhotoLibraryManager {
                     assetProcessingProgressBlock(progressUnit)
                     return VideoAsset(firstImage: UIImage(cgImage: firstImage),
                                       lastImage: UIImage(cgImage: lastImage),
+                                      name: Self.extractAssetURLVideoNamePart(from: item.asset),
                                       length: videoLength.seconds,
                                       index: item.index,
                                       creationDate: creationDate)
@@ -329,6 +330,31 @@ actor PhotoLibraryManager {
     // MARK: - Miscellaneous
     func requestAuthorization() async {
         authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+    }
+    
+    private static func extractAssetURLVideoNamePart(from asset: AVAsset) -> String? {
+        guard let urlAsset = asset as? AVURLAsset else {
+            PRLogger.photoLibraryManagement.error("Asset is not an AVURLAsset!")
+            return nil
+        }
+        
+        guard let lastPathComponent = urlAsset.url.lastPathComponent.removingPercentEncoding else {
+            PRLogger.photoLibraryManagement.error("Could not remove percent encoding!")
+            return nil
+        }
+        
+        // Returns IMG_3242.mov here, so I need metadata.... :'(
+        
+        guard
+            let firstCharacterPosition = lastPathComponent.range(of: "[")?.upperBound,
+            let lastCharacterPosition = lastPathComponent.range(of: "]")?.lowerBound,
+            firstCharacterPosition < lastCharacterPosition
+        else {
+            PRLogger.photoLibraryManagement.error("Unrecognized path!")
+            return nil
+        }
+        
+        return String(lastPathComponent[firstCharacterPosition..<lastCharacterPosition])
     }
     
     enum AlbumFetchingReason {

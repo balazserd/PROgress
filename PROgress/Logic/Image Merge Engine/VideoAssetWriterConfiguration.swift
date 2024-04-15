@@ -23,10 +23,15 @@ class VideoAssetWriterConfiguration: @unchecked Sendable {
         self.userSettings = settings
         self.videoId = UUID()
         
+        let videoNameCleared = userSettings.videoName
+            .replacingOccurrences(of: "[", with: "")
+            .replacingOccurrences(of: "]", with: "")
+            .addingPercentEncoding(withAllowedCharacters: .alphanumerics.union(.whitespaces)) ?? "<error>"
+        
         self.outputUrl = FileManager()
             .urls(for: .documentDirectory, in: .userDomainMask)
             .first?
-            .appendingPathComponent(videoId.uuidString, conformingTo: .quickTimeMovie)
+            .appendingPathComponent("\(videoId.uuidString)[\(videoNameCleared)]", conformingTo: .quickTimeMovie)
         
         guard outputUrl != nil else {
             throw VideoAssetWriterConfigurationError.couldNotCreateFileURL
