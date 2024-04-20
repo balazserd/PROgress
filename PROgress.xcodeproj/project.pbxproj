@@ -16,7 +16,6 @@
 		560049D22BA0EDE200D373BB /* ProcessInfo+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60AD2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift */; };
 		560049D32BA0EDEA00D373BB /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
 		560049D42BA0EDFE00D373BB /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
-		560049D52BA0EE1400D373BB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
 		560049D62BA0EE1900D373BB /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		560049D72BA0EE1F00D373BB /* ImageProcessingModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60B02A85034A00D5B5D3 /* ImageProcessingModals.swift */; };
 		560049D92BA0EE6400D373BB /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 560049D82BA0EE6400D373BB /* Factory */; };
@@ -64,12 +63,10 @@
 		56853BD22BA0ECCD00CF0F14 /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
 		56853BD32BA0ECD900CF0F14 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		56853BD42BA0ECE300CF0F14 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
-		56853BD52BA0ECEC00CF0F14 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
 		568B605E2A7AD98300D5B5D3 /* PROgressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */; };
 		568B60602A7AD98300D5B5D3 /* NewProgressVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */; };
 		568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
 		568B60652A7AD98400D5B5D3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60642A7AD98400D5B5D3 /* Preview Assets.xcassets */; };
-		568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60662A7AD98400D5B5D3 /* Persistence.swift */; };
 		568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 568B60682A7AD98400D5B5D3 /* PROgress.xcdatamodeld */; };
 		568B60752A7AD98400D5B5D3 /* PROgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60742A7AD98400D5B5D3 /* PROgressTests.swift */; };
 		568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B607E2A7AD98400D5B5D3 /* PROgressUITests.swift */; };
@@ -260,7 +257,6 @@
 		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
 		568B60612A7AD98400D5B5D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		568B60642A7AD98400D5B5D3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		568B60662A7AD98400D5B5D3 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		568B60692A7AD98400D5B5D3 /* PROgress.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PROgress.xcdatamodel; sourceTree = "<group>"; };
 		568B606B2A7AD98400D5B5D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		568B60702A7AD98400D5B5D3 /* PROgressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PROgressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -441,7 +437,6 @@
 				56BC80C02AA9AAEB00DCA75D /* Tabs */,
 				568B60AC2A84C45E00D5B5D3 /* Extensions */,
 				568B60612A7AD98400D5B5D3 /* Assets.xcassets */,
-				568B60662A7AD98400D5B5D3 /* Persistence.swift */,
 				568B606B2A7AD98400D5B5D3 /* Info.plist */,
 				568B60682A7AD98400D5B5D3 /* PROgress.xcdatamodeld */,
 				568B60632A7AD98400D5B5D3 /* Preview Content */,
@@ -858,7 +853,6 @@
 				56A554312A87F23E00E99F65 /* ImageLoadingSuccessView.swift in Sources */,
 				56A554562A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56217F282AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
-				568B60672A7AD98400D5B5D3 /* Persistence.swift in Sources */,
 				56BF34D92A98FD2700AFA9E4 /* Photos+Sendable.swift in Sources */,
 				562527B52AA2001700197E10 /* Axis+Extensions.swift in Sources */,
 				56C255362BCD9CB900753C3D /* BasicVideoSettingsSection.swift in Sources */,
@@ -960,7 +954,6 @@
 				56853BD12BA0ECB900CF0F14 /* NewProgressVideoViewModel.swift in Sources */,
 				56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
-				56853BD52BA0ECEC00CF0F14 /* Persistence.swift in Sources */,
 				564408332BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */,
 				56217F232AA06AB100A79CA0 /* FreeResolutionPicker.swift in Sources */,
 				568B60AB2A840C2200D5B5D3 /* Container.swift in Sources */,
@@ -1032,7 +1025,6 @@
 				5644083C2BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift in Sources */,
 				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				56BF34DF2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */,
-				560049D52BA0EE1400D373BB /* Persistence.swift in Sources */,
 				56BC80C92AA9B8DB00DCA75D /* UserDefaultKeys.swift in Sources */,
 				56A554632A8D552300E99F65 /* PhotoAlbumCollection.swift in Sources */,
 				560049CC2BA0ED9B00D373BB /* ProgressImage.swift in Sources */,

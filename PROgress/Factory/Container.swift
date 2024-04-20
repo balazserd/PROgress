@@ -7,6 +7,7 @@
 
 import Foundation
 import Factory
+import SwiftData
 
 extension Container {
     var imageMergeEngine: Factory<ImageMergeEngine> {
@@ -19,5 +20,11 @@ extension Container {
     
     var activityManager: Factory<ActivityManager> {
         self { ActivityManager() }
+    }
+    
+    var persistenceContainer: Factory<ModelContainer?> {
+        self {
+            try? ModelContainer(for: ProgressVideo.Model.self)
+        }
     }
 }

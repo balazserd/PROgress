@@ -6,17 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PROgressApp: App {
     static let groupIdentifier = "group.com.ebuniapps.PROgress"
-    
-    let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             MainWindow()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(GlobalSettings())
         }
     }

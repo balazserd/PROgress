@@ -153,7 +153,7 @@ struct NewProgressVideoView: View {
             }
         }
         
-        if let video = viewModel.video {
+        if viewModel.video != nil {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { viewModel.watchVideo() }) {
                     Image(systemName: "video.fill")

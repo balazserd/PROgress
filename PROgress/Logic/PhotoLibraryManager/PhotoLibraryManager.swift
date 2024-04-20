@@ -77,7 +77,9 @@ actor PhotoLibraryManager {
                                     return
                                 }
     
-                                let indexedAsset = IndexedAVAsset(asset: avAsset, index: index)
+                                let indexedAsset = IndexedAVAsset(asset: avAsset, 
+                                                                  localIdentifier: asset.localIdentifier,
+                                                                  index: index)
                                 continuation.resume(returning: indexedAsset)
                             }
                     }
@@ -107,10 +109,11 @@ actor PhotoLibraryManager {
                     assetProcessingProgressBlock(progressUnit)
                     return VideoAsset(firstImage: UIImage(cgImage: firstImage),
                                       lastImage: UIImage(cgImage: lastImage),
-                                      name: Self.extractAssetURLVideoNamePart(from: item.asset),
+                                      name: nil,
                                       length: videoLength.seconds,
                                       index: item.index,
-                                      creationDate: creationDate)
+                                      creationDate: creationDate,
+                                      localIdentifier: item.localIdentifier)
                 }
             }
             
@@ -258,14 +261,13 @@ actor PhotoLibraryManager {
     }
     
     // MARK: - Saving video to designated album
-    nonisolated func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws {
+    nonisolated func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws -> String {
         switch await self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
             await self.requestAuthorization()
             
-            try await saveAssetToPhotoLibrary(assetAtUrl: url)
-            return
+            return try await saveAssetToPhotoLibrary(assetAtUrl: url)
             
         case .restricted, .denied:
             throw AuthorizationError.deniedAuthorization
@@ -281,6 +283,7 @@ actor PhotoLibraryManager {
             try await self.createPROgressMediaLibrary()
         }
         
+        var newAssetlocalIdentifier: String!
         do {
             try await PHPhotoLibrary.shared().performChanges {
                 guard let creationRequest = PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: url) else {
@@ -304,7 +307,10 @@ actor PhotoLibraryManager {
                 }
                 
                 addAssetRequest.addAssets([placeholder] as NSArray)
+                newAssetlocalIdentifier = placeholder.localIdentifier
             }
+            
+            return newAssetlocalIdentifier
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)
@@ -434,9 +440,21 @@ struct VideoAsset: Sendable {
     var length: Double
     var index: Int
     var creationDate: Date?
+    var localIdentifier: String
+    
+    static func addAssetNamesFromPersistentStore(assets: inout [VideoAsset], persistedAssets: [ProgressVideo.Model]) {
+        for (index, asset) in assets.enumerated() {
+            if let model = persistedAssets.first(where: { $0.localIdentifier == asset.localIdentifier }) {
+                assets[index].name = model.name
+            } else {
+                assets[index].name = "<Unnamed Progress Video>"
+            }
+        }
+    }
 }
 
 struct IndexedAVAsset: @unchecked Sendable {
     let asset: AVAsset
+    let localIdentifier: String
     var index: Int
 }

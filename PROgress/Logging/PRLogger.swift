@@ -21,4 +21,6 @@ actor PRLogger {
     static let photoConversion = Logger(subsystem: "com.ebuniapps.PROgress", category: "photoConversion")
     
     static let photoLibraryManagement = Logger(subsystem: "com.ebuniapps.PROgress", category: "photoLibraryManagement")
+    
+    static let persistence = Logger(subsystem: "com.ebuniapps.PROgress", category: "persistence")
 }

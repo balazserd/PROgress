@@ -7,31 +7,54 @@
 
 import Foundation
 import Factory
+import SwiftData
+import os
 
 @MainActor
 class ProgressVideosCollectionViewModel: ObservableObject {
     @Injected(\.photoLibraryManager) private var photoLibraryManager: PhotoLibraryManager
-    
+    @Injected(\.persistenceContainer) private var container
+               
     @Published private(set) var videos: [VideoAsset]?
     @Published private(set) var videoLoadInProgress: Bool = false
+    @Published private(set) var error: VideoRetrievalError?
     
     func loadProgressVideos() {
         self.videoLoadInProgress = true
         
-        Task.detached {
-            let videos = try await self.photoLibraryManager.getAllVideosOfPROgressMediaLibrary { _ in
-                return
-            } processing: { _ in
-                return
+        guard container != nil else {
+            PRLogger.persistence.error("Container creation failed!")
+            self.error = .containerCreationFailure
+            
+            return
+        }
+        
+        Task {
+            var getVideosFromAlbumTask = Task.detached {
+                let videos = try await self.photoLibraryManager.getAllVideosOfPROgressMediaLibrary { _ in
+                    return
+                } processing: { _ in
+                    return
+                }
+                
+                return videos
             }
             
-            await self.setVideos(to: videos)
+            do {
+                var persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.allItemsDescriptor())
+                var videoAssetsInAlbum = try await getVideosFromAlbumTask.value
+                
+                VideoAsset.addAssetNamesFromPersistentStore(assets: &videoAssetsInAlbum,
+                                                            persistedAssets: persistedVideos)
+                
+                self.videos = videoAssetsInAlbum
+            } catch let error {
+                PRLogger.persistence.error("Could not fetch videos from backing store! [\(error)]")
+                self.error = .fetchRequestError
+            }
+            
+            self.videoLoadInProgress = false
         }
-    }
-    
-    func setVideos(to videos: [VideoAsset]?) {
-        self.videos = videos
-        self.videoLoadInProgress = false
     }
     
     lazy var videoDurationFormatter: DateComponentsFormatter = {
@@ -49,4 +72,9 @@ class ProgressVideosCollectionViewModel: ObservableObject {
         
         return formatter
     }()
+    
+    enum VideoRetrievalError: Error {
+        case containerCreationFailure
+        case fetchRequestError
+    }
 }
