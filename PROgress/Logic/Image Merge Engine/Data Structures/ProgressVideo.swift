@@ -14,8 +14,15 @@ struct ProgressVideo: Hashable {
     var resolution: CGSize
     var name: String = "Progress Video"
     
+    /// Signals whether the video had already been persisted in the background.
+    var persisted: Bool = false
+    
     func hash(into hasher: inout Hasher) {
         videoId.hash(into: &hasher)
+    }
+    
+    func model(withLocalIdentifier localIdentifier: String) -> Model {
+        return ProgressVideo.Model(localIdentifier: localIdentifier, name: self.name)
     }
     
     /// The persistable version of this type.

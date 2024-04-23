@@ -11,22 +11,22 @@ import AVKit
 import Combine
 
 struct NewProgressVideoPlayerView: View {
-    @StateObject private var viewModel = NewProgressVideoPlayerViewModel()
+    @StateObject private var viewModel: NewProgressVideoPlayerViewModel
+    private var video: ProgressVideo { self.viewModel.video }
     
     @State private var showShareSheet = false
     
-    var video: ProgressVideo
     private let avPlayer: AVPlayer
     
     init(video: ProgressVideo) {
-        self.video = video
+        self._viewModel = StateObject(wrappedValue: .init(video: video))
         self.avPlayer = AVPlayer(url: video.url)
     }
     
     var body: some View {
         VStack(spacing: 12) {
             AVPlayerViewController.Representable(player: avPlayer)
-                .aspectRatio(video.resolution.width / video.resolution.height, contentMode: .fit)
+                .aspectRatio(viewModel.video.resolution.width / viewModel.video.resolution.height, contentMode: .fit)
                 .padding(.horizontal)
                 .shadow(radius: 15)
                 .onAppear {
@@ -45,8 +45,8 @@ struct NewProgressVideoPlayerView: View {
             .padding(.horizontal)
         }
         .padding(.vertical)
-        .navigationTitle(video.name)
-        .shareView(with: [video.url], isPresented: $showShareSheet)
+        .navigationTitle(viewModel.video.name)
+        .shareView(with: [viewModel.video.url], isPresented: $showShareSheet)
     }
     
     @ToolbarContentBuilder
@@ -57,7 +57,8 @@ struct NewProgressVideoPlayerView: View {
                 ProgressView()
                     .transition(.opacity)
                 
-            case .finished:
+            case .none where viewModel.video.persisted,
+                 .finished:
                 Button(action: {}) {
                     Image(systemName: "arrow.down.circle")
                         .overlay(alignment: .topTrailing) {
@@ -74,8 +75,8 @@ struct NewProgressVideoPlayerView: View {
                 .disabled(true)
                 .transition(.opacity)
                 
-            case .none:
-                Button(action: { viewModel.saveVideo(video) }) {
+            case .none where !viewModel.video.persisted:
+                Button(action: { viewModel.saveVideo() }) {
                     Image(systemName: "arrow.down.circle")
                 }
                 .transition(.opacity)

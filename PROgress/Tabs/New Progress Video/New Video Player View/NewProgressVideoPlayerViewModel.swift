@@ -16,15 +16,19 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
     @Injected(\.persistenceContainer) private var container
     
     @Published private(set) var saveStatus: SaveStatus?
+    @Published private(set) var video: ProgressVideo
     
-    func saveVideo(_ progressVideo: ProgressVideo) {
+    init(video: ProgressVideo) {
+        self.video = video
+    }
+    
+    func saveVideo() {
         self.setSaveVideoStatus(to: .inProgress)
         
         Task.detached {
             do {
-                let newAssetLocalIdentifier = try await self.photoLibraryManager.saveAssetToPhotoLibrary(assetAtUrl: progressVideo.url)
+                try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(self.video)
                 
-                await self.persistVideo(progressVideo, withLocalIdentifier: newAssetLocalIdentifier)
                 await self.setSaveVideoStatus(to: .finished)
             } catch let error {
                 PRLogger.app.error("Failed to save video! [\(error)]")
@@ -33,13 +37,11 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
         }
     }
     
-    func persistVideo(_ video: ProgressVideo, withLocalIdentifier localIdentifier: String) {
-        let persistedVideo = ProgressVideo.Model(localIdentifier: localIdentifier,
-                                                 name: video.name)
-        self.container?.mainContext.insert(persistedVideo)
-    }
-    
     func setSaveVideoStatus(to status: SaveStatus) {
+        if status == .finished {
+            self.video.persisted = true
+        }
+        
         withAnimation(.easeInOut) {
             self.saveStatus = status
         }

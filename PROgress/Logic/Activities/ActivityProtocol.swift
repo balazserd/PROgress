@@ -19,12 +19,14 @@ protocol ActivityProtocol: Actor {
     
     func setId(to id: String)
     func onStart()
-    func onFinish()
+    func onEnded()
+    func onDismissed()
 }
 
 extension ActivityProtocol {
     func onStart() { }
-    func onFinish() { }
+    func onEnded() { }
+    func onDismissed() { }
     
     func setId(to id: String) {
         self.id = id

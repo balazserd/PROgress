@@ -16,7 +16,7 @@ import Combine
 actor ImageMergeEngine {
     static let backgroundTaskName = "com.ebuniapps.PROgress-imageMergeTask"
     
-    var state = CurrentValueSubject<State, Never>(.idle)
+    nonisolated let state = CurrentValueSubject<State, Never>(.idle)
     
     func provideVideoCreationActivityThumbnails<ConversionEngine: PhotoConversionEngine>(
         from images: [ConversionEngine.Input],

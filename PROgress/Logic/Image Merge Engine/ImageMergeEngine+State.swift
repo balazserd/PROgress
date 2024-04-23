@@ -8,7 +8,7 @@
 import Foundation
 
 extension ImageMergeEngine {
-    enum State: Equatable {
+    enum State: Equatable, Sendable {
         case idle
         case working(progress: Double)
         case finished

@@ -23,6 +23,16 @@ final class ActivityManager: Sendable {
             
             await activity.setId(to: activityKitActivity.id)
             await activity.onStart()
+            
+            /// Listen for dismiss event.
+            Task.detached { [id = activityKitActivity.id] in
+                let _act = try self.activityWithId(id, withAttributeType: A.Attributes.self)
+                
+                for await stateUpdate in _act.activityStateUpdates {
+                    guard stateUpdate == .dismissed else { continue }
+                    await activity.onDismissed()
+                }
+            }
         } catch let error {
             PRLogger.activities.error("Activity could not be started! \(error)")
             throw error
@@ -44,7 +54,7 @@ final class ActivityManager: Sendable {
         let finalActivityContent = ActivityContent(state: state, staleDate: await activity.staleDate())
         await activityKitActivity.end(finalActivityContent)
         
-        await activity.onFinish()
+        await activity.onEnded()
     }
     
     private func activityWithId<Attributes: ActivityAttributes>(_ id: String,

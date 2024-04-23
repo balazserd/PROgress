@@ -10,8 +10,11 @@ import Foundation
 import SwiftUI
 import UIKit
 import AVFoundation
+import Factory
 
 actor PhotoLibraryManager {
+    @Injected(\.persistenceContainer) private var container
+    
     var authorizationStatus: PHAuthorizationStatus
     
     static let videoLibraryTitle = "PROgress"
@@ -37,8 +40,8 @@ actor PhotoLibraryManager {
     
     /// Returns all videos in the PROgress app's designated video folder.
     func getAllVideosOfPROgressMediaLibrary(
-        retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void,
-        processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void
+        retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return },
+        processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return }
     ) async throws -> [VideoAsset] {
         guard let videoLibrary = PROgressMediaLibraryAssetCollection else {
             PRLogger.photoLibraryManagement.error("Did not find the designated video library!")
@@ -261,13 +264,13 @@ actor PhotoLibraryManager {
     }
     
     // MARK: - Saving video to designated album
-    func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws -> String {
+    func saveProgressVideoToPhotoLibrary(_ progressVideo: ProgressVideo) async throws {
         switch self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
             await self.requestAuthorization()
             
-            return try await saveAssetToPhotoLibrary(assetAtUrl: url)
+            return try await saveProgressVideoToPhotoLibrary(progressVideo)
             
         case .restricted, .denied:
             throw AuthorizationError.deniedAuthorization
@@ -283,11 +286,11 @@ actor PhotoLibraryManager {
             try await self.createPROgressMediaLibrary()
         }
         
-        var newAssetlocalIdentifier = String.makeActorized()
+        let newAssetlocalIdentifier = String.makeActorized()
         do {
-            try await PHPhotoLibrary.shared().performChanges { @Sendable [newAssetlocalIdentifier] in
-                guard let creationRequest = PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: url) else {
-                    PRLogger.photoLibraryManagement.error("Could not build asset creation request for url \(url, privacy: .private(mask: .hash))")
+            try await PHPhotoLibrary.shared().performChanges { @Sendable [newAssetlocalIdentifier, progressVideo] in
+                guard let creationRequest = PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: progressVideo.url) else {
+                    PRLogger.photoLibraryManagement.error("Could not build asset creation request for url \(progressVideo.url, privacy: .private(mask: .hash))")
                     return
                 }
                 
@@ -312,7 +315,8 @@ actor PhotoLibraryManager {
                 }
             }
             
-            return await newAssetlocalIdentifier.value
+            let model = await progressVideo.model(withLocalIdentifier: newAssetlocalIdentifier.value)
+            container?.makeNewContext().insert(model)
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)

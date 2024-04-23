@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
-import Combine
+@preconcurrency import Combine
 import EBUniAppsKit
 import Factory
 import ActivityKit
@@ -19,6 +19,7 @@ class NewProgressVideoViewModel: ObservableObject {
     @Injected(\.imageMergeEngine) private var imageMergeEngine
     @Injected(\.photoLibraryManager) private var photoLibraryManager
     @Injected(\.activityManager) private var activityManager
+    @Injected(\.persistenceContainer) private var container
     
     // MARK: - Variables
     @Published var navigationState = NavigationPath()
@@ -145,12 +146,14 @@ class NewProgressVideoViewModel: ObservableObject {
                 }
                 
                 video.name = await self.videoName
-                await self.addVideoToView(video)
                 
                 if await UIApplication.shared.applicationState == .background {
                     PRLogger.app.notice("App is in background, automatically saving video to Photo Library.")
-                    try await self.photoLibraryManager.saveAssetToPhotoLibrary(assetAtUrl: video.url)
+                    try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(video)
+                    video.persisted = true
                 }
+                
+                await self.addVideoToView(video)
                 
                 try await self.activityManager.endActivity(activity, with: .ended())
             } catch let error {
@@ -159,7 +162,9 @@ class NewProgressVideoViewModel: ObservableObject {
             }
         }
         
-        Task.detached { [unowned self] in
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+            
             for await state in await self.imageMergeEngine.state.values {
                 await MainActor.run {
                     self.videoProcessingState = state

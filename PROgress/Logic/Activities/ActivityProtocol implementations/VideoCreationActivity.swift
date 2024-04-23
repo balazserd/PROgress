@@ -28,7 +28,7 @@ actor VideoCreationActivity: ActivityProtocol {
         Calendar.current.date(byAdding: .minute, value: 20, to: Date())!
     }
     
-    func onFinish() {
+    func onDismissed() {
         let imageUrls = [attributes.firstImage] + attributes.middleImages + [attributes.lastImage]
         
         Task.detached {

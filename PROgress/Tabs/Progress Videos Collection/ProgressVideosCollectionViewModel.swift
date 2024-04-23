@@ -30,18 +30,12 @@ class ProgressVideosCollectionViewModel: ObservableObject {
         }
         
         Task {
-            var getVideosFromAlbumTask = Task.detached {
-                let videos = try await self.photoLibraryManager.getAllVideosOfPROgressMediaLibrary { _ in
-                    return
-                } processing: { _ in
-                    return
-                }
-                
-                return videos
+            let getVideosFromAlbumTask = Task.detached {
+                return try await self.photoLibraryManager.getAllVideosOfPROgressMediaLibrary()
             }
             
             do {
-                var persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.allItemsDescriptor())
+                let persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.allItemsDescriptor())
                 var videoAssetsInAlbum = try await getVideosFromAlbumTask.value
                 
                 VideoAsset.addAssetNamesFromPersistentStore(assets: &videoAssetsInAlbum,
