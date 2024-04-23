@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Photos
+@preconcurrency import Photos
 import SwiftUI
 import UIKit
 import AVFoundation
@@ -36,7 +36,7 @@ actor PhotoLibraryManager {
     }
     
     /// Returns all videos in the PROgress app's designated video folder.
-    nonisolated func getAllVideosOfPROgressMediaLibrary(
+    func getAllVideosOfPROgressMediaLibrary(
         retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void,
         processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void
     ) async throws -> [VideoAsset] {
@@ -261,8 +261,8 @@ actor PhotoLibraryManager {
     }
     
     // MARK: - Saving video to designated album
-    nonisolated func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws -> String {
-        switch await self.authorizationStatus {
+    func saveAssetToPhotoLibrary(assetAtUrl url: URL) async throws -> String {
+        switch self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
             await self.requestAuthorization()
@@ -283,9 +283,9 @@ actor PhotoLibraryManager {
             try await self.createPROgressMediaLibrary()
         }
         
-        var newAssetlocalIdentifier: String!
+        var newAssetlocalIdentifier = String.makeActorized()
         do {
-            try await PHPhotoLibrary.shared().performChanges {
+            try await PHPhotoLibrary.shared().performChanges { @Sendable [newAssetlocalIdentifier] in
                 guard let creationRequest = PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: url) else {
                     PRLogger.photoLibraryManagement.error("Could not build asset creation request for url \(url, privacy: .private(mask: .hash))")
                     return
@@ -307,24 +307,26 @@ actor PhotoLibraryManager {
                 }
                 
                 addAssetRequest.addAssets([placeholder] as NSArray)
-                newAssetlocalIdentifier = placeholder.localIdentifier
+                Task {
+                    await newAssetlocalIdentifier.set(to: placeholder.localIdentifier)
+                }
             }
             
-            return newAssetlocalIdentifier
+            return await newAssetlocalIdentifier.value
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)
         }
     }
     
-    nonisolated func createPROgressMediaLibrary() async throws {
+    func createPROgressMediaLibrary() async throws {
         guard self.PROgressMediaLibraryAssetCollection == nil else {
             PRLogger.photoLibraryManagement.fault("Attempted to recreate the PROgress video library!")
             return
         }
         
         do {
-            try await PHPhotoLibrary.shared().performChanges {
+            try await PHPhotoLibrary.shared().performChanges { @Sendable in
                 PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: Self.videoLibraryTitle)
             }
         } catch let error {

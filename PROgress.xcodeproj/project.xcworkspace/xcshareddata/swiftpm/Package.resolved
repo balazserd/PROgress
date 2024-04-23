@@ -1,4 +1,5 @@
 {
+  "originHash" : "29535959acadd1936d4787d03424394a1ea8fa4f2c5d640b3ff2d68aadf21460",
   "pins" : [
     {
       "identity" : "ebuniappskit",
@@ -19,5 +20,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
