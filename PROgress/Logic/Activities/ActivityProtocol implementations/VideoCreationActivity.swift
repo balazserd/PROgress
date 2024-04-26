@@ -29,6 +29,8 @@ actor VideoCreationActivity: ActivityProtocol {
     }
     
     func onDismissed() {
+        PRLogger.activities.debug("Activity was dismissed!")
+        
         let imageUrls = [attributes.firstImage] + attributes.middleImages + [attributes.lastImage]
         
         Task.detached {
@@ -37,9 +39,9 @@ actor VideoCreationActivity: ActivityProtocol {
                 .forEach { imageUrl in
                     do {
                         try FileManager.default.removeItem(at: imageUrl)
-                        PRLogger.app.debug("Successfully deleted Live Activity asset.")
+                        PRLogger.activities.debug("Successfully deleted Live Activity asset.")
                     } catch let error {
-                        PRLogger.app.error("Could not delete temporary Live Activity asset! [\(error)]")
+                        PRLogger.activities.error("Could not delete temporary Live Activity asset! [\(error)]")
                     }
                 }
         }

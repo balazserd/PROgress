@@ -316,7 +316,11 @@ actor PhotoLibraryManager {
             }
             
             let model = await progressVideo.model(withLocalIdentifier: newAssetlocalIdentifier.value)
-            container?.makeNewContext().insert(model)
+            try container?.withNewContext {
+                $0.insert(model)
+                try $0.save()
+            }
+            
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)

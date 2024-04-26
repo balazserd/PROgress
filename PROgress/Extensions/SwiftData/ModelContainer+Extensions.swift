@@ -12,4 +12,11 @@ extension ModelContainer {
     func makeNewContext() -> ModelContext {
         ModelContext(self)
     }
+    
+    func withNewContext(_ block: (ModelContext) throws -> Void) rethrows {
+        let context = ModelContext(self)
+        context.autosaveEnabled = true
+        
+        try block(context)
+    }
 }

@@ -25,12 +25,14 @@ final class ActivityManager: Sendable {
             await activity.onStart()
             
             /// Listen for dismiss event.
-            Task.detached { [id = activityKitActivity.id] in
+            Task.detached(priority: .background) { [id = activityKitActivity.id] in
                 let _act = try self.activityWithId(id, withAttributeType: A.Attributes.self)
                 
                 for await stateUpdate in _act.activityStateUpdates {
                     guard stateUpdate == .dismissed else { continue }
+                    
                     await activity.onDismissed()
+                    break
                 }
             }
         } catch let error {

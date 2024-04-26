@@ -94,7 +94,7 @@ class NewProgressVideoViewModel: ObservableObject {
                 backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable in
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
-                        PRLogger.app.notice("Background task ended. Remaining time: \(timeRemaining) seconds.")
+                        PRLogger.app.info("Background task ended. Remaining time: \(timeRemaining) seconds.")
                     }
                 }
                 
@@ -113,15 +113,7 @@ class NewProgressVideoViewModel: ObservableObject {
                                                                 by: .photosPickerItemEngine)
                 }
                 
-                let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
-                                                                     middleImages: thumbnails.middleImagesData,
-                                                                     lastImage: thumbnails.lastImageData)
-                let activity = await MainActor.run { [attributes] in
-                    self.videoCreationLiveActivity = .videoCreation(attributes)
-                    return self.videoCreationLiveActivity!
-                }
-                
-                try await self.activityManager.startActivity(activity)
+                await self.setupLiveActivityForProgressVideo(with: thumbnails)
                 
                 let settings = await self.userSettings!
                 let options = ImageMergeEngine.MergeOptions(customOrder: photoUserOrdering, userSettings: settings)
@@ -145,7 +137,7 @@ class NewProgressVideoViewModel: ObservableObject {
                                                                         options: options)
                 }
                 
-                video.name = await self.videoName
+                video.name = await self.videoName // Do it manually once outside of didSet to pass default name.
                 
                 if await UIApplication.shared.applicationState == .background {
                     PRLogger.app.notice("App is in background, automatically saving video to Photo Library.")
@@ -155,30 +147,12 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 await self.addVideoToView(video)
                 
-                try await self.activityManager.endActivity(activity, with: .ended())
+                if let activity = await self.videoCreationLiveActivity {
+                    try await self.activityManager.endActivity(activity, with: .ended())
+                }
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
                 return
-            }
-        }
-        
-        Task.detached { [weak self] in
-            guard let self = self else { return }
-            
-            for await state in await self.imageMergeEngine.state.values {
-                await MainActor.run {
-                    self.videoProcessingState = state
-                }
-                
-                if  case .working(let progress) = state,
-                    let activity = await self.videoCreationLiveActivity
-                {
-                    do {
-                        try await self.activityManager.updateActivity(activity, with: .inProgress(value: progress))
-                    } catch let error {
-                        PRLogger.app.error("Failed to update live activity! [\(error)]")
-                    }
-                }
             }
         }
     }
@@ -279,6 +253,43 @@ class NewProgressVideoViewModel: ObservableObject {
         } catch let error {
             PRLogger.app.error("Failed to fetch images! [\(error)]")
             await updateState(to: .failure(error))
+        }
+    }
+    
+    private func setupLiveActivityForProgressVideo(with thumbnails: VideoCreationActivityThumbnailData) async {
+        let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
+                                                             middleImages: thumbnails.middleImagesData,
+                                                             lastImage: thumbnails.lastImageData)
+        let activity = await MainActor.run { [attributes] in
+            self.videoCreationLiveActivity = .videoCreation(attributes)
+            return self.videoCreationLiveActivity!
+        }
+        
+        do {
+            try await self.activityManager.startActivity(activity)
+        } catch let error {
+            PRLogger.activities.error("Activity couldn't be started: \(error)")
+        }
+        
+        // Update live activity when image merging progresses
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+            
+            for await state in await self.imageMergeEngine.state.values {
+                await MainActor.run {
+                    self.videoProcessingState = state
+                }
+                
+                if  case .working(let progress) = state,
+                    let activity = await self.videoCreationLiveActivity
+                {
+                    do {
+                        try await self.activityManager.updateActivity(activity, with: .inProgress(value: progress))
+                    } catch let error {
+                        PRLogger.app.error("Failed to update live activity! [\(error)]")
+                    }
+                }
+            }
         }
     }
     

@@ -35,15 +35,11 @@ struct ReorderImagesDropDelegate: DropDelegate {
             return
         }
         
-        print("Before: \(photoUserOrdering)")
-        
         allProgressImages!.move(fromOffsets: IndexSet([dragIndex]),
                                 toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
         
         photoUserOrdering.move(fromOffsets: IndexSet([dragIndex]),
                                toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
-        
-        print("After: \(photoUserOrdering)")
     }
     
     func performDrop(info: DropInfo) -> Bool {

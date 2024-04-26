@@ -1385,6 +1385,7 @@
 				INFOPLIST_FILE = PROgressActivities/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PROgressActivities;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1414,6 +1415,7 @@
 				INFOPLIST_FILE = PROgressActivities/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PROgressActivities;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
