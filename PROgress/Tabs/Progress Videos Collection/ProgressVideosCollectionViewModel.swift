@@ -8,6 +8,7 @@
 import Foundation
 import Factory
 import SwiftData
+import Combine
 import os
 
 @MainActor
@@ -15,11 +16,21 @@ class ProgressVideosCollectionViewModel: ObservableObject {
     @Injected(\.photoLibraryManager) private var photoLibraryManager: PhotoLibraryManager
     @Injected(\.persistenceContainer) private var container
                
+    @Published private(set) var searchCriteriaFulfillingVideos: [VideoAsset] = []
     @Published private(set) var videos: [VideoAsset]?
     @Published private(set) var videoLoadInProgress: Bool = false
     @Published private(set) var error: VideoRetrievalError?
     
+    @Published var searchText: String = ""
+    
+    init() { 
+        setupBindings()
+        loadProgressVideos()
+    }
+    
     func loadProgressVideos() {
+        PRLogger.app.debug("Initiating refresh of progress video list.")
+        
         self.videoLoadInProgress = true
         
         guard container != nil else {
@@ -66,6 +77,27 @@ class ProgressVideosCollectionViewModel: ObservableObject {
         
         return formatter
     }()
+    
+    // MARK: - Private functions
+    private var subscriptions = Set<AnyCancellable>()
+    private func setupBindings() {
+        Publishers.CombineLatest($videos, $searchText)
+            .compactMap { (videos, searchText) in
+                if searchText.isEmpty {
+                    return videos
+                }
+                
+                return videos?.filter { $0.name?.contains(searchText) == true }
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &self.$searchCriteriaFulfillingVideos)
+        
+        NotificationCenter.default.publisher(for: .didCreateNewProgressVideo)
+            .sink { [weak self] _ in
+                self?.loadProgressVideos()
+            }
+            .store(in: &subscriptions)
+    }
     
     enum VideoRetrievalError: Error {
         case containerCreationFailure

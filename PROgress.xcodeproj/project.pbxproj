@@ -188,6 +188,12 @@
 		56BF34DD2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DE2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
 		56BF34DF2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */; };
+		56BFBC412BDD554E00046927 /* CGImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC402BDD554E00046927 /* CGImage+Extensions.swift */; };
+		56BFBC422BDD554E00046927 /* CGImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC402BDD554E00046927 /* CGImage+Extensions.swift */; };
+		56BFBC432BDD554E00046927 /* CGImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC402BDD554E00046927 /* CGImage+Extensions.swift */; };
+		56BFBC472BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC462BDD5D8700046927 /* NSNotification.Name+Extensions.swift */; };
+		56BFBC482BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC462BDD5D8700046927 /* NSNotification.Name+Extensions.swift */; };
+		56BFBC492BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BFBC462BDD5D8700046927 /* NSNotification.Name+Extensions.swift */; };
 		56C159BA2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C159B92BD81C8100632A4A /* ModelContainer+Extensions.swift */; };
 		56C159BB2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C159B92BD81C8100632A4A /* ModelContainer+Extensions.swift */; };
 		56C159BC2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C159B92BD81C8100632A4A /* ModelContainer+Extensions.swift */; };
@@ -320,6 +326,8 @@
 		56BF34D42A97EE5B00AFA9E4 /* VideoCreationActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationActivity.swift; sourceTree = "<group>"; };
 		56BF34D82A98FD2700AFA9E4 /* Photos+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos+Sendable.swift"; sourceTree = "<group>"; };
 		56BF34DC2A990B1400AFA9E4 /* CoreImage+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreImage+Sendable.swift"; sourceTree = "<group>"; };
+		56BFBC402BDD554E00046927 /* CGImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+Extensions.swift"; sourceTree = "<group>"; };
+		56BFBC462BDD5D8700046927 /* NSNotification.Name+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotification.Name+Extensions.swift"; sourceTree = "<group>"; };
 		56C159B92BD81C8100632A4A /* ModelContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContainer+Extensions.swift"; sourceTree = "<group>"; };
 		56C255352BCD9CB900753C3D /* BasicVideoSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicVideoSettingsSection.swift; sourceTree = "<group>"; };
 		56C255392BCD9D1F00753C3D /* VideoSubsetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSubsetting.swift; sourceTree = "<group>"; };
@@ -520,16 +528,16 @@
 		568B60AC2A84C45E00D5B5D3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				56BFBC452BDD5D6300046927 /* Notifications */,
+				56BFBC442BDD5D3F00046927 /* SwiftUI */,
+				56BFBC3F2BDD553E00046927 /* Core Graphics */,
 				56C159B82BD81C7300632A4A /* SwiftData */,
 				56C255582BD7A6DB00753C3D /* Concurrency */,
 				56BC80BA2AA8530300DCA75D /* Core Image */,
 				56A554492A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift */,
-				564408352BB4A76200F035D3 /* Text+Extensions.swift */,
 				56A5544D2A8BEAD900E99F65 /* CVPixelBuffer+Extensions.swift */,
 				568B60AD2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift */,
 				56BF34D82A98FD2700AFA9E4 /* Photos+Sendable.swift */,
-				562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */,
-				562527B42AA2001700197E10 /* Axis+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -674,6 +682,32 @@
 				56BF34D42A97EE5B00AFA9E4 /* VideoCreationActivity.swift */,
 			);
 			path = "ActivityProtocol implementations";
+			sourceTree = "<group>";
+		};
+		56BFBC3F2BDD553E00046927 /* Core Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				56BFBC402BDD554E00046927 /* CGImage+Extensions.swift */,
+			);
+			path = "Core Graphics";
+			sourceTree = "<group>";
+		};
+		56BFBC442BDD5D3F00046927 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */,
+				562527B42AA2001700197E10 /* Axis+Extensions.swift */,
+				564408352BB4A76200F035D3 /* Text+Extensions.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		56BFBC452BDD5D6300046927 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				56BFBC462BDD5D8700046927 /* NSNotification.Name+Extensions.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		56C159B82BD81C7300632A4A /* SwiftData */ = {
@@ -877,6 +911,7 @@
 			files = (
 				568B60A62A840A6E00D5B5D3 /* ProgressVideo.swift in Sources */,
 				56A554312A87F23E00E99F65 /* ImageLoadingSuccessView.swift in Sources */,
+				56BFBC412BDD554E00046927 /* CGImage+Extensions.swift in Sources */,
 				56A554562A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56217F282AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
 				56BF34D92A98FD2700AFA9E4 /* Photos+Sendable.swift in Sources */,
@@ -907,6 +942,7 @@
 				56BC80CF2AAA46FE00DCA75D /* ProgressVideosCollectionViewModel.swift in Sources */,
 				56A5549A2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
 				56C2553E2BCD9D9C00753C3D /* PremiumVideoSettingsSection.swift in Sources */,
+				56BFBC472BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				5604B1142A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
@@ -981,6 +1017,7 @@
 				56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				5604B1152A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
 				564408372BB4A76200F035D3 /* Text+Extensions.swift in Sources */,
+				56BFBC482BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */,
 				56853BD12BA0ECB900CF0F14 /* NewProgressVideoViewModel.swift in Sources */,
 				56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A5542A2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
@@ -996,6 +1033,7 @@
 				5604B1192A9D054500B0DA4B /* AspectRatioFixedResolutionPicker.swift in Sources */,
 				56217F292AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
 				56BC80CC2AA9BD1200DCA75D /* GlobalSettings.swift in Sources */,
+				56BFBC422BDD554E00046927 /* CGImage+Extensions.swift in Sources */,
 				56BF34D12A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
@@ -1024,6 +1062,7 @@
 				560049D02BA0EDC900D373BB /* ProgressVideo.swift in Sources */,
 				56A554332A87F23E00E99F65 /* ImageLoadingSuccessView.swift in Sources */,
 				56BC80BE2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
+				56BFBC432BDD554E00046927 /* CGImage+Extensions.swift in Sources */,
 				56A554582A8BEB2E00E99F65 /* ImageMergeEngine+State.swift in Sources */,
 				56217F1C2A9DD41500A79CA0 /* AspectRatioFixedResolutionPickerPage.swift in Sources */,
 				560049CE2BA0EDB900D373BB /* ImageMergeEngine.swift in Sources */,
@@ -1053,6 +1092,7 @@
 				560049D22BA0EDE200D373BB /* ProcessInfo+Extensions.swift in Sources */,
 				56A554742A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
 				5644083E2BB4AA3700F035D3 /* ShareView.swift in Sources */,
+				56BFBC492BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */,
 				56BF34D22A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				5644083C2BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift in Sources */,
 				56A554482A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,

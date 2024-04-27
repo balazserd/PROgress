@@ -22,6 +22,8 @@ struct NewProgressVideoView: View {
     
     @State private var isShowingVideoNameEditor: Bool = false
     
+    @State private var editedVideoName: String = ""
+    
     @StateObject private var viewModel = NewProgressVideoViewModel()
     
     var body: some View {
@@ -62,8 +64,14 @@ struct NewProgressVideoView: View {
                 "Change video title",
                 isPresented: $isShowingVideoNameEditor,
                 actions: {
-                    TextField("Video title", text: $viewModel.videoName)
-                    Button("OK", action: { isShowingVideoNameEditor = false })
+                    TextField("Video title", text: $editedVideoName)
+                        .submitLabel(.return)
+                        .onSubmit {
+                            viewModel.videoName = editedVideoName
+                            editedVideoName = ""
+                            isShowingVideoNameEditor = false
+                        }
+                    Button("Cancel", role: .cancel, action: { isShowingVideoNameEditor = false })
                 },
                 message: {
                     Text("Change the name of your video. This is the name by which it will be saved and later shown to you.")

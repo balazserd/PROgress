@@ -9,11 +9,12 @@ import Foundation
 @preconcurrency import Photos
 import SwiftUI
 import UIKit
-import AVFoundation
+@preconcurrency import AVFoundation
 import Factory
 
 actor PhotoLibraryManager {
     @Injected(\.persistenceContainer) private var container
+    @Injected(\.imageMergeEngine) private var imageMergeEngine
     
     var authorizationStatus: PHAuthorizationStatus
     
@@ -102,20 +103,42 @@ actor PhotoLibraryManager {
             let videoAssetSources = await videoAssetSourcesTask.value
             for item in videoAssetSources {
                 group.addTask {
+                    typealias IndexedImage = (index: CMTime, image: UIImage?)
+                    
                     let imageGenerator = AVAssetImageGenerator(asset: item.asset)
+                    imageGenerator.requestedTimeToleranceAfter = .zero
+                    imageGenerator.requestedTimeToleranceBefore = .zero
+                    imageGenerator.maximumSize = .thumbnail
                     
                     let (videoLength, creationDateMetaData) = try await item.asset.load(.duration, .creationDate)
-                    let creationDate = try await creationDateMetaData?.load(.dateValue)
-                    let firstImage = try await imageGenerator.image(at: .zero).image
-                    let lastImage = try await imageGenerator.image(at: videoLength).image
+                    async let creationDate = creationDateMetaData?.load(.dateValue)
+                    
+                    var indexedImages = [IndexedImage]()
+                    let times = (0...4).map { CMTime(seconds: videoLength.seconds / 4 * Double($0), 
+                                                     preferredTimescale: 1) }
+                    for await imageGeneratorResult in imageGenerator.images(for: times) {
+                        switch imageGeneratorResult {
+                        case let .success(requestedTime, image, actualTime):
+                            indexedImages.append((index: actualTime, image: UIImage(cgImage: image)))
+                            
+                        case let .failure(requestedTime, error):
+                            indexedImages.append((index: requestedTime, image: nil))
+                        }
+                    }
+                    
+                    var thumbnails = indexedImages
+                        .sorted(by: { $0.index < $1.index })
+                        .map { $0.image}
                     
                     assetProcessingProgressBlock(progressUnit)
-                    return VideoAsset(firstImage: UIImage(cgImage: firstImage),
-                                      lastImage: UIImage(cgImage: lastImage),
+                    
+                    return VideoAsset(firstImage: thumbnails[0],
+                                      middleImages: Array(thumbnails[1...3]),
+                                      lastImage: thumbnails[4],
                                       name: nil,
                                       length: videoLength.seconds,
                                       index: item.index,
-                                      creationDate: creationDate,
+                                      creationDate: try await creationDate,
                                       localIdentifier: item.localIdentifier)
                 }
             }
@@ -321,6 +344,7 @@ actor PhotoLibraryManager {
                 try $0.save()
             }
             
+            NotificationCenter.default.post(name: .didCreateNewProgressVideo, object: nil)
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)
@@ -444,8 +468,9 @@ extension PHImageRequestOptions {
 }
 
 struct VideoAsset: Sendable {
-    var firstImage: UIImage
-    var lastImage: UIImage
+    var firstImage: UIImage?
+    var middleImages: [UIImage?]
+    var lastImage: UIImage?
     var name: String?
     var length: Double
     var index: Int
