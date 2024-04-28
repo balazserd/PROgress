@@ -59,41 +59,21 @@ actor PhotoLibraryManager {
         let progressUnit = 1.0 / Double(rawVideoAssets.count)
         
         let videoAssetSourcesTask = Task.detached {
-            var indexedVideoAssetSourceTasks = [Task<IndexedAVAsset, Never>]()
+            var indexedVideoAssetSourceTasks = [Task<IndexedAVAsset?, Never>]()
             
             rawVideoAssets.enumerateObjects { asset, index, _ in
                 indexedVideoAssetSourceTasks.append(Task {
-                    return await withCheckedContinuation { continuation in
-                        let requestOptions = PHVideoRequestOptions()
-                        requestOptions.deliveryMode = .fastFormat
-                        requestOptions.version = .current
-                        
-                        PHImageManager.default()
-                            .requestAVAsset(forVideo: asset, options: requestOptions) { avAsset, _, resultInfo in
-                                defer { Task {
-                                    assetRetrievalProgressBlock(progressUnit)
-                                }}
-    
-                                guard let avAsset else {
-                                    let info = resultInfo ?? [:]
-                                    PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
-    
-                                    return
-                                }
-    
-                                let indexedAsset = IndexedAVAsset(asset: avAsset, 
-                                                                  localIdentifier: asset.localIdentifier,
-                                                                  index: index)
-                                continuation.resume(returning: indexedAsset)
-                            }
-                    }
+                    return await Self.retrieveAVAssetForPHAsset(asset, index: index)
                 })
             }
             
             var indexedVideoAssetSources = [IndexedAVAsset]()
             for task in indexedVideoAssetSourceTasks {
-                let result = await task.value
-                indexedVideoAssetSources.append(result)
+                if let result = await task.value {
+                    indexedVideoAssetSources.append(result)
+                }
+                
+                assetRetrievalProgressBlock(progressUnit)
             }
             
             return indexedVideoAssetSources.sorted(by: { $0.index < $1.index })
@@ -103,43 +83,10 @@ actor PhotoLibraryManager {
             let videoAssetSources = await videoAssetSourcesTask.value
             for item in videoAssetSources {
                 group.addTask {
-                    typealias IndexedImage = (index: CMTime, image: UIImage?)
-                    
-                    let imageGenerator = AVAssetImageGenerator(asset: item.asset)
-                    imageGenerator.requestedTimeToleranceAfter = .zero
-                    imageGenerator.requestedTimeToleranceBefore = .zero
-                    imageGenerator.maximumSize = .thumbnail
-                    
-                    let (videoLength, creationDateMetaData) = try await item.asset.load(.duration, .creationDate)
-                    async let creationDate = creationDateMetaData?.load(.dateValue)
-                    
-                    var indexedImages = [IndexedImage]()
-                    let times = (0...4).map { CMTime(seconds: videoLength.seconds / 4 * Double($0), 
-                                                     preferredTimescale: 1) }
-                    for await imageGeneratorResult in imageGenerator.images(for: times) {
-                        switch imageGeneratorResult {
-                        case let .success(requestedTime, image, actualTime):
-                            indexedImages.append((index: actualTime, image: UIImage(cgImage: image)))
-                            
-                        case let .failure(requestedTime, error):
-                            indexedImages.append((index: requestedTime, image: nil))
-                        }
-                    }
-                    
-                    var thumbnails = indexedImages
-                        .sorted(by: { $0.index < $1.index })
-                        .map { $0.image}
+                    let indexedVideoAsset = try await Self.generateVideoAsset(from: item)
                     
                     assetProcessingProgressBlock(progressUnit)
-                    
-                    return VideoAsset(firstImage: thumbnails[0],
-                                      middleImages: Array(thumbnails[1...3]),
-                                      lastImage: thumbnails[4],
-                                      name: nil,
-                                      length: videoLength.seconds,
-                                      index: item.index,
-                                      creationDate: try await creationDate,
-                                      localIdentifier: item.localIdentifier)
+                    return indexedVideoAsset
                 }
             }
             
@@ -372,29 +319,66 @@ actor PhotoLibraryManager {
         authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
     }
     
-    private static func extractAssetURLVideoNamePart(from asset: AVAsset) -> String? {
-        guard let urlAsset = asset as? AVURLAsset else {
-            PRLogger.photoLibraryManagement.error("Asset is not an AVURLAsset!")
-            return nil
+    private static func generateVideoAsset(from indexedAvAsset: IndexedAVAsset) async throws -> VideoAsset {
+        typealias IndexedImage = (index: CMTime, image: UIImage?)
+        
+        let imageGenerator = AVAssetImageGenerator(asset: indexedAvAsset.asset)
+        imageGenerator.requestedTimeToleranceAfter = .zero
+        imageGenerator.requestedTimeToleranceBefore = .zero
+        imageGenerator.maximumSize = .thumbnail
+        
+        let (videoLength, creationDateMetaData) = try await indexedAvAsset.asset.load(.duration, .creationDate)
+        let creationDate = try await creationDateMetaData?.load(.dateValue)
+        
+        var indexedImages = [IndexedImage]()
+        let times = (0...4).map { CMTime(seconds: videoLength.seconds / 4 * Double($0),
+                                         preferredTimescale: 1) }
+        for await imageGeneratorResult in imageGenerator.images(for: times) {
+            switch imageGeneratorResult {
+            case let .success(_, image, actualTime):
+                indexedImages.append((index: actualTime, image: UIImage(cgImage: image)))
+                
+            case let .failure(requestedTime, _):
+                indexedImages.append((index: requestedTime, image: nil))
+            }
         }
         
-        guard let lastPathComponent = urlAsset.url.lastPathComponent.removingPercentEncoding else {
-            PRLogger.photoLibraryManagement.error("Could not remove percent encoding!")
-            return nil
+        let thumbnails = indexedImages
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.image}
+        
+        return VideoAsset(firstImage: thumbnails[0],
+                          middleImages: Array(thumbnails[1...3]),
+                          lastImage: thumbnails[4],
+                          name: nil,
+                          length: videoLength.seconds,
+                          index: indexedAvAsset.index,
+                          creationDate: creationDate,
+                          localIdentifier: indexedAvAsset.localIdentifier)
+    }
+    
+    private static func retrieveAVAssetForPHAsset(_ phAsset: PHAsset, index: Int) async -> IndexedAVAsset? {
+        return await withCheckedContinuation { (continuation: CheckedContinuation<IndexedAVAsset?, Never>) in
+            let requestOptions = PHVideoRequestOptions()
+            requestOptions.deliveryMode = .fastFormat
+            requestOptions.version = .current
+            
+            PHImageManager.default()
+                .requestAVAsset(forVideo: phAsset, options: requestOptions) { avAsset, _, resultInfo in
+                    guard let avAsset else {
+                        let info = resultInfo ?? [:]
+                        PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
+                        
+                        continuation.resume(returning: nil)
+                        return
+                    }
+
+                    let indexedAsset = IndexedAVAsset(asset: avAsset,
+                                                      localIdentifier: phAsset.localIdentifier,
+                                                      index: index)
+                    continuation.resume(returning: indexedAsset)
+                }
         }
-        
-        // Returns IMG_3242.mov here, so I need metadata.... :'(
-        
-        guard
-            let firstCharacterPosition = lastPathComponent.range(of: "[")?.upperBound,
-            let lastCharacterPosition = lastPathComponent.range(of: "]")?.lowerBound,
-            firstCharacterPosition < lastCharacterPosition
-        else {
-            PRLogger.photoLibraryManagement.error("Unrecognized path!")
-            return nil
-        }
-        
-        return String(lastPathComponent[firstCharacterPosition..<lastCharacterPosition])
     }
     
     enum AlbumFetchingReason {
