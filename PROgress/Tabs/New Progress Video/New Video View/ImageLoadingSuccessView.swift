@@ -17,57 +17,34 @@ struct ImageLoadingSuccessView: View {
     @State private var draggedImage: ProgressImage?
     
     var body: some View {
-//        VStack(alignment: .leading) {
-//            HStack {
-//                Text("Settings")
-//                    .font(.title3)
-//                    .bold()
-//                
-//                Spacer()
-//                
-//                NavigationLink(value: NavigationDestination.settings) {
-//                    Text("Change \(Image(systemName: "chevron.right"))")
-//                        .font(.body)
-//                }
-//            }
+        VStack(alignment: .leading) {
             
-//            SettingsSection()
-            
-//            Divider()
-            
-            VStack(alignment: .leading) {
-//                Text("Selected photos: \(viewModel.progressImages!.count)")
-//                    .font(.title3)
-//                    .bold()
-//                    .padding(.bottom, -2)
-                
-                HStack(spacing: 0) {
-                    Text("💡")
-                        .font(.caption2)
-                        .padding(.leading, -2)
-                    Text("Long press and drag an image to reorder it.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                    
-                ScrollView {
-                    LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
-                        ForEach(viewModel.progressImages!) {
-                            PhotoGridItem(progressImage: $0, draggedImage: $draggedImage)
-                        }
-                    }
-                    
-                    if viewModel.video != nil {
-                        // Space for the "Watch video" button
-                        Color.clear.frame(height: 32)
-                            .padding(.vertical, 8)
-                    }
-                }
-                .padding(.horizontal, -8)
-                .contentMargins([.horizontal, .bottom], 8, for: .scrollContent)
+            HStack(spacing: 0) {
+                Text("💡")
+                    .font(.caption2)
+                    .padding(.leading, -2)
+                Text("Long press and drag an image to reorder it.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            .frame(maxHeight: .infinity)
-//        }
+                
+            ScrollView {
+                LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
+                    ForEach(viewModel.progressImages!) {
+                        PhotoGridItem(progressImage: $0, draggedImage: $draggedImage)
+                    }
+                }
+                
+                if viewModel.video != nil {
+                    // Space for the "Watch video" button
+                    Color.clear.frame(height: 32)
+                        .padding(.vertical, 8)
+                }
+            }
+            .padding(.horizontal, -8)
+            .contentMargins([.horizontal, .bottom], 8, for: .scrollContent)
+        }
+        .frame(maxHeight: .infinity)
         .padding(8)
         .navigationTitle("Selected Photos (\(viewModel.progressImages?.count ?? 0))")
     }

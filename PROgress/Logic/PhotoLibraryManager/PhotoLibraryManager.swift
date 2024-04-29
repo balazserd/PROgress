@@ -59,17 +59,17 @@ actor PhotoLibraryManager {
         let progressUnit = 1.0 / Double(rawVideoAssets.count)
         
         let videoAssetSourcesTask = Task.detached {
-            var indexedVideoAssetSourceTasks = [Task<IndexedAVAsset?, Never>]()
+            var indexedVideoAssetSourceTasks = [Task<IndexedAVAsset?, Error>]()
             
             rawVideoAssets.enumerateObjects { asset, index, _ in
                 indexedVideoAssetSourceTasks.append(Task {
-                    return await Self.retrieveAVAssetForPHAsset(asset, index: index)
+                    return try await Self.retrieveAVAssetForPHAsset(asset, index: index)
                 })
             }
             
             var indexedVideoAssetSources = [IndexedAVAsset]()
             for task in indexedVideoAssetSourceTasks {
-                if let result = await task.value {
+                if let result = try await task.value {
                     indexedVideoAssetSources.append(result)
                 }
                 
@@ -80,7 +80,7 @@ actor PhotoLibraryManager {
         }
         
         let indexedVideoAssets = try await withThrowingTaskGroup(of: VideoAsset.self) { group in
-            let videoAssetSources = await videoAssetSourcesTask.value
+            let videoAssetSources = try await videoAssetSourcesTask.value
             for item in videoAssetSources {
                 group.addTask {
                     let indexedVideoAsset = try await Self.generateVideoAsset(from: item)
@@ -233,6 +233,13 @@ actor PhotoLibraryManager {
         return asset
     }
     
+    nonisolated func getAVAsset(for localIdentifier: String) async throws -> AVAsset {
+        let phAsset = try assetForIdentifier(localIdentifier)
+        let avAssetWithIndex = try await Self.retrieveAVAssetForPHAsset(phAsset, index: -1)
+        
+        return avAssetWithIndex.asset
+    }
+    
     // MARK: - Saving video to designated album
     func saveProgressVideoToPhotoLibrary(_ progressVideo: ProgressVideo) async throws {
         switch self.authorizationStatus {
@@ -313,7 +320,6 @@ actor PhotoLibraryManager {
             throw OperationError.videoLibraryCreationFailed(underlyingError: error)
         }
     }
-    
     // MARK: - Miscellaneous
     func requestAuthorization() async {
         authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
@@ -357,8 +363,8 @@ actor PhotoLibraryManager {
                           localIdentifier: indexedAvAsset.localIdentifier)
     }
     
-    private static func retrieveAVAssetForPHAsset(_ phAsset: PHAsset, index: Int) async -> IndexedAVAsset? {
-        return await withCheckedContinuation { (continuation: CheckedContinuation<IndexedAVAsset?, Never>) in
+    private static func retrieveAVAssetForPHAsset(_ phAsset: PHAsset, index: Int) async throws -> IndexedAVAsset {
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<IndexedAVAsset, Error>) in
             let requestOptions = PHVideoRequestOptions()
             requestOptions.deliveryMode = .fastFormat
             requestOptions.version = .current
@@ -369,7 +375,7 @@ actor PhotoLibraryManager {
                         let info = resultInfo ?? [:]
                         PRLogger.photoLibraryManagement.error("Video could not be loaded! \(info.debugDescription)")
                         
-                        continuation.resume(returning: nil)
+                        continuation.resume(throwing: OperationError.videoNotFound)
                         return
                     }
 
@@ -395,6 +401,7 @@ actor PhotoLibraryManager {
     
     // MARK: - Error types
     enum OperationError: Error {
+        case videoNotFound
         case videoLibraryCreationFailed(underlyingError: Error)
         case videoLibraryNotFound
         case videoSaveFailed(underlyingError: Error)
@@ -451,7 +458,7 @@ extension PHImageRequestOptions {
     }
 }
 
-struct VideoAsset: Sendable {
+struct VideoAsset: Hashable, Sendable {
     var firstImage: UIImage?
     var middleImages: [UIImage?]
     var lastImage: UIImage?

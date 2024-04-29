@@ -10,12 +10,9 @@ import SwiftUI
 struct ProgressVideosCollectionView: View {
     @StateObject private var viewModel = ProgressVideosCollectionViewModel()
     
-    private static var largeProgressImageSize = 80.0
-    private static var smallProgressImageSize = 60.0
-    
     var body: some View {
         NavigationStack {
-            VStack {
+            ScrollView {
                 if let videos = viewModel.videos {
                     VStack {
                         if videos.count == 0 {
@@ -27,49 +24,20 @@ struct ProgressVideosCollectionView: View {
                                                    systemImage: "questionmark.folder.fill",
                                                    description: Text("No video matches your search."))
                         } else {
-                            List {
+                            ProgressVideoCollectionGrid {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
-                                    VStack(alignment: .leading) {
-                                        Text(video.name ?? "Progress Video [\(video.index)]")
-                                            .font(.title3)
-                                            .bold()
-                                            .lineLimit(1)
-                                        
-                                        HStack(alignment: .top) {
-                                            if let date = video.creationDate {
-                                                Text(viewModel.videoDateFormatter.string(from: date))
-                                                    .font(.caption)
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            Text("Duration: \(viewModel.videoDurationFormatter.string(from: video.length) ?? "00:00")")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                        }
-                                        
-                                        HStack {
-                                            self.progressImage(from: video.firstImage, isLarge: true)
-                                            
-                                            ForEach(0..<3, id: \.self) { index in
-                                                Spacer()
-                                                
-                                                self.progressImage(from: video.middleImages[index], isLarge: false)
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            self.progressImage(from: video.lastImage, isLarge: true)
-                                        }
-                                    }
+                                    ProgressVideoCollectionItem(video: video)
+                                        .environmentObject(viewModel)
                                 }
                             }
+                            .padding([.horizontal], 20)
                         }
                     }
                     .searchable(text: $viewModel.searchText)
                     .refreshable {
                         viewModel.loadProgressVideos()
                     }
+                    .padding(.top, 12)
                 } else {
                     ProgressView()
                     Text("Loading videos...")
@@ -77,23 +45,10 @@ struct ProgressVideosCollectionView: View {
             }
             .searchable(text: $viewModel.searchText)
             .navigationTitle("Progress Videos")
-        }
-    }
-    
-    private func progressImage(from uiImage: UIImage?, isLarge: Bool) -> some View {
-        Rectangle()
-            .fill(.clear)
-            .aspectRatio(1, contentMode: .fill)
-            .overlay {
-                Image(uiImage: uiImage ?? .init(systemName: "photo")!)
-                    .resizable()
-                    .scaledToFill()
+            .navigationDestination(for: VideoAsset.self) { asset in
+                ProgressVideoPlayerView(video: asset)
             }
-            .cornerRadius(4)
-            .clipped()
-            .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-            .frame(maxWidth: isLarge ? Self.largeProgressImageSize : Self.smallProgressImageSize,
-                   maxHeight: isLarge ? Self.largeProgressImageSize: Self.smallProgressImageSize)
+        }
     }
 }
 
