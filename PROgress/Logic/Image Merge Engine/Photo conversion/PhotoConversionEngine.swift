@@ -40,7 +40,7 @@ class PHAssetConversionEngine: PhotoConversionEngine, @unchecked Sendable {
     }
     
     func convertInput(_ input: LocalIdentifier) async throws -> Data {
-        let asset = try photoLibraryManager.assetForIdentifier(input)
+        let asset = try await photoLibraryManager.assetForIdentifier(input)
         
         return try await withCheckedThrowingContinuation { continuation in
             PHImageManager.default()

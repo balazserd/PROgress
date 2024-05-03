@@ -22,14 +22,24 @@ struct ProgressVideoPlayerView: View {
     var body: some View {
         VStack(spacing: 12) {
             if let urlAsset = viewModel.avAsset {
-                let player = AVPlayer(url: urlAsset.url)
-                
-                AVPlayerViewController.Representable(player: player)
-                    .padding(20)
-                    .shadow(radius: 15)
-                    .onAppear {
-                        player.play()
-                    }
+                if let size = viewModel.assetAspectRatio {
+                    let player = AVPlayer(url: urlAsset.url)
+                    
+                    AVPlayerViewController.Representable(player: player)
+                        .shadow(radius: 15)
+                        .aspectRatio(size, contentMode: .fit)
+                        .padding(20)
+                        .onAppear {
+                            player.play()
+                        }
+                    
+                    Spacer()
+                } else {
+                    ContentUnavailableView("Failed to load video",
+                                           systemImage: "exclamationmark.triangle.fill",
+                                           description: Text("Please check that the video exists in the 'PROgress' dedicated folder in the Photos app, then try again."))
+                        .symbolRenderingMode(.multicolor)
+                }
             } else {
                 ProgressView()
             }
@@ -50,4 +60,11 @@ struct ProgressVideoPlayerView: View {
             }
         }
     }
+}
+
+#Preview {
+    ContentUnavailableView("Failed to load video",
+                           systemImage: "exclamationmark.triangle.fill",
+                           description: Text("Please check that the video exists in the 'PROgress' dedicated folder in the Photos app try again."))
+        .symbolRenderingMode(.multicolor)
 }

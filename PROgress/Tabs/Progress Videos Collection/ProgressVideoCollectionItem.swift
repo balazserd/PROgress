@@ -12,48 +12,64 @@ struct ProgressVideoCollectionItem: View {
     
     var video: VideoAsset
     
+    @Binding var isEditing: Bool
+    @State private var shouldRemove: Bool = false
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading) {
-                    Text(video.name ?? "Progress Video [\(video.index)]")
-                        .font(.title3)
-                        .bold()
-                        .lineLimit(1)
+        HStack(spacing: 12) {
+            if isEditing {
+                Button(action: { shouldRemove.toggle() }) {
+                    Image(systemName: shouldRemove ? "xmark.circle.fill" : "xmark.circle")
+                        .resizable()
+                        .symbolRenderingMode(.multicolor)
+                        .frame(width: 30, height: 30)
+                        .opacity(shouldRemove ? 1.0 : 0.2)
+                }
+            }
+            
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text(video.name ?? "Progress Video [\(video.index)]")
+                            .font(.title3)
+                            .bold()
+                            .lineLimit(1)
+                        
+                        if let date = video.creationDate {
+                            Text(viewModel.videoDateFormatter.string(from: date))
+                                .font(.caption)
+                        }
+                    }
                     
-                    if let date = video.creationDate {
-                        Text(viewModel.videoDateFormatter.string(from: date))
-                            .font(.caption)
+                    Spacer()
+                    
+                    NavigationLink(value: video) {
+                        Text("Watch \(Image(systemName: "chevron.right"))")
                     }
                 }
                 
-                Spacer()
                 
-                NavigationLink(value: video) {
-                    Text("Watch \(Image(systemName: "chevron.right"))")
-                }
-            }
-            
-            
-            HStack {
-                self.progressImage(from: video.firstImage, isLarge: true)
-                
-                ForEach(0..<3, id: \.self) { index in
+                HStack {
+                    self.progressImage(from: video.firstImage, isLarge: true)
+                    
+                    ForEach(0..<3, id: \.self) { index in
+                        Spacer()
+                        
+                        self.progressImage(from: video.middleImages[index], isLarge: false)
+                    }
+                    
                     Spacer()
                     
-                    self.progressImage(from: video.middleImages[index], isLarge: false)
+                    self.progressImage(from: video.lastImage, isLarge: true)
                 }
-                
-                Spacer()
-                
-                self.progressImage(from: video.lastImage, isLarge: true)
             }
-        }
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white)
-                .shadow(color: .gray.opacity(0.2), radius: 12)
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.white)
+                    .shadow(color: .gray.opacity(0.2), radius: 12)
+            }
+            .animation(.easeInOut, value: isEditing)
         }
     }
     
@@ -78,6 +94,6 @@ struct ProgressVideoCollectionItem: View {
 }
 
 #Preview {
-    ProgressVideoCollectionItem(video: .init(middleImages: [nil, nil, nil], length: 320, index: 7, localIdentifier: "dfdgfdgfdgfgd"))
+    ProgressVideoCollectionItem(video: .init(middleImages: [nil, nil, nil], length: 320, index: 7, localIdentifier: "dfdgfdgfdgfgd"), isEditing: .constant(true))
         .environmentObject(ProgressVideosCollectionViewModel())
 }

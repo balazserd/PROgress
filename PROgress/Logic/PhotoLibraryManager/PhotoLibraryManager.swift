@@ -63,7 +63,7 @@ actor PhotoLibraryManager {
             
             rawVideoAssets.enumerateObjects { asset, index, _ in
                 indexedVideoAssetSourceTasks.append(Task {
-                    return try await Self.retrieveAVAssetForPHAsset(asset, index: index)
+                    return try await Self.retrieveAVAssetForPHAsset(asset, index: index, mode: .fastFormat)
                 })
             }
             
@@ -222,7 +222,7 @@ actor PhotoLibraryManager {
         return album
     }
     
-    nonisolated func assetForIdentifier(_ identifier: String) throws -> PHAsset {
+    func assetForIdentifier(_ identifier: String) throws -> PHAsset {
         let assetInArray = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
         
         guard let asset = assetInArray.firstObject else {
@@ -233,9 +233,9 @@ actor PhotoLibraryManager {
         return asset
     }
     
-    nonisolated func getAVAsset(for localIdentifier: String) async throws -> AVAsset {
+    func getAVAsset(for localIdentifier: String) async throws -> AVAsset {
         let phAsset = try assetForIdentifier(localIdentifier)
-        let avAssetWithIndex = try await Self.retrieveAVAssetForPHAsset(phAsset, index: -1)
+        let avAssetWithIndex = try await Self.retrieveAVAssetForPHAsset(phAsset, index: -1, mode: .highQualityFormat)
         
         return avAssetWithIndex.asset
     }
@@ -363,10 +363,13 @@ actor PhotoLibraryManager {
                           localIdentifier: indexedAvAsset.localIdentifier)
     }
     
-    private static func retrieveAVAssetForPHAsset(_ phAsset: PHAsset, index: Int) async throws -> IndexedAVAsset {
+    private static func retrieveAVAssetForPHAsset(_ phAsset: PHAsset, 
+                                                  index: Int,
+                                                  mode: PHVideoRequestOptionsDeliveryMode)
+    async throws -> IndexedAVAsset {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<IndexedAVAsset, Error>) in
             let requestOptions = PHVideoRequestOptions()
-            requestOptions.deliveryMode = .fastFormat
+            requestOptions.deliveryMode = mode
             requestOptions.version = .current
             
             PHImageManager.default()

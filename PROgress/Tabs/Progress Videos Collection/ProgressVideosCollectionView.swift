@@ -10,6 +10,8 @@ import SwiftUI
 struct ProgressVideosCollectionView: View {
     @StateObject private var viewModel = ProgressVideosCollectionViewModel()
     
+    @State private var isEditing: Bool = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -26,7 +28,7 @@ struct ProgressVideosCollectionView: View {
                         } else {
                             ProgressVideoCollectionGrid {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
-                                    ProgressVideoCollectionItem(video: video)
+                                    ProgressVideoCollectionItem(video: video, isEditing: $isEditing)
                                         .environmentObject(viewModel)
                                 }
                             }
@@ -44,9 +46,19 @@ struct ProgressVideosCollectionView: View {
                 }
             }
             .searchable(text: $viewModel.searchText)
+            .toolbar { toolbar }
             .navigationTitle("Progress Videos")
             .navigationDestination(for: VideoAsset.self) { asset in
                 ProgressVideoPlayerView(video: asset)
+            }
+        }
+    }
+    
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { isEditing.toggle() }) {
+                Image(systemName: "slider.horizontal.3")
             }
         }
     }
