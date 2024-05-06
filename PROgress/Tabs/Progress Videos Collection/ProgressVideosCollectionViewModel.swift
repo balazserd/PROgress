@@ -10,6 +10,7 @@ import Factory
 import SwiftData
 import Combine
 import os
+import SwiftUI
 
 @MainActor
 class ProgressVideosCollectionViewModel: ObservableObject {
@@ -21,7 +22,9 @@ class ProgressVideosCollectionViewModel: ObservableObject {
     @Published private(set) var videoLoadInProgress: Bool = false
     @Published private(set) var error: VideoRetrievalError?
     
+    @Published var videosToDelete = Set<VideoAsset>()
     @Published var searchText: String = ""
+    @Published var navigationState = NavigationPath()
     
     init() { 
         setupBindings()
@@ -46,7 +49,7 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             }
             
             do {
-                let persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.allItemsDescriptor())
+                let persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.descriptorForAllItems())
                 var videoAssetsInAlbum = try await getVideosFromAlbumTask.value
                 
                 VideoAsset.addAssetNamesFromPersistentStore(assets: &videoAssetsInAlbum,
@@ -59,6 +62,38 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             }
             
             self.videoLoadInProgress = false
+        }
+    }
+    
+    func deleteMarkedVideos() {
+        Task {
+            let progressVideoIdsToDelete = videosToDelete.map { $0.localIdentifier }
+            
+            do {
+                try container?.withNewContext {
+                    try $0.delete(model: ProgressVideo.Model.self, where: #Predicate {
+                        progressVideoIdsToDelete.contains($0.localIdentifier)
+                    })
+                }
+                
+                // TODO: remove videos from PHAsset lib as well.
+                
+                PRLogger.persistence.info("Removed \(progressVideoIdsToDelete.count) videos from backing store!")
+            } catch let error {
+                PRLogger.persistence.error("Could not remove videos from backing store! [\(error)]")
+            }
+        }
+    }
+    
+    func shouldRemoveVideo(_ video: VideoAsset) -> Bool {
+        self.videosToDelete.contains(video)
+    }
+    
+    func toggleDeletionStatus(for video: VideoAsset) {
+        if shouldRemoveVideo(video) {
+            self.videosToDelete.remove(video)
+        } else {
+            self.videosToDelete.insert(video)
         }
     }
     

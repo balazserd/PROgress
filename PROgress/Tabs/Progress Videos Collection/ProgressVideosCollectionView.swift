@@ -13,7 +13,7 @@ struct ProgressVideosCollectionView: View {
     @State private var isEditing: Bool = false
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $viewModel.navigationState) {
             ScrollView {
                 if let videos = viewModel.videos {
                     VStack {
@@ -30,6 +30,16 @@ struct ProgressVideosCollectionView: View {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
                                     ProgressVideoCollectionItem(video: video, isEditing: $isEditing)
                                         .environmentObject(viewModel)
+                                        .onTapGesture {
+                                            if isEditing {
+                                                viewModel.toggleDeletionStatus(for: video)
+                                            } else {
+                                                viewModel.navigationState.append(video)
+                                            }
+                                        }
+                                        .onLongPressGesture {
+                                            isEditing.toggle()
+                                        }
                                 }
                             }
                             .padding([.horizontal], 20)
@@ -56,6 +66,24 @@ struct ProgressVideosCollectionView: View {
     
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        if isEditing {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { viewModel.deleteMarkedVideos() }) {
+                    Image(systemName: "checkmark.circle.badge.xmark")
+                        .symbolRenderingMode(.multicolor)
+                        .offset(x: -2, y: 2)
+                }
+                .disabled(viewModel.videosToDelete.count == 0)
+            }
+            
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { viewModel.videosToDelete.removeAll() }) {
+                    Image(systemName: "slider.horizontal.2.gobackward")
+                }
+                .disabled(viewModel.videosToDelete.count == 0)
+            }
+        }
+        
         ToolbarItem(placement: .primaryAction) {
             Button(action: { isEditing.toggle() }) {
                 Image(systemName: "slider.horizontal.3")

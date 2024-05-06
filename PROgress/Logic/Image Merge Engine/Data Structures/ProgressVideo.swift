@@ -40,8 +40,20 @@ struct ProgressVideo: Hashable {
             self.createdAt = createdAt
         }
         
-        static func allItemsDescriptor() -> FetchDescriptor<ProgressVideo.Model> {
+        static func descriptorForAllItems() -> FetchDescriptor<ProgressVideo.Model> {
             .init(sortBy: [.init(\.createdAt, order: .reverse)])
         }
     }
 }
+
+/* this isn't yet supported in Swift
+ -----
+extension Predicate where repeat each Input == (ProgressVideo.Model) {
+    static func predicateMatchingLocalIdentifiers(_ localIdentifiers: [String]) -> Predicate<ProgressVideo.Model> {
+        #Predicate<ProgressVideo.Model> {
+            localIdentifiers.contains($0.localIdentifier)
+        }
+    }
+}
+ -----
+ */

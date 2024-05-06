@@ -13,17 +13,16 @@ struct ProgressVideoCollectionItem: View {
     var video: VideoAsset
     
     @Binding var isEditing: Bool
-    @State private var shouldRemove: Bool = false
     
     var body: some View {
         HStack(spacing: 12) {
             if isEditing {
-                Button(action: { shouldRemove.toggle() }) {
-                    Image(systemName: shouldRemove ? "xmark.circle.fill" : "xmark.circle")
+                Button(action: { viewModel.toggleDeletionStatus(for: video) }) {
+                    Image(systemName: viewModel.shouldRemoveVideo(video) ? "xmark.circle.fill" : "xmark.circle")
                         .resizable()
                         .symbolRenderingMode(.multicolor)
                         .frame(width: 30, height: 30)
-                        .opacity(shouldRemove ? 1.0 : 0.2)
+                        .opacity(viewModel.shouldRemoveVideo(video) ? 1.0 : 0.2)
                 }
             }
             
@@ -68,6 +67,15 @@ struct ProgressVideoCollectionItem: View {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color.white)
                     .shadow(color: .gray.opacity(0.2), radius: 12)
+                    .background {
+                        if isEditing {
+                            RoundedRectangle(cornerRadius: 10)
+                                .inset(by: -2)
+                                .stroke(.red, lineWidth: viewModel.shouldRemoveVideo(video) ? 2 : 0)
+                                .transition(.asymmetric(insertion: .opacity.animation(.default.delay(0.35)),
+                                                        removal: .identity))
+                        }
+                    }
             }
             .animation(.easeInOut, value: isEditing)
         }
