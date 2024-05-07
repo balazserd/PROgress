@@ -52,8 +52,7 @@ class ProgressVideosCollectionViewModel: ObservableObject {
                 let persistedVideos = try container!.mainContext.fetch(ProgressVideo.Model.descriptorForAllItems())
                 var videoAssetsInAlbum = try await getVideosFromAlbumTask.value
                 
-                VideoAsset.addAssetNamesFromPersistentStore(assets: &videoAssetsInAlbum,
-                                                            persistedAssets: persistedVideos)
+                videoAssetsInAlbum.addAssetNamesFromPersistentStore(persistedAssets: persistedVideos)
                 
                 self.videos = videoAssetsInAlbum
             } catch let error {
@@ -71,9 +70,8 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             
             do {
                 try container?.withNewContext {
-                    try $0.delete(model: ProgressVideo.Model.self, where: #Predicate {
-                        progressVideoIdsToDelete.contains($0.localIdentifier)
-                    })
+                    try $0.delete(model: ProgressVideo.Model.self,
+                                  where: .matchingLocalIdentifiers(progressVideoIdsToDelete))
                 }
                 
                 // TODO: remove videos from PHAsset lib as well.

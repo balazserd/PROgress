@@ -46,14 +46,13 @@ struct ProgressVideo: Hashable {
     }
 }
 
-/* this isn't yet supported in Swift
- -----
-extension Predicate where repeat each Input == (ProgressVideo.Model) {
-    static func predicateMatchingLocalIdentifiers(_ localIdentifiers: [String]) -> Predicate<ProgressVideo.Model> {
+// FIXME: when same-type requirements will be possible for parameter packs switch to:
+// extension Predicate where repeat each Input == (ProgressVideo.Model) { ... }
+
+extension Predicate<ProgressVideo.Model> {
+    static func matchingLocalIdentifiers(_ localIdentifiers: [String]) -> Predicate<ProgressVideo.Model> {
         #Predicate<ProgressVideo.Model> {
             localIdentifiers.contains($0.localIdentifier)
         }
     }
 }
- -----
- */
