@@ -26,7 +26,7 @@ actor PhotoLibraryManager {
     
     // MARK: - Working with albums
     /// The PROgress app's designated video folder.
-    nonisolated var PROgressMediaLibraryAssetCollection: PHAssetCollection? {
+    nonisolated func getPROgressMediaLibraryAssetCollection() -> PHAssetCollection? {
         let options = PHFetchOptions()
         options.predicate = NSPredicate(format: "title LIKE %@", Self.videoLibraryTitle)
         
@@ -36,7 +36,12 @@ actor PhotoLibraryManager {
             PRLogger.photoLibraryManagement.fault("Unexpectedly found more than 1 matching libraries!")
         }
         
-        return assetCollections.firstObject
+        if let library = assetCollections.firstObject {
+            return library
+        } else {
+            PRLogger.photoLibraryManagement.notice("Did not find the designated video library!")
+            return nil
+        }
     }
     
     /// Returns all videos in the PROgress app's designated video folder.
@@ -44,8 +49,8 @@ actor PhotoLibraryManager {
         retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return },
         processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return }
     ) async throws -> [VideoAsset] {
-        guard let videoLibrary = PROgressMediaLibraryAssetCollection else {
-            PRLogger.photoLibraryManagement.error("Did not find the designated video library!")
+        guard let videoLibrary = self.getPROgressMediaLibraryAssetCollection() else {
+            PRLogger.photoLibraryManagement.fault("Video library should exist!")
             throw OperationError.videoLibraryNotFound
         }
         
@@ -233,6 +238,10 @@ actor PhotoLibraryManager {
         return asset
     }
     
+    nonisolated func assetsForIdentifiers(_ identifiers: [String]) -> PHFetchResult<PHAsset> {
+        return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
+    }
+    
     func getAVAsset(for localIdentifier: String) async throws -> AVAsset {
         let phAsset = try assetForIdentifier(localIdentifier)
         let avAssetWithIndex = try await Self.retrieveAVAssetForPHAsset(phAsset, index: -1, mode: .highQualityFormat)
@@ -259,7 +268,7 @@ actor PhotoLibraryManager {
             throw AuthorizationError.unknown
         }
         
-        if self.PROgressMediaLibraryAssetCollection == nil {
+        if self.getPROgressMediaLibraryAssetCollection() == nil {
             try await self.createPROgressMediaLibrary()
         }
         
@@ -271,8 +280,8 @@ actor PhotoLibraryManager {
                     return
                 }
                 
-                guard let videoLibrary = self.PROgressMediaLibraryAssetCollection else {
-                    PRLogger.photoLibraryManagement.fault("PROgress video library asset collection not found!")
+                guard let videoLibrary = self.getPROgressMediaLibraryAssetCollection() else {
+                    PRLogger.photoLibraryManagement.fault("Video library should exist!")
                     return
                 }
                 
@@ -306,8 +315,8 @@ actor PhotoLibraryManager {
     }
     
     func createPROgressMediaLibrary() async throws {
-        guard self.PROgressMediaLibraryAssetCollection == nil else {
-            PRLogger.photoLibraryManagement.fault("Attempted to recreate the PROgress video library!")
+        guard self.getPROgressMediaLibraryAssetCollection() == nil else {
+            PRLogger.photoLibraryManagement.notice("Video library should not exist to create it!")
             return
         }
         
@@ -320,6 +329,36 @@ actor PhotoLibraryManager {
             throw OperationError.videoLibraryCreationFailed(underlyingError: error)
         }
     }
+    
+    // MARK: - Removing videos from album
+    func deleteVideoAssetsFromPROgressLibrary(assets: [VideoAsset]) async throws {
+        let localIdentifiersToDelete = assets.map { $0.localIdentifier }
+        
+        do {
+            try await PHPhotoLibrary.shared().performChanges { @Sendable [localIdentifiersToDelete] in
+                guard let videoLibrary = self.getPROgressMediaLibraryAssetCollection() else {
+                    PRLogger.photoLibraryManagement.fault("Video library should exist!")
+                    return
+                }
+                
+                let assetsToDelete = self.assetsForIdentifiers(localIdentifiersToDelete)
+                PHAssetChangeRequest.deleteAssets(assetsToDelete)
+            }
+            
+            try container?.withNewContext {
+                try $0.delete(model: ProgressVideo.Model.self,
+                              where: .matchingLocalIdentifiers(localIdentifiersToDelete))
+                try $0.save()
+                PRLogger.persistence.info("Removed \(localIdentifiersToDelete.count) videos from backing store!")
+            }
+            
+            NotificationCenter.default.post(name: .didRemoveProgressVideos, object: nil)
+        } catch let error {
+            PRLogger.photoLibraryManagement.error("Failed to remove videos completely! [\(error)]")
+            throw OperationError.videoDeletionFailed
+        }
+    }
+    
     // MARK: - Miscellaneous
     func requestAuthorization() async {
         authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
@@ -404,12 +443,13 @@ actor PhotoLibraryManager {
     
     // MARK: - Error types
     enum OperationError: Error {
+        case albumNotFoundWithLocalIdentifier
+        case assetNotFoundWithLocalIdentifier
+        case videoDeletionFailed
         case videoNotFound
         case videoLibraryCreationFailed(underlyingError: Error)
         case videoLibraryNotFound
         case videoSaveFailed(underlyingError: Error)
-        case albumNotFoundWithLocalIdentifier
-        case assetNotFoundWithLocalIdentifier
     }
     
     enum AuthorizationError: Error {

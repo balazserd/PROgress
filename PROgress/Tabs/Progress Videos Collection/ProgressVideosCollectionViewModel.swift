@@ -22,6 +22,7 @@ class ProgressVideosCollectionViewModel: ObservableObject {
     @Published private(set) var videoLoadInProgress: Bool = false
     @Published private(set) var error: VideoRetrievalError?
     
+    @Published var isEditing = false
     @Published var videosToDelete = Set<VideoAsset>()
     @Published var searchText: String = ""
     @Published var navigationState = NavigationPath()
@@ -61,25 +62,19 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             }
             
             self.videoLoadInProgress = false
+            self.isEditing = false
         }
     }
     
     func deleteMarkedVideos() {
         Task {
-            let progressVideoIdsToDelete = videosToDelete.map { $0.localIdentifier }
-            
             do {
-                try container?.withNewContext {
-                    try $0.delete(model: ProgressVideo.Model.self,
-                                  where: .matchingLocalIdentifiers(progressVideoIdsToDelete))
-                }
-                
-                // TODO: remove videos from PHAsset lib as well.
-                
-                PRLogger.persistence.info("Removed \(progressVideoIdsToDelete.count) videos from backing store!")
+                try await photoLibraryManager.deleteVideoAssetsFromPROgressLibrary(assets: Array(videosToDelete))
             } catch let error {
-                PRLogger.persistence.error("Could not remove videos from backing store! [\(error)]")
+                PRLogger.persistence.error("Could not remove videos! [\(error)]")
             }
+            
+            videosToDelete.removeAll()
         }
     }
     
@@ -125,7 +120,8 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &self.$searchCriteriaFulfillingVideos)
         
-        NotificationCenter.default.publisher(for: .didCreateNewProgressVideo)
+        Publishers.Merge(NotificationCenter.default.publisher(for: .didCreateNewProgressVideo),
+                         NotificationCenter.default.publisher(for: .didRemoveProgressVideos))
             .sink { [weak self] _ in
                 self?.loadProgressVideos()
             }

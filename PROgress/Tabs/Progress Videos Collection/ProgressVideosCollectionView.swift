@@ -10,7 +10,7 @@ import SwiftUI
 struct ProgressVideosCollectionView: View {
     @StateObject private var viewModel = ProgressVideosCollectionViewModel()
     
-    @State private var isEditing: Bool = false
+    @State private var showDeleteConfirmationAlert: Bool = false
     
     var body: some View {
         NavigationStack(path: $viewModel.navigationState) {
@@ -28,17 +28,17 @@ struct ProgressVideosCollectionView: View {
                         } else {
                             ProgressVideoCollectionGrid {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
-                                    ProgressVideoCollectionItem(video: video, isEditing: $isEditing)
+                                    ProgressVideoCollectionItem(video: video, isEditing: $viewModel.isEditing)
                                         .environmentObject(viewModel)
                                         .onTapGesture {
-                                            if isEditing {
+                                            if viewModel.isEditing {
                                                 viewModel.toggleDeletionStatus(for: video)
                                             } else {
                                                 viewModel.navigationState.append(video)
                                             }
                                         }
                                         .onLongPressGesture {
-                                            isEditing.toggle()
+                                            viewModel.isEditing.toggle()
                                         }
                                 }
                             }
@@ -61,14 +61,25 @@ struct ProgressVideosCollectionView: View {
             .navigationDestination(for: VideoAsset.self) { asset in
                 ProgressVideoPlayerView(video: asset)
             }
+            .alert("Delete videos?", isPresented: $showDeleteConfirmationAlert) {
+                Button(role: .destructive, action: { viewModel.deleteMarkedVideos() }) {
+                    Text("Delete")
+                }
+                
+                Button(role: .cancel, action: { showDeleteConfirmationAlert = false }) {
+                    Text("Cancel").fixedSize()
+                }
+            } message: {
+                Text("The videos will also be deleted from the designated media library for PROgress in the Photos app.\n\nDeleted videos can be recovered in the Photos app for a period of time set by your operating system.")
+            }
         }
     }
     
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        if isEditing {
+        if viewModel.isEditing {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { viewModel.deleteMarkedVideos() }) {
+                Button(action: { showDeleteConfirmationAlert = true }) {
                     Image(systemName: "checkmark.circle.badge.xmark")
                         .symbolRenderingMode(.multicolor)
                         .offset(x: -2, y: 2)
@@ -85,7 +96,7 @@ struct ProgressVideosCollectionView: View {
         }
         
         ToolbarItem(placement: .primaryAction) {
-            Button(action: { isEditing.toggle() }) {
+            Button(action: { viewModel.isEditing.toggle() }) {
                 Image(systemName: "slider.horizontal.3")
             }
         }

@@ -704,9 +704,9 @@
 		56BC80C02AA9AAEB00DCA75D /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				56BC80BF2AA9AAD800DCA75D /* Settings */,
 				56A5545B2A8CB3A600E99F65 /* Progress Videos Collection */,
 				568B609C2A82B4CB00D5B5D3 /* New Progress Video */,
+				56BC80BF2AA9AAD800DCA75D /* Settings */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";

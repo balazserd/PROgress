@@ -65,7 +65,7 @@ struct NewProgressVideoView: View {
                 isPresented: $isShowingVideoNameEditor,
                 actions: {
                     TextField("Video title", text: $editedVideoName)
-                        .submitLabel(.return)
+                        .submitLabel(.done)
                         .onSubmit {
                             viewModel.videoName = editedVideoName
                             editedVideoName = ""
