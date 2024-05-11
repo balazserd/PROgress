@@ -203,8 +203,8 @@ class NewProgressVideoViewModel: ObservableObject {
                    height: max($0.height, $1.originalSize.height))
         }
         
-        self.userSettings = VideoProcessingUserSettings(extentX: largestPhotoSize.width,
-                                                        extentY: largestPhotoSize.height)
+        self.userSettings = VideoProcessingUserSettings(maxPhotoExtentX: largestPhotoSize.width,
+                                                        maxPhotoExtentY: largestPhotoSize.height)
     }
     
     private nonisolated func loadImages(from selection: [PhotosPickerItem]) async {

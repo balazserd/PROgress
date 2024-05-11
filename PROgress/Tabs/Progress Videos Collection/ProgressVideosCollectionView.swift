@@ -21,10 +21,12 @@ struct ProgressVideosCollectionView: View {
                             ContentUnavailableView("No videos",
                                                    systemImage: "questionmark.folder.fill",
                                                    description: Text("New progress videos you create will appear here."))
+                                .padding(.top, 50)
                         } else if viewModel.searchCriteriaFulfillingVideos.count == 0 {
                             ContentUnavailableView("No match",
                                                    systemImage: "questionmark.folder.fill",
                                                    description: Text("No video matches your search."))
+                                .padding(.top, 50)
                         } else {
                             ProgressVideoCollectionGrid {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
@@ -78,10 +80,10 @@ struct ProgressVideosCollectionView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         if viewModel.isEditing {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: { showDeleteConfirmationAlert = true }) {
-                    Image(systemName: "checkmark.circle.badge.xmark")
-                        .symbolRenderingMode(.multicolor)
+            ToolbarItem(placement: .cancellationAction) {
+                Button(role: .destructive, action: { showDeleteConfirmationAlert = true }) {
+                    Image(systemName: "trash")
+                        .tint(.red)
                         .offset(x: -2, y: 2)
                 }
                 .disabled(viewModel.videosToDelete.count == 0)

@@ -25,37 +25,14 @@ struct AlbumSelectorView: View {
                         LazyVGrid(columns: Array(repeating: .init(spacing: 14), count: gridColumnCount),
                                   spacing: 16) {
                             ForEach(albums, id: \.index) { album in
-                                VStack(alignment: .leading, spacing: 0) {
-                                    Rectangle()
-                                        .aspectRatio(1, contentMode: .fill)
-                                        .overlay {
-                                            (album.thumbnailImage ?? Image(systemName: "photo.circle"))
-                                                .resizable()
-                                                .scaledToFill()
-                                        }
-                                        .clipped()
-                                        .cornerRadius(4)
-                                        .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-                                        .padding(.bottom, 4)
-                                        .onTapGesture {
-                                            selectedAlbum = album
-                                            dismiss()
-                                        }
-                                    
-                                    Text(album.name)
-                                        .font(.callout)
-                                        .lineLimit(1)
-                                        .lineSpacing(0.6)
-                                    
-                                    Text("\(album.imageCount)")
-                                        .font(.caption)
-                                        .lineLimit(1)
-                                        .foregroundColor(.secondary)
-                                        .padding(.bottom, 6)
-                                }
+                                AlbumSelectorGridItem(album: album)
+                                    .onTapGesture {
+                                        selectedAlbum = album
+                                        dismiss()
+                                    }
                             }
                         }
-                                  .padding(.horizontal)
+                        .padding(.horizontal)
                     case .loading:
                         ProgressView()
                         

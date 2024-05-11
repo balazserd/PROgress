@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 struct VideoProcessingUserSettings: Sendable {
+    private let maxPhotoExtentX: CGFloat
+    private let maxPhotoExtentY: CGFloat
+    
     var hideLogo: Bool = false
     var addBeforeAfterFinalImage: Bool = false
     
@@ -27,8 +30,8 @@ struct VideoProcessingUserSettings: Sendable {
                 aspectRatio = nil
                 
             default:
-                extentX = min(extentX, resolution.maxExtentLength!)
-                extentY = min(extentY, resolution.maxExtentLength!)
+                extentX = min(maxPhotoExtentX, resolution.maxExtentLength!)
+                extentY = min(maxPhotoExtentY, resolution.maxExtentLength!)
             }
         }
     }
@@ -102,13 +105,15 @@ struct VideoProcessingUserSettings: Sendable {
     
     init(timeBetweenFrames: Double = 0.2,
          resolution: Resolution = .medium,
-         extentX: Double = 640,
-         extentY: Double = 320,
+         maxPhotoExtentX: Double = 640,
+         maxPhotoExtentY: Double = 320,
          backgroundColor: Color = .white,
          customExtentAxis: Axis? = .horizontal) {
         self.timeBetweenFrames = timeBetweenFrames
-        self.extentX = extentX
-        self.extentY = extentY
+        self.maxPhotoExtentX = maxPhotoExtentX
+        self.maxPhotoExtentY = maxPhotoExtentY
+        self.extentX = maxPhotoExtentX
+        self.extentY = maxPhotoExtentY
         defer {
             self.backgroundColor = backgroundColor
             self.resolution = resolution

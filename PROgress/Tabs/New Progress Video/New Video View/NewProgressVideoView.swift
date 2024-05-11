@@ -111,7 +111,7 @@ struct NewProgressVideoView: View {
                 Text("Importing photos...")
             }
             
-            Text("Depending on the number of selected photos, this operation might take a few minutes.")
+            Text("Depending on the number of selected photos, this operation might take a few minutes.\n\nIf photos are only available in iCloud, the operation's length will also depend on your download speed.")
                 .font(.system(size: 10))
                 .foregroundColor(.secondary)
         }

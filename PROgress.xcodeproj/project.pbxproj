@@ -70,6 +70,9 @@
 		5644083C2BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564408392BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift */; };
 		5644083D2BB4AA3700F035D3 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */; };
 		5644083E2BB4AA3700F035D3 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */; };
+		56573C042BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */; };
+		56573C052BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */; };
+		56573C062BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */; };
 		566721A02BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A12BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A22BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
@@ -292,6 +295,7 @@
 		564408312BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageLoadingSuccessView+SettingsSection.swift"; sourceTree = "<group>"; };
 		564408352BB4A76200F035D3 /* Text+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Extensions.swift"; sourceTree = "<group>"; };
 		564408392BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageLoadingSuccessView+PhotoGridItem.swift"; sourceTree = "<group>"; };
+		56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectorGridItem.swift; sourceTree = "<group>"; };
 		5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoCollectionGrid.swift; sourceTree = "<group>"; };
 		566721A32BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoCollectionItem.swift; sourceTree = "<group>"; };
 		566721A72BE0045A00A7CEB2 /* ProgressVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoPlayerView.swift; sourceTree = "<group>"; };
@@ -625,6 +629,7 @@
 				564408392BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift */,
 				568B60B02A85034A00D5B5D3 /* ImageProcessingModals.swift */,
 				56A5546C2A8E8F4600E99F65 /* AlbumSelectorView.swift */,
+				56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */,
 			);
 			path = "New Video View";
 			sourceTree = "<group>";
@@ -1036,6 +1041,7 @@
 				5644083A2BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift in Sources */,
 				564408322BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */,
 				56BF34DD2A990B1400AFA9E4 /* CoreImage+Sendable.swift in Sources */,
+				56573C042BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */,
 				56C2555A2BD7A70400753C3D /* Actorized.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1109,6 +1115,7 @@
 				56BF34D12A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
 				568B60A42A840A6600D5B5D3 /* ProgressImage.swift in Sources */,
+				56573C052BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */,
 				568B60AF2A84C47300D5B5D3 /* ProcessInfo+Extensions.swift in Sources */,
 				56853BCF2BA0EC7D00CF0F14 /* PRLogger.swift in Sources */,
 				56853BD42BA0ECE300CF0F14 /* NewProgressVideoView.swift in Sources */,
@@ -1126,6 +1133,7 @@
 				562527B72AA2001700197E10 /* Axis+Extensions.swift in Sources */,
 				56C255382BCD9CB900753C3D /* BasicVideoSettingsSection.swift in Sources */,
 				56A554962A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
+				56573C062BF00136007AF80C /* AlbumSelectorGridItem.swift in Sources */,
 				56BF34CB2A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift in Sources */,
 				5604B1162A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
 				564408382BB4A76200F035D3 /* Text+Extensions.swift in Sources */,
