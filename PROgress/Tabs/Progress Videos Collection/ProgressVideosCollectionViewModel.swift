@@ -90,22 +90,6 @@ class ProgressVideosCollectionViewModel: ObservableObject {
         }
     }
     
-    lazy var videoDurationFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = .pad
-        
-        return formatter
-    }()
-    
-    lazy var videoDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM dd, yyyy"
-        
-        return formatter
-    }()
-    
     // MARK: - Private functions
     private var subscriptions = Set<AnyCancellable>()
     private func setupBindings() {
@@ -120,8 +104,9 @@ class ProgressVideosCollectionViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &self.$searchCriteriaFulfillingVideos)
         
-        Publishers.Merge(NotificationCenter.default.publisher(for: .didCreateNewProgressVideo),
-                         NotificationCenter.default.publisher(for: .didRemoveProgressVideos))
+        Publishers.MergeMany(NotificationCenter.default.publisher(for: .didCreateNewProgressVideo),
+                             NotificationCenter.default.publisher(for: .didRemoveProgressVideos),
+                             NotificationCenter.default.publisher(for: .didUpdateProgressVideoProperties))
             .sink { [weak self] _ in
                 self?.loadProgressVideos()
             }

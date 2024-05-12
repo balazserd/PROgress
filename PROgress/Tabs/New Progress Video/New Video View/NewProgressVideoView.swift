@@ -56,26 +56,11 @@ struct NewProgressVideoView: View {
                 .photosPicker(isPresented: $isShowingPhotoPicker,
                               selection: $viewModel.selectedItems,
                               matching: .any(of: [.images, .screenshots]))
+                .videoNameEditorAlert($viewModel.videoName, isPresented: $isShowingVideoNameEditor)
                 .sheet(isPresented: $isShowingPhotoAlbumPicker,
                        onDismiss: { isShowingPhotoAlbumPicker = false }) {
                     AlbumSelectorView(selectedAlbum: $viewModel.selectedAlbum)
                 }
-               .alert(
-                "Change video title",
-                isPresented: $isShowingVideoNameEditor,
-                actions: {
-                    TextField("Video title", text: $editedVideoName)
-                        .submitLabel(.done)
-                        .onSubmit {
-                            viewModel.videoName = editedVideoName
-                            editedVideoName = ""
-                            isShowingVideoNameEditor = false
-                        }
-                    Button("Cancel", role: .cancel, action: { isShowingVideoNameEditor = false })
-                },
-                message: {
-                    Text("Change the name of your video. This is the name by which it will be saved and later shown to you.")
-                })
             }
                 
             switch viewModel.videoProcessingState {

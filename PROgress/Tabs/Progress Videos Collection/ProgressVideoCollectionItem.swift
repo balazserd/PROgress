@@ -35,7 +35,7 @@ struct ProgressVideoCollectionItem: View {
                             .lineLimit(1)
                         
                         if let date = video.creationDate {
-                            Text(viewModel.videoDateFormatter.string(from: date))
+                            Text(DateFormatter.videoDateFormatter.string(from: date))
                                 .font(.caption)
                         }
                     }

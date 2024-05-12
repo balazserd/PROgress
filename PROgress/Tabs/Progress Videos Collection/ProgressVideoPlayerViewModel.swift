@@ -10,15 +10,38 @@ import Observation
 import Factory
 @preconcurrency import AVFoundation
 import os
+import SwiftData
+import SwiftUI
 
 @Observable @MainActor
 class ProgressVideoPlayerViewModel {
     @ObservationIgnored
     @Injected(\.photoLibraryManager) private var photoLibraryManager
     
-    let videoAsset: VideoAsset
+    @ObservationIgnored
+    @Injected(\.persistenceContainer) private var container
     
-    var avAsset: AVURLAsset?
+    var videoAsset: VideoAsset {
+        willSet {
+            if videoAsset.name != newValue.name, let newName = newValue.name {
+                self.updatePersistedVideoAssetName(to: newName)
+            }
+        }
+    }
+    
+    var videoAssetNameBinding: Binding<String> {
+        Binding<String>(get: { self.videoAsset.name ?? "" },
+                        set: { self.videoAsset.name = $0 })
+    }
+    
+    var avAsset: AVURLAsset? {
+        didSet {
+            guard avAsset != nil else { return }
+            player = AVPlayer(url: avAsset!.url)
+        }
+    }
+    
+    var player: AVPlayer?
     var assetAspectRatio: CGSize?
     
     init(videoAsset: VideoAsset) {
@@ -47,5 +70,27 @@ class ProgressVideoPlayerViewModel {
         
         let (size, preferredTransform) = try await track.load(.naturalSize, .preferredTransform)
         return size.applying(preferredTransform)
+    }
+    
+    private func updatePersistedVideoAssetName(to newName: String) {
+        Task.detached { [localIdentifier = self.videoAsset.localIdentifier] in
+            do {
+                try await self.container?.withNewContext {
+                    let fetchDescriptor = FetchDescriptor(predicate: .matchingLocalIdentifier(localIdentifier))
+                    guard let persistedVideoAsset = try $0.fetch(fetchDescriptor).first else {
+                        PRLogger.persistence.error("Persisted video asset not found!")
+                        return
+                    }
+                    
+                    persistedVideoAsset.name = newName
+                    
+                    try $0.save()
+                }
+                
+                NotificationCenter.default.post(name: .didUpdateProgressVideoProperties, object: nil)
+            } catch let error {
+                PRLogger.persistence.error("Failed to update video name! \(error)")
+            }
+        }
     }
 }

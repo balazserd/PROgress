@@ -55,4 +55,10 @@ extension Predicate<ProgressVideo.Model> {
             localIdentifiers.contains($0.localIdentifier)
         }
     }
+    
+    static func matchingLocalIdentifier(_ localIdentifier: String) -> Predicate<ProgressVideo.Model> {
+        #Predicate<ProgressVideo.Model> {
+            $0.localIdentifier == localIdentifier
+        }
+    }
 }

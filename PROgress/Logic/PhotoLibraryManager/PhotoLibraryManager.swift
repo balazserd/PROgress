@@ -336,7 +336,7 @@ actor PhotoLibraryManager {
         
         do {
             try await PHPhotoLibrary.shared().performChanges { @Sendable [localIdentifiersToDelete] in
-                guard let videoLibrary = self.getPROgressMediaLibraryAssetCollection() else {
+                if self.getPROgressMediaLibraryAssetCollection() == nil {
                     PRLogger.photoLibraryManagement.fault("Video library should exist!")
                     return
                 }
@@ -375,9 +375,12 @@ actor PhotoLibraryManager {
         let (videoLength, creationDateMetaData) = try await indexedAvAsset.asset.load(.duration, .creationDate)
         let creationDate = try await creationDateMetaData?.load(.dateValue)
         
+        let times = (0...4).map {
+            CMTime(seconds: videoLength.seconds / 4 * Double($0),
+                   preferredTimescale: 1)
+        }
+        
         var indexedImages = [IndexedImage]()
-        let times = (0...4).map { CMTime(seconds: videoLength.seconds / 4 * Double($0),
-                                         preferredTimescale: 1) }
         for await imageGeneratorResult in imageGenerator.images(for: times) {
             switch imageGeneratorResult {
             case let .success(_, image, actualTime):

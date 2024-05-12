@@ -8,6 +8,7 @@
 import Foundation
 
 extension NSNotification.Name {
-    static let didCreateNewProgressVideo: NSNotification.Name = .init("com.ebuniapps.PROgress.didCreateNewProgressVideo")
-    static let didRemoveProgressVideos: NSNotification.Name = .init("com.ebuniapps.PROgress.didRemoveProgressVideos")
+    static let didCreateNewProgressVideo: Self = .init("com.ebuniapps.PROgress.didCreateNewProgressVideo")
+    static let didUpdateProgressVideoProperties: Self = .init("com.ebuniapps.PROgress.didUpdateProgressVideoProperties")
+    static let didRemoveProgressVideos: Self = .init("com.ebuniapps.PROgress.didRemoveProgressVideos")
 }

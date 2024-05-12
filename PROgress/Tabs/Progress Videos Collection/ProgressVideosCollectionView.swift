@@ -54,6 +54,8 @@ struct ProgressVideosCollectionView: View {
                     .padding(.top, 12)
                 } else {
                     ProgressView()
+                        .padding(.top, 20)
+                    
                     Text("Loading videos...")
                 }
             }
