@@ -51,7 +51,7 @@ struct ProgressVideosCollectionView: View {
                     .refreshable {
                         viewModel.loadProgressVideos()
                     }
-                    .padding(.top, 12)
+                    .padding(.vertical, 12)
                 } else {
                     ProgressView()
                         .padding(.top, 20)

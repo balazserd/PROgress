@@ -141,8 +141,8 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 if await UIApplication.shared.applicationState == .background {
                     PRLogger.app.notice("App is in background, automatically saving video to Photo Library.")
-                    try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(video)
-                    video.persisted = true
+                    let id = try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(video)
+                    video.persistentIdentifier = id
                 }
                 
                 await self.addVideoToView(video)

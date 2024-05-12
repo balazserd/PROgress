@@ -11,6 +11,7 @@ import SwiftUI
 import UIKit
 @preconcurrency import AVFoundation
 import Factory
+import SwiftData
 
 actor PhotoLibraryManager {
     @Injected(\.persistenceContainer) private var container
@@ -250,7 +251,8 @@ actor PhotoLibraryManager {
     }
     
     // MARK: - Saving video to designated album
-    func saveProgressVideoToPhotoLibrary(_ progressVideo: ProgressVideo) async throws {
+    @discardableResult
+    func saveProgressVideoToPhotoLibrary(_ progressVideo: ProgressVideo) async throws -> PersistentIdentifier? {
         switch self.authorizationStatus {
         case .notDetermined:
             PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
@@ -308,6 +310,7 @@ actor PhotoLibraryManager {
             }
             
             NotificationCenter.default.post(name: .didCreateNewProgressVideo, object: nil)
+            return model.persistentModelID
         } catch let error {
             PRLogger.photoLibraryManagement.error("Failed to save video to PROgress media library! [\(error)]")
             throw OperationError.videoSaveFailed(underlyingError: error)

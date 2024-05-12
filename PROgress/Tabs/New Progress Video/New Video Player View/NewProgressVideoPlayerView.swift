@@ -15,6 +15,7 @@ struct NewProgressVideoPlayerView: View {
     private var video: ProgressVideo { self.viewModel.video }
     
     @State private var showShareSheet = false
+    @State private var isShowingVideoNameEditor: Bool = false
     
     private let avPlayer: AVPlayer
     
@@ -27,12 +28,12 @@ struct NewProgressVideoPlayerView: View {
         VStack(spacing: 12) {
             AVPlayerViewController.Representable(player: avPlayer)
                 .aspectRatio(viewModel.video.resolution.width / viewModel.video.resolution.height, contentMode: .fit)
-                .padding(.horizontal)
-                .shadow(radius: 15)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 20)
+                .layoutPriority(.infinity)
                 .onAppear {
                     avPlayer.play()
                 }
-                .toolbar { toolbar }
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("You can save the video into your Photos app with the \(Image(systemName: "arrow.down.circle")) button.")
@@ -42,22 +43,32 @@ struct NewProgressVideoPlayerView: View {
             .font(.system(size: 10))
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
+            
+            Spacer()
         }
-        .padding(.vertical)
+        .padding(20)
+        .toolbar { toolbar }
         .navigationTitle(viewModel.video.name)
         .shareView(with: [viewModel.video.url], isPresented: $showShareSheet)
+        .videoNameEditorAlert($viewModel.video.name, isPresented: $isShowingVideoNameEditor)
+        .ignoresSafeArea(.keyboard)
     }
     
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { isShowingVideoNameEditor = true }) {
+                Image(systemName: "pencil")
+            }
+        }
+        
         ToolbarItem(placement: .primaryAction) {
             switch viewModel.saveStatus {
             case .inProgress:
                 ProgressView()
                     .transition(.opacity)
                 
-            case .none where viewModel.video.persisted,
+            case .none where viewModel.video.persistentIdentifier != nil,
                  .finished:
                 Button(action: {}) {
                     Image(systemName: "arrow.down.circle")
@@ -75,7 +86,7 @@ struct NewProgressVideoPlayerView: View {
                 .disabled(true)
                 .transition(.opacity)
                 
-            case .none where !viewModel.video.persisted:
+            case .none where viewModel.video.persistentIdentifier == nil:
                 Button(action: { viewModel.saveVideo() }) {
                     Image(systemName: "arrow.down.circle")
                 }
@@ -102,7 +113,7 @@ struct NewProgressVideoPlayerView_Previews: PreviewProvider {
             NewProgressVideoPlayerView(video:
                 ProgressVideo(videoId: UUID(),
                               url: URL(string: FileManager().currentDirectoryPath)!,
-                              resolution: CGSize(width: 640, height: 2560))
+                              resolution: CGSize(width: 2560, height: 2560))
             )
         }
     }

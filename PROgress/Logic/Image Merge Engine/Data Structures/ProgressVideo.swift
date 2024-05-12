@@ -15,7 +15,7 @@ struct ProgressVideo: Hashable {
     var name: String = "Progress Video"
     
     /// Signals whether the video had already been persisted in the background.
-    var persisted: Bool = false
+    var persistentIdentifier: PersistentIdentifier?
     
     func hash(into hasher: inout Hasher) {
         videoId.hash(into: &hasher)

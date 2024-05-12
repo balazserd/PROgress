@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import SwiftUI
 import SwiftData
+import Combine
 
 @MainActor
 class NewProgressVideoPlayerViewModel: ObservableObject {
@@ -16,10 +17,13 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
     @Injected(\.persistenceContainer) private var container
     
     @Published private(set) var saveStatus: SaveStatus?
-    @Published private(set) var video: ProgressVideo
+    @Published var video: ProgressVideo
+    
     
     init(video: ProgressVideo) {
         self.video = video
+        
+        self.setupSubscriptions()
     }
     
     func saveVideo() {
@@ -27,7 +31,11 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
         
         Task.detached {
             do {
-                try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(self.video)
+                let persistentId = try await self.photoLibraryManager.saveProgressVideoToPhotoLibrary(self.video)
+                
+                await MainActor.run {
+                    self.video.persistentIdentifier = persistentId
+                }
                 
                 await self.setSaveVideoStatus(to: .finished)
             } catch let error {
@@ -38,13 +46,43 @@ class NewProgressVideoPlayerViewModel: ObservableObject {
     }
     
     func setSaveVideoStatus(to status: SaveStatus) {
-        if status == .finished {
-            self.video.persisted = true
-        }
-        
         withAnimation(.easeInOut) {
             self.saveStatus = status
         }
+    }
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    private func setupSubscriptions() {
+        // If the video had already been saved, auto-save the new video name.
+        $video
+            .map { $0.name }
+            .removeDuplicates()
+            .sink { [weak self] newVideoName in
+                guard let persistentIdentifier = self?.video.persistentIdentifier else {
+                    PRLogger.app.notice("Cannot update persisted model!")
+                    return
+                }
+                
+                do {
+                    try self?.container?.withNewContext {
+                        guard let persistedVideo = $0.model(for: persistentIdentifier) as? ProgressVideo.Model else {
+                            PRLogger.app.error("Did not find model in persistence store!")
+                            return
+                        }
+                        
+                        persistedVideo.name = newVideoName
+                        try $0.save()
+                        
+                        PRLogger.app.debug("Updated model in persistence store!")
+                        
+                        NotificationCenter.default.post(name: .didUpdateProgressVideoProperties, object: nil)
+                    }
+                } catch let error {
+                    PRLogger.app.error("Failed to update model in persistence store! [\(error)]")
+                }
+            }
+            .store(in: &subscriptions)
     }
     
     enum SaveStatus {

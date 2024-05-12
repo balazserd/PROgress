@@ -114,25 +114,24 @@ struct VideoCreationLiveActivity: Widget {
     
     // MARK: - Reused components
     private func thumbnailImage(url: URL?, scale: Image.Scale) -> some View {
-        ZStack {
-            Color.accentColor.opacity(0.7)
-                .overlay {
+        Rectangle()
+            .fill(.clear)
+            .aspectRatio(1.0, contentMode: .fit)
+            .overlay {
+                if  let url,
+                    let uiImage = UIImage(contentsOfFile: url.path()) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .contentTransition(.identity)
+                } else {
                     Image(systemName: "photo.circle")
                         .imageScale(scale)
                 }
-                .aspectRatio(1.0, contentMode: .fit)
-                .overlay {
-                    if  let url,
-                        let uiImage = UIImage(contentsOfFile: url.path()) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .contentTransition(.identity)
-                    }
-                }
-        }
-        .cornerRadius(scale == .large ? 8 : 3)
-        .layoutPriority(scale == .large ? 1.0 : 0.5)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: scale == .large ? 8 : 3))
+            .layoutPriority(scale == .large ? 1.0 : 0.5)
+            .contentTransition(.identity)
     }
 }
 
