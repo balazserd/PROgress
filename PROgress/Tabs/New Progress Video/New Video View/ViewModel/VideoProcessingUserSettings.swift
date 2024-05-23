@@ -23,10 +23,12 @@ struct VideoProcessingUserSettings: Sendable {
             switch resolution {
             case .customWidthPreservedAspectRatio:
                 customExtentAxis = .horizontal
+                shape = .automatic
                 aspectRatio = Double(extentX) / Double(extentY)
                 
             case .custom:
                 customExtentAxis = nil
+                shape = .automatic
                 aspectRatio = nil
                 
             default:

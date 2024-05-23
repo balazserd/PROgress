@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import os
 
 struct SettingsView: View {
+    @Environment(\.openURL) private var openURL
+    
     @AppStorage(.privateActivitiesMode) private var privateActivitiesMode: Bool = false
     
     var body: some View {
@@ -22,6 +25,25 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
                     
+                }
+                
+                Section("Feedback") {
+                    Button {
+                        guard let reviewUrl = URL(string: "https://apps.apple.com/app/id<my-app-store-id>?action=write-review") else {
+                            PRLogger.app.error("Could not construct App Store App Review URL!")
+                            return
+                        }
+                        
+                        openURL(reviewUrl)
+                    } label: {
+                        Text("Write a Review")
+                    }
+                    
+                    Button(role: .destructive) {
+                        // TODO
+                    } label: {
+                        Text("Report an issue")
+                    }
                 }
                 
                 Section("Subscription") {
@@ -41,7 +63,6 @@ struct SettingsView: View {
                     } label: {
                         Text("Restore purchase")
                     }
-                    
                 }
                 
                 Section("Miscellaneous") {
@@ -53,12 +74,6 @@ struct SettingsView: View {
                         // TODO
                     } label: {
                         Text("Privacy Policy")
-                    }
-                    
-                    Button {
-                        // TODO
-                    } label: {
-                        Text("Report an issue")
                     }
                 }
             }
