@@ -1,0 +1,129 @@
+{
+  "identifier" : "5B3EDC0D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6503061802",
+    "_developerTeamID" : "B9J6J6XB6U",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 738160131.78239703,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21491764",
+      "localizations" : [
+
+      ],
+      "name" : "PROgress Main Subscription Group",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.49",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6503062222",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Premium features for 1 Month. Renews.",
+              "displayName" : "PROgress Premium - Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.ebuniapps.progress.subscriptions.premium.1m",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "PROgress Premium [Monthly]",
+          "subscriptionGroupID" : "21491764",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6503061961",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Premium features for 1 year. Renews.",
+              "displayName" : "PROgress Premium - Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.ebuniapps.progress.subscriptions.premium.1y",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "PROgress Premium [Yearly]",
+          "subscriptionGroupID" : "21491764",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

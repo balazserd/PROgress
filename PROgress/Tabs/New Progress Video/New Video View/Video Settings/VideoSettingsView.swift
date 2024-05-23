@@ -58,7 +58,7 @@ struct VideoSettingsView_Previews: PreviewProvider {
         NavigationStack {
             VideoSettingsView()
                 .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
-                .environmentObject(GlobalSettings())
+                .environmentObject(GlobalSettings.shared)
         }
     }
 }

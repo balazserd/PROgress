@@ -13,6 +13,10 @@ struct SettingsView: View {
     
     @AppStorage(.privateActivitiesMode) private var privateActivitiesMode: Bool = false
     
+    @EnvironmentObject private var globalSettings: GlobalSettings
+    
+    @State private var isShowingSubscriptionsSheet: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -24,7 +28,6 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-                    
                 }
                 
                 Section("Feedback") {
@@ -50,15 +53,15 @@ struct SettingsView: View {
                     HStack {
                         Text("Current plan")
                         Spacer()
-                        Text("Free")
+                        Text(globalSettings.subscriptionType.rawValue)
                             .foregroundColor(.secondary)
                     }
                     
                     Button("Upgrade", action: {
-                        // TODO
+                        self.isShowingSubscriptionsSheet = true
                     })
                     
-                    Button(role: .destructive) {
+                    Button {
                         // TODO
                     } label: {
                         Text("Restore purchase")
@@ -78,6 +81,15 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .sheet(isPresented: $isShowingSubscriptionsSheet) {
+                PremiumSubscriptionView()
+            }
+            .navigationDestination(for: SubPages.self) {
+                switch $0 {
+                case .licenseAttribution:
+                    EmptyView()
+                }
+            }
         }
     }
     

@@ -15,7 +15,7 @@ struct PROgressApp: App {
     var body: some Scene {
         WindowGroup {
             MainWindow()
-                .environmentObject(GlobalSettings())
+                .environmentObject(GlobalSettings.shared)
         }
     }
 }

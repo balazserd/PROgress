@@ -80,6 +80,9 @@
             isEnabled = "YES">
          </AdditionalOption>
       </AdditionalOptions>
+      <StoreKitConfigurationFileReference
+         identifier = "../../PROgress/Resources/StoreKit Testing/PROgress.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

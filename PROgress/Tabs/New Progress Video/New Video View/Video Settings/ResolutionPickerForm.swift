@@ -66,7 +66,7 @@ struct ResolutionPickerForm_Previews: PreviewProvider {
         NavigationStack {
             ResolutionPickerForm()
                 .environmentObject(NewProgressVideoViewModel.previewForVideoSettings)
-                .environmentObject(GlobalSettings())
+                .environmentObject(GlobalSettings.shared)
         }
     }
 }
