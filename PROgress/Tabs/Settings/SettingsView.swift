@@ -31,27 +31,8 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section("Feedback") {
-                    Button {
-                        guard let reviewUrl = URL(string: "https://apps.apple.com/app/id<my-app-store-id>?action=write-review") else {
-                            PRLogger.app.error("Could not construct App Store App Review URL!")
-                            return
-                        }
-                        
-                        openURL(reviewUrl)
-                    } label: {
-                        Text("Write a Review")
-                    }
-                    
-                    Button(role: .destructive) {
-                        // TODO
-                    } label: {
-                        Text("Report an issue")
-                    }
-                }
-                
                 Section("Subscription") {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Text("Current plan")
                             Spacer()
@@ -96,6 +77,25 @@ struct SettingsView: View {
                         }
                     }
                     .disabled(globalSettings.purchaseRestorationInProgress)
+                }
+                
+                Section("Feedback") {
+                    Button {
+                        guard let reviewUrl = URL(string: "https://apps.apple.com/app/id<my-app-store-id>?action=write-review") else {
+                            PRLogger.app.error("Could not construct App Store App Review URL!")
+                            return
+                        }
+                        
+                        openURL(reviewUrl)
+                    } label: {
+                        Text("Write a Review")
+                    }
+                    
+                    Button(role: .destructive) {
+                        // TODO
+                    } label: {
+                        Text("Report an issue")
+                    }
                 }
                 
                 Section("Miscellaneous") {

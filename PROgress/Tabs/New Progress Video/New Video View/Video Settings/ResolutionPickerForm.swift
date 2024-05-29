@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import os
 
 struct ResolutionPickerForm: View {
     @EnvironmentObject private var viewModel: NewProgressVideoViewModel
     @EnvironmentObject private var globalSettings: GlobalSettings
+    
+    @State private var isShowingSubscriptionsSheet: Bool = false
     
     var body: some View {
         Form {
@@ -43,6 +46,21 @@ struct ResolutionPickerForm: View {
                     
                     if !globalSettings.isPremiumUser {
                         Text(footnoteAttributedString)
+                            .font(.caption)
+                            .sheet(isPresented: $isShowingSubscriptionsSheet) {
+                                PremiumSubscriptionView()
+                            }
+                            .environment(\.openURL, OpenURLAction { url in
+                                PRLogger.app.debug("Handling URL on PremiumVideoSettingsSection page.")
+                                
+                                if url.absoluteString == "PROgress://open-subscriptions-sheet" {
+                                    DispatchQueue.main.async {
+                                        isShowingSubscriptionsSheet = true
+                                    }
+                                }
+                                
+                                return .discarded
+                            })
                     }
                 }
             }
@@ -53,7 +71,7 @@ struct ResolutionPickerForm: View {
     private var footnoteAttributedString: AttributedString = {
         let regularTextPart = AttributedString("Some resolution types are only available with PROgress Premium subscription. ")
         var linkPart = AttributedString("More info...")
-        linkPart.link = URL(string: "https://www.apple.com")
+        linkPart.link = URL(string: "PROgress://open-subscriptions-sheet")
         
         return regularTextPart + linkPart
     }()
