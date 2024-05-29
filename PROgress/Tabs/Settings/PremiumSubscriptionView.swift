@@ -35,17 +35,27 @@ struct PremiumSubscriptionView: View {
             }
             .multilineTextAlignment(.center)
             .padding(.horizontal)
+            .containerBackground(for: .subscriptionStore) {
+                LinearGradient(stops: [.init(color: Color.accentColor.opacity(0.1), location: 0),
+                                       .init(color: Color.accentColor.opacity(0.03), location: 0.85),
+                                       .init(color: Color.white, location: 1)],
+                               startPoint: .top,
+                               endPoint: .bottom)
+            }
         }
+        .backgroundStyle(.clear)
         .subscriptionStoreControlStyle(.prominentPicker)
         .onInAppPurchaseCompletion { product, result in
             switch result {
             case .success(let purchaseResult):
-                PRLogger.purchases.notice("Finished in-app purchase successfull!")
+                PRLogger.purchases.notice("Finished in-app purchase successful!")
+                NotificationCenter.default.post(name: .didPurchaseItem, object: nil)
+                
             case .failure(let error):
                 PRLogger.purchases.error("In app purchase completion resulted in error! [\(error)]")
             }
         }
-        .storeButton(.hidden, for: .cancellation)
+        .storeButton(.visible, for: .redeemCode)
     }
 }
 

@@ -65,6 +65,9 @@
 		563615D72BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 563615D62BFF65CD00D79EF0 /* StoreKitTestCertificate.cer */; };
 		563615D82BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 563615D62BFF65CD00D79EF0 /* StoreKitTestCertificate.cer */; };
 		563615D92BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 563615D62BFF65CD00D79EF0 /* StoreKitTestCertificate.cer */; };
+		563615DC2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563615DB2C07489600D79EF0 /* Transaction+Extensions.swift */; };
+		563615DD2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563615DB2C07489600D79EF0 /* Transaction+Extensions.swift */; };
+		563615DE2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563615DB2C07489600D79EF0 /* Transaction+Extensions.swift */; };
 		564408322BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564408312BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift */; };
 		564408332BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564408312BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift */; };
 		564408342BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564408312BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift */; };
@@ -307,6 +310,7 @@
 		563615CF2BFF3F5400D79EF0 /* PremiumSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSubscriptionView.swift; sourceTree = "<group>"; };
 		563615D52BFF658000D79EF0 /* PROgress.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = PROgress.storekit; sourceTree = "<group>"; };
 		563615D62BFF65CD00D79EF0 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
+		563615DB2C07489600D79EF0 /* Transaction+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transaction+Extensions.swift"; sourceTree = "<group>"; };
 		564408312BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageLoadingSuccessView+SettingsSection.swift"; sourceTree = "<group>"; };
 		564408352BB4A76200F035D3 /* Text+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Extensions.swift"; sourceTree = "<group>"; };
 		564408392BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageLoadingSuccessView+PhotoGridItem.swift"; sourceTree = "<group>"; };
@@ -505,6 +509,14 @@
 			path = "StoreKit Testing";
 			sourceTree = "<group>";
 		};
+		563615DA2C07486E00D79EF0 /* StoreKit */ = {
+			isa = PBXGroup;
+			children = (
+				563615DB2C07489600D79EF0 /* Transaction+Extensions.swift */,
+			);
+			path = StoreKit;
+			sourceTree = "<group>";
+		};
 		56573C072BF0EA5C007AF80C /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
@@ -626,6 +638,7 @@
 		568B60AC2A84C45E00D5B5D3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				563615DA2C07486E00D79EF0 /* StoreKit */,
 				56573C072BF0EA5C007AF80C /* Foundation */,
 				5625EE462BEA1E22005713CB /* Photos */,
 				56BFBC452BDD5D6300046927 /* Notifications */,
@@ -1041,6 +1054,7 @@
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
 				56A554652A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				566721A42BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift in Sources */,
+				563615DC2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */,
 				56BC80C32AA9AB2900DCA75D /* SettingsView.swift in Sources */,
 				56A5542D2A87F0FE00E99F65 /* ReorderImagesDropDelegate.swift in Sources */,
 				56C159BA2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */,
@@ -1166,6 +1180,7 @@
 				56217F292AA07B6700A79CA0 /* FreeResolutionPickerPage.swift in Sources */,
 				56BC80CC2AA9BD1200DCA75D /* GlobalSettings.swift in Sources */,
 				56BFBC422BDD554E00046927 /* CGImage+Extensions.swift in Sources */,
+				563615DD2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */,
 				56573C0A2BF0EA6F007AF80C /* DateFormatter+Extensions.swift in Sources */,
 				56BF34D12A97EE2600AFA9E4 /* ActivityProtocol.swift in Sources */,
 				56BC80BD2AA8531900DCA75D /* CIColor+Extensions.swift in Sources */,
@@ -1215,6 +1230,7 @@
 				56A5543C2A8940F400E99F65 /* PhotoLibraryManager.swift in Sources */,
 				560049D42BA0EDFE00D373BB /* PROgressApp.swift in Sources */,
 				56A5542B2A87956900E99F65 /* NewProgressVideoPlayerView.swift in Sources */,
+				563615DE2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */,
 				564408342BB4A6E200F035D3 /* ImageLoadingSuccessView+SettingsSection.swift in Sources */,
 				56C159BC2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */,
 				56BC80D12AAA46FE00DCA75D /* ProgressVideosCollectionViewModel.swift in Sources */,

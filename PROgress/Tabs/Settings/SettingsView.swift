@@ -7,6 +7,7 @@
 
 import SwiftUI
 import os
+import StoreKit
 
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
@@ -50,22 +51,51 @@ struct SettingsView: View {
                 }
                 
                 Section("Subscription") {
-                    HStack {
-                        Text("Current plan")
-                        Spacer()
-                        Text(globalSettings.subscriptionType.rawValue)
-                            .foregroundColor(.secondary)
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Current plan")
+                            Spacer()
+                            Text(globalSettings.subscriptionType.rawValue)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        if globalSettings.subscriptionType == .premium {
+                            VStack(alignment: .leading, spacing: 8) {
+                                if let expirationDate = globalSettings.subscriptionTransaction?.expirationDate {
+                                    Text("Your current Premium plan billing period lasts until\n")
+                                    +
+                                    Text("\(DateFormatter.videoDateFormatter.string(from: expirationDate)).")
+                                        .bold()
+                                    
+                                    Text("This does not mean you have no other subscriptions coming up after the above shown date. Check your Apple ID settings in the Settings app for your full list of subscriptions related to PROgress.")
+                                    
+                                    Text("Auto-renewable subscriptions can be cancelled anytime and they will last until the end of the current billing period.")
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                        }
                     }
                     
-                    Button("Upgrade", action: {
+                    Button("Change subscription", action: {
                         self.isShowingSubscriptionsSheet = true
                     })
                     
                     Button {
-                        // TODO
+                        globalSettings.requestPurchaseRestore()
                     } label: {
-                        Text("Restore purchase")
+                        HStack {
+                            Text("Restore purchase")
+                            
+                            if globalSettings.purchaseRestorationInProgress {
+                                Spacer()
+                                
+                                ProgressView()
+                            }
+                        }
                     }
+                    .disabled(globalSettings.purchaseRestorationInProgress)
                 }
                 
                 Section("Miscellaneous") {
@@ -95,11 +125,5 @@ struct SettingsView: View {
     
     private enum SubPages {
         case licenseAttribution
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
     }
 }
