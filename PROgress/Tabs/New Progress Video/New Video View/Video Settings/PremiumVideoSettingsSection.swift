@@ -39,20 +39,7 @@ struct PremiumVideoSettingsSection: View {
             if !globalSettings.isPremiumUser {
                 Text(onlyWithPremiumAttributedString)
                     .font(.caption)
-                    .sheet(isPresented: $isShowingSubscriptionsSheet) {
-                        PremiumSubscriptionView()
-                    }
-                    .environment(\.openURL, OpenURLAction { url in
-                        PRLogger.app.debug("Handling URL on PremiumVideoSettingsSection page.")
-                        
-                        if url.absoluteString == "PROgress://open-subscriptions-sheet" {
-                            DispatchQueue.main.async {
-                                isShowingSubscriptionsSheet = true
-                            }
-                        }
-                        
-                        return .discarded
-                    })
+                    .subscriptionSheetLink(isPresented: $isShowingSubscriptionsSheet)
             }
         }
     }

@@ -22,7 +22,7 @@ actor PhotoLibraryManager {
     static let videoLibraryTitle = "PROgress"
     
     init() {
-        self.authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        self.authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
     
     // MARK: - Working with albums
@@ -50,6 +50,8 @@ actor PhotoLibraryManager {
         retrieval assetRetrievalProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return },
         processing assetProcessingProgressBlock: @escaping @Sendable (Double) -> Void = { _ in return }
     ) async throws -> [VideoAsset] {
+        try await handleAuthorizationStatus()
+        
         guard let videoLibrary = self.getPROgressMediaLibraryAssetCollection() else {
             PRLogger.photoLibraryManagement.fault("Video library should exist!")
             throw OperationError.videoLibraryNotFound
@@ -108,6 +110,8 @@ actor PhotoLibraryManager {
                                          to fetchReason: AlbumFetchingReason,
                                          progressBlock: @escaping @Sendable () -> Void)
     async throws -> [ProgressImage] {
+        try await handleAuthorizationStatus()
+        
         let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: .imagesInAlbum)
         
@@ -163,6 +167,8 @@ actor PhotoLibraryManager {
     
     /// Returns an object that contains all albums from the user's Photo Library that has at least one image.
     nonisolated func getPhotoAlbumCollection() async throws -> PhotoAlbumCollection {
+        try await handleAuthorizationStatus()
+        
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
         
         var tasks = [Task<PhotoAlbum?, Never>]()
@@ -253,22 +259,7 @@ actor PhotoLibraryManager {
     // MARK: - Saving video to designated album
     @discardableResult
     func saveProgressVideoToPhotoLibrary(_ progressVideo: ProgressVideo) async throws -> PersistentIdentifier? {
-        switch self.authorizationStatus {
-        case .notDetermined:
-            PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
-            await self.requestAuthorization()
-            
-            return try await saveProgressVideoToPhotoLibrary(progressVideo)
-            
-        case .restricted, .denied:
-            throw AuthorizationError.deniedAuthorization
-            
-        case .authorized, .limited:
-            break
-            
-        @unknown default:
-            throw AuthorizationError.unknown
-        }
+        try await handleAuthorizationStatus()
         
         if self.getPROgressMediaLibraryAssetCollection() == nil {
             try await self.createPROgressMediaLibrary()
@@ -364,7 +355,26 @@ actor PhotoLibraryManager {
     
     // MARK: - Miscellaneous
     func requestAuthorization() async {
-        authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        authorizationStatus = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+    }
+    
+    private func handleAuthorizationStatus() async throws {
+        switch self.authorizationStatus {
+        case .notDetermined:
+            PRLogger.photoLibraryManagement.notice("saveAssetToPhotoLibrary was called with undetermined status!")
+            await self.requestAuthorization()
+            
+            try await handleAuthorizationStatus()
+            
+        case .restricted, .denied:
+            throw AuthorizationError.deniedAuthorization
+            
+        case .authorized, .limited:
+            break
+            
+        @unknown default:
+            throw AuthorizationError.unknown
+        }
     }
     
     private static func generateVideoAsset(from indexedAvAsset: IndexedAVAsset) async throws -> VideoAsset {

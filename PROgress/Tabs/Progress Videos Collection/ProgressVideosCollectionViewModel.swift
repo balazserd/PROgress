@@ -107,6 +107,7 @@ class ProgressVideosCollectionViewModel: ObservableObject {
         Publishers.MergeMany(NotificationCenter.default.publisher(for: .didCreateNewProgressVideo),
                              NotificationCenter.default.publisher(for: .didRemoveProgressVideos),
                              NotificationCenter.default.publisher(for: .didUpdateProgressVideoProperties))
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.loadProgressVideos()
             }

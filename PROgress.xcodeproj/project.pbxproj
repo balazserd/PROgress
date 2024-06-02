@@ -100,6 +100,10 @@
 		566721AC2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566721AB2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift */; };
 		566721AD2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566721AB2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift */; };
 		566721AE2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566721AB2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift */; };
+		566730A92C0C80F100E6969D /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566730A82C0C80F100E6969D /* View+Extensions.swift */; };
+		566730AA2C0C80F100E6969D /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566730A82C0C80F100E6969D /* View+Extensions.swift */; };
+		566730AB2C0C80F100E6969D /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566730A82C0C80F100E6969D /* View+Extensions.swift */; };
+		566730AC2C0C8C2000E6969D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A554872A9210A300E99F65 /* Assets.xcassets */; };
 		56853BCF2BA0EC7D00CF0F14 /* PRLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60912A7B8C1600D5B5D3 /* PRLogger.swift */; };
 		56853BD12BA0ECB900CF0F14 /* NewProgressVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60932A82B36B00D5B5D3 /* NewProgressVideoViewModel.swift */; };
 		56853BD22BA0ECCD00CF0F14 /* PhotoTransferingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568B60992A82B3F700D5B5D3 /* PhotoTransferingError.swift */; };
@@ -321,6 +325,7 @@
 		566721A32BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoCollectionItem.swift; sourceTree = "<group>"; };
 		566721A72BE0045A00A7CEB2 /* ProgressVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoPlayerView.swift; sourceTree = "<group>"; };
 		566721AB2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoPlayerViewModel.swift; sourceTree = "<group>"; };
+		566730A82C0C80F100E6969D /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		568B605A2A7AD98300D5B5D3 /* PROgress.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROgress.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568B605D2A7AD98300D5B5D3 /* PROgressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressApp.swift; sourceTree = "<group>"; };
 		568B605F2A7AD98300D5B5D3 /* NewProgressVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressVideoView.swift; sourceTree = "<group>"; };
@@ -818,6 +823,7 @@
 				562527B82AA34EAE00197E10 /* SwiftUI+Sendable.swift */,
 				562527B42AA2001700197E10 /* Axis+Extensions.swift */,
 				564408352BB4A76200F035D3 /* Text+Extensions.swift */,
+				566730A82C0C80F100E6969D /* View+Extensions.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -997,6 +1003,7 @@
 			files = (
 				568B60652A7AD98400D5B5D3 /* Preview Assets.xcassets in Resources */,
 				568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */,
+				566730AC2C0C8C2000E6969D /* Assets.xcassets in Resources */,
 				563615D72BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1054,6 +1061,7 @@
 				568B606A2A7AD98400D5B5D3 /* PROgress.xcdatamodeld in Sources */,
 				56A554652A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				566721A42BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift in Sources */,
+				566730A92C0C80F100E6969D /* View+Extensions.swift in Sources */,
 				563615DC2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */,
 				56BC80C32AA9AB2900DCA75D /* SettingsView.swift in Sources */,
 				56A5542D2A87F0FE00E99F65 /* ReorderImagesDropDelegate.swift in Sources */,
@@ -1146,6 +1154,7 @@
 				56BC80C82AA9B8DB00DCA75D /* UserDefaultKeys.swift in Sources */,
 				566721A12BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */,
 				56A5549B2A949E3F00E99F65 /* ActivityManager.swift in Sources */,
+				566730AA2C0C80F100E6969D /* View+Extensions.swift in Sources */,
 				562527B22AA1FFD900197E10 /* VideoProcessingUserSettings.swift in Sources */,
 				5625EE4D2BEA1E53005713CB /* PHImageRequestOptions+Extensions.swift in Sources */,
 				56C159BB2BD81C8100632A4A /* ModelContainer+Extensions.swift in Sources */,
@@ -1222,6 +1231,7 @@
 				560049CE2BA0EDB900D373BB /* ImageMergeEngine.swift in Sources */,
 				560049D12BA0EDD600D373BB /* Container.swift in Sources */,
 				5625EE4E2BEA1E53005713CB /* PHImageRequestOptions+Extensions.swift in Sources */,
+				566730AB2C0C80F100E6969D /* View+Extensions.swift in Sources */,
 				56C2553C2BCD9D1F00753C3D /* VideoSubsetting.swift in Sources */,
 				561D66AD2A9D235E000A7E7C /* ResolutionPickerForm.swift in Sources */,
 				560049D32BA0EDEA00D373BB /* PhotoTransferingError.swift in Sources */,
@@ -1439,7 +1449,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PROgress/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it. It also needs access to your photos to import them.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1475,7 +1485,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PROgress/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "PROgress needs your permission to create its dedicated video folder and add your progress videos to it. It also needs access to your photos to import them.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
