@@ -255,6 +255,13 @@
 		56C2555A2BD7A70400753C3D /* Actorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C255592BD7A70400753C3D /* Actorized.swift */; };
 		56C2555B2BD7A70400753C3D /* Actorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C255592BD7A70400753C3D /* Actorized.swift */; };
 		56C2555C2BD7A70400753C3D /* Actorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C255592BD7A70400753C3D /* Actorized.swift */; };
+		56C714BC2C0E05A300E50356 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568B60612A7AD98400D5B5D3 /* Assets.xcassets */; };
+		56C714BE2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */; };
+		56C714BF2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */; };
+		56C714C02C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */; };
+		56C714CE2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
+		56C714CF2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
+		56C714D02C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
 		56EEDFCE2BA0E61F0096D8BA /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */; };
 		56F533A02B98F5E3001D9A58 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F5339F2B98F5E3001D9A58 /* StatusBar.swift */; };
 /* End PBXBuildFile section */
@@ -395,6 +402,8 @@
 		56C255392BCD9D1F00753C3D /* VideoSubsetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSubsetting.swift; sourceTree = "<group>"; };
 		56C2553D2BCD9D9C00753C3D /* PremiumVideoSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumVideoSettingsSection.swift; sourceTree = "<group>"; };
 		56C255592BD7A70400753C3D /* Actorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actorized.swift; sourceTree = "<group>"; };
+		56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+WatermarkingError.swift"; sourceTree = "<group>"; };
+		56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PROgressWatermarkIcon.png; sourceTree = "<group>"; };
 		56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		56F5339F2B98F5E3001D9A58 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -500,7 +509,7 @@
 		563615D32BFF654A00D79EF0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				563615D42BFF655000D79EF0 /* StoreKit Testing */,
+				56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -578,6 +587,7 @@
 		568B60632A7AD98400D5B5D3 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				563615D42BFF655000D79EF0 /* StoreKit Testing */,
 				568B60642A7AD98400D5B5D3 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -626,6 +636,7 @@
 				56A554552A8BEB2E00E99F65 /* ImageMergeEngine+State.swift */,
 				56A554412A8BCE8A00E99F65 /* ImageMergeEngine+MergeOptions.swift */,
 				56A554512A8BEB0A00E99F65 /* ImageMergeEngine+MergeError.swift */,
+				56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */,
 				56BF34C82A95335400AFA9E4 /* ImageMergeEngine+VideoCreationThumbnailActivityError.swift */,
 				56A554342A8901C100E99F65 /* VideoAssetWriterConfiguration.swift */,
 			);
@@ -1002,6 +1013,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				568B60652A7AD98400D5B5D3 /* Preview Assets.xcassets in Resources */,
+				56C714CE2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */,
 				568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */,
 				566730AC2C0C8C2000E6969D /* Assets.xcassets in Resources */,
 				563615D72BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */,
@@ -1012,6 +1024,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C714CF2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */,
 				563615D82BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1020,6 +1033,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C714D02C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */,
 				563615D92BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1028,6 +1042,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C714BC2C0E05A300E50356 /* Assets.xcassets in Resources */,
 				56A554882A9210A300E99F65 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1062,6 +1077,7 @@
 				56A554652A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				566721A42BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift in Sources */,
 				566730A92C0C80F100E6969D /* View+Extensions.swift in Sources */,
+				56C714BE2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */,
 				563615DC2C07489600D79EF0 /* Transaction+Extensions.swift in Sources */,
 				56BC80C32AA9AB2900DCA75D /* SettingsView.swift in Sources */,
 				56A5542D2A87F0FE00E99F65 /* ReorderImagesDropDelegate.swift in Sources */,
@@ -1138,6 +1154,7 @@
 				563615D12BFF3F5400D79EF0 /* PremiumSubscriptionView.swift in Sources */,
 				5625EE442BEA1E08005713CB /* IndexedAVAsset.swift in Sources */,
 				56A554322A87F23E00E99F65 /* ImageLoadingSuccessView.swift in Sources */,
+				56C714BF2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */,
 				5625EE402BEA1DF3005713CB /* VideoAsset.swift in Sources */,
 				56BF34DA2A98FD2700AFA9E4 /* Photos+Sendable.swift in Sources */,
 				56BF34C62A952E9200AFA9E4 /* VideoCreationActivityThumbnailData.swift in Sources */,
@@ -1246,6 +1263,7 @@
 				56BC80D12AAA46FE00DCA75D /* ProgressVideosCollectionViewModel.swift in Sources */,
 				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A5544C2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
+				56C714C02C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */,
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
 				56A5546F2A8E8F4600E99F65 /* AlbumSelectorView.swift in Sources */,
 				56BF34D72A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,

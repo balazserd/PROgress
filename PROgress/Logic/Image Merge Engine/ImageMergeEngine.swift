@@ -12,12 +12,17 @@ import CoreImage
 @preconcurrency import AVFoundation
 import EBUniAppsKit
 import Combine
+import CoreImage.CIFilterBuiltins
 
 actor ImageMergeEngine {
     static let backgroundTaskName = "com.ebuniapps.PROgress-imageMergeTask"
     
     nonisolated let state = CurrentValueSubject<State, Never>(.idle)
     
+    // MARK: -  Operation-private variables
+    private var watermarkImage: CIImage?
+    
+    // MARK: - Operations
     func provideVideoCreationActivityThumbnails<ConversionEngine: PhotoConversionEngine>(
         from images: [ConversionEngine.Input],
         by engine: ConversionEngine
@@ -87,6 +92,8 @@ actor ImageMergeEngine {
         by engine: ConversionEngine,
         options: MergeOptions
     ) async throws -> ProgressVideo {
+        self.watermarkImage = nil // Always reset the watermark between merges.
+        
         let indexedImages = images.enumerated().map { ($1, $0) }
         
         let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
@@ -198,9 +205,20 @@ actor ImageMergeEngine {
         let backgroundColor = CIColor(argbComponents: config.userSettings.backgroundColorComponentsARGB)
         let background = CIImage(color: backgroundColor)
         
-        let finalImage = scaledToFitImage // Video frame.
+        var finalImage = scaledToFitImage // Video frame.
             .composited(over: background) // Actual background color.
             .composited(over: base) // Overwrites base black background, allowing for background colors with alpha.
+        
+        if await !GlobalSettings.shared.isPremiumUser {
+            if self.watermarkImage == nil {
+                let videoSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer),
+                                       height: CVPixelBufferGetHeight(pixelBuffer))
+                self.watermarkImage = try self.createWatermarkImage(size: videoSize,
+                                                                    backgroundColor: backgroundColor)
+            }
+            
+            finalImage = self.watermarkImage!.composited(over: finalImage)
+        }
         
         context.clearCaches() // Removes CIContext caches. Important!
         context.render(finalImage,
@@ -212,6 +230,70 @@ actor ImageMergeEngine {
                           timescale: 20)
         
         return Sample(index: index, time: time, buffer: pixelBuffer)
+    }
+    
+    private static let watermarkRatio = 0.06
+    private static let watermarkPadding = 12.5
+    private func createWatermarkImage(size: CGSize, backgroundColor: CIColor) throws -> CIImage {
+        // Required size
+        let watermarkIconRequiredSize = CGSize(width: size.height * Self.watermarkRatio,
+                                               height: size.height * Self.watermarkRatio)
+        
+        // Watermark Icon
+        guard
+            let watermarkIconUrl = Bundle.main.url(forResource: "PROgressWatermarkIcon", withExtension: "png"),
+            let watermarkIconOriginalSize = CIImage(contentsOf: watermarkIconUrl)
+        else {
+            throw WatermarkingError.watermarkIconMissingInBundle
+        }
+        
+        let watermarkIconFinalSize = watermarkIconOriginalSize
+            .transformed(by: CGAffineTransform(
+                scaleX: watermarkIconRequiredSize.width / watermarkIconOriginalSize.extent.width,
+                y: watermarkIconRequiredSize.height / watermarkIconOriginalSize.extent.height)
+            )
+            .transformed(by: CGAffineTransform(
+                translationX: size.width - (Self.watermarkPadding + 5) - watermarkIconRequiredSize.width,
+                y: Self.watermarkPadding)
+            )
+        
+        // Watermark Text
+        let watermarkTextFilter = CIFilter.attributedTextImageGenerator()
+        watermarkTextFilter.text = NSAttributedString(string: "Made with PROgress")
+        watermarkTextFilter.scaleFactor = 2
+        watermarkTextFilter.padding = 5
+        
+        guard let watermarkTextImage = watermarkTextFilter.outputImage else {
+            throw WatermarkingError.watermarkTextFilterFailure
+        }
+        
+        let watermarkTextFinalSizeScaling = (size.height * Self.watermarkRatio) / watermarkTextImage.extent.height
+        let watermarkTextImageResized = watermarkTextImage
+            .transformed(by: CGAffineTransform(
+                scaleX: watermarkTextFinalSizeScaling,
+                y: watermarkTextFinalSizeScaling)
+            )
+        let watermarkTextImageResizedAndPositioned = watermarkTextImageResized
+            .transformed(by: CGAffineTransform(
+                translationX: size.width - (Self.watermarkPadding + 5) - watermarkIconRequiredSize.width - 10 - watermarkTextImageResized.extent.width,
+                y: Self.watermarkPadding)
+            )
+        
+        // Watermark Background
+        let watermarkBackgroundFilter = CIFilter.roundedRectangleGenerator()
+        watermarkBackgroundFilter.color = CIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+        watermarkBackgroundFilter.extent = CGRect(x: 0, y: 0,
+                                                  width: size.width,
+                                                  height: Self.watermarkPadding * 2 + watermarkIconRequiredSize.height)
+        watermarkBackgroundFilter.radius = 0
+        guard let watermarkBackgroundImage = watermarkBackgroundFilter.outputImage else {
+            throw WatermarkingError.watermarkBackgroundFilterFailure
+        }
+        
+        return watermarkTextImageResizedAndPositioned
+            .composited(over: watermarkIconFinalSize)
+            .composited(over: watermarkBackgroundImage)
+            .composited(over: CIImage(color: .clear))
     }
     
     // MARK: - Typealias Sample
