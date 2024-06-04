@@ -12,7 +12,7 @@ struct VideoProcessingUserSettings: Sendable {
     private let maxPhotoExtentX: CGFloat
     private let maxPhotoExtentY: CGFloat
     
-    var hideLogo: Bool = false
+    var hideLogo: Bool
     var addBeforeAfterFinalImage: Bool = false
     
     var timeBetweenFrames: Double
@@ -105,6 +105,7 @@ struct VideoProcessingUserSettings: Sendable {
     
     private(set) var aspectRatio: Double!
     
+    @MainActor
     init(timeBetweenFrames: Double = 0.2,
          resolution: Resolution = .medium,
          maxPhotoExtentX: Double = 640,
@@ -116,6 +117,9 @@ struct VideoProcessingUserSettings: Sendable {
         self.maxPhotoExtentY = maxPhotoExtentY
         self.extentX = maxPhotoExtentX
         self.extentY = maxPhotoExtentY
+        
+        self.hideLogo = GlobalSettings.shared.isPremiumUser ? true : false
+        
         defer {
             self.backgroundColor = backgroundColor
             self.resolution = resolution

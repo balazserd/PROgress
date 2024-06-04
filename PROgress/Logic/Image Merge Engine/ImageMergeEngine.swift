@@ -209,15 +209,19 @@ actor ImageMergeEngine {
             .composited(over: background) // Actual background color.
             .composited(over: base) // Overwrites base black background, allowing for background colors with alpha.
         
-        if await !GlobalSettings.shared.isPremiumUser {
+        if !config.userSettings.hideLogo {
+            let width = CVPixelBufferGetWidth(pixelBuffer)
+            let height = CVPixelBufferGetHeight(pixelBuffer)
+            
             if self.watermarkImage == nil {
-                let videoSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer),
-                                       height: CVPixelBufferGetHeight(pixelBuffer))
+                let videoSize = CGSize(width: width, height: height)
                 self.watermarkImage = try self.createWatermarkImage(size: videoSize,
                                                                     backgroundColor: backgroundColor)
             }
             
-            finalImage = self.watermarkImage!.composited(over: finalImage)
+            finalImage = self.watermarkImage!
+                .composited(over: finalImage)
+                .clamped(to: CGRect(origin: .zero, size: .init(width: width, height: height)))
         }
         
         context.clearCaches() // Removes CIContext caches. Important!
@@ -234,16 +238,20 @@ actor ImageMergeEngine {
     
     private static let watermarkRatio = 0.06
     private static let watermarkPadding = 12.5
+//    private static let watermarkIconSize = 25
+    
     private func createWatermarkImage(size: CGSize, backgroundColor: CIColor) throws -> CIImage {
         // Required size
-        let watermarkIconRequiredSize = CGSize(width: size.height * Self.watermarkRatio,
-                                               height: size.height * Self.watermarkRatio)
+        let watermarkIconRequiredSize = CGSize(width: min(size.height, size.width) * Self.watermarkRatio,
+                                               height: min(size.height, size.width) * Self.watermarkRatio)
+//        let watermarkIconRequiredSize = CGSize(width: Self.watermarkIconSize, height: Self.watermarkIconSize)
         
         // Watermark Icon
         guard
-            let watermarkIconUrl = Bundle.main.url(forResource: "PROgressWatermarkIcon", withExtension: "png"),
+            let watermarkIconUrl = Bundle.main.url(forResource: "PROgressWatermarkIcon", withExtension: "tiff"),
             let watermarkIconOriginalSize = CIImage(contentsOf: watermarkIconUrl)
         else {
+            PRLogger.imageProcessing.error("Watermarking error, bundle png corrupted or missing!")
             throw WatermarkingError.watermarkIconMissingInBundle
         }
         
@@ -253,7 +261,7 @@ actor ImageMergeEngine {
                 y: watermarkIconRequiredSize.height / watermarkIconOriginalSize.extent.height)
             )
             .transformed(by: CGAffineTransform(
-                translationX: size.width - (Self.watermarkPadding + 5) - watermarkIconRequiredSize.width,
+                translationX: size.width - Self.watermarkPadding - watermarkIconRequiredSize.width,
                 y: Self.watermarkPadding)
             )
         
@@ -264,10 +272,11 @@ actor ImageMergeEngine {
         watermarkTextFilter.padding = 5
         
         guard let watermarkTextImage = watermarkTextFilter.outputImage else {
+            PRLogger.imageProcessing.error("Watermarking error, text filter cannot be built!")
             throw WatermarkingError.watermarkTextFilterFailure
         }
         
-        let watermarkTextFinalSizeScaling = (size.height * Self.watermarkRatio) / watermarkTextImage.extent.height
+        let watermarkTextFinalSizeScaling = watermarkIconRequiredSize.height / watermarkTextImage.extent.height
         let watermarkTextImageResized = watermarkTextImage
             .transformed(by: CGAffineTransform(
                 scaleX: watermarkTextFinalSizeScaling,
@@ -275,7 +284,7 @@ actor ImageMergeEngine {
             )
         let watermarkTextImageResizedAndPositioned = watermarkTextImageResized
             .transformed(by: CGAffineTransform(
-                translationX: size.width - (Self.watermarkPadding + 5) - watermarkIconRequiredSize.width - 10 - watermarkTextImageResized.extent.width,
+                translationX: size.width - Self.watermarkPadding - watermarkIconRequiredSize.width - 10 - watermarkTextImageResized.extent.width,
                 y: Self.watermarkPadding)
             )
         
@@ -287,6 +296,7 @@ actor ImageMergeEngine {
                                                   height: Self.watermarkPadding * 2 + watermarkIconRequiredSize.height)
         watermarkBackgroundFilter.radius = 0
         guard let watermarkBackgroundImage = watermarkBackgroundFilter.outputImage else {
+            PRLogger.imageProcessing.error("Watermarking error, background filter cannot be built!")
             throw WatermarkingError.watermarkBackgroundFilterFailure
         }
         

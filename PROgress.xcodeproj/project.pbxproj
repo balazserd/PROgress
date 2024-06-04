@@ -262,6 +262,7 @@
 		56C714CE2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
 		56C714CF2C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
 		56C714D02C0E206B00E50356 /* PROgressWatermarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */; };
+		56C714D42C0F0C7D00E50356 /* PROgressWatermarkIcon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 56C714D32C0F0C7D00E50356 /* PROgressWatermarkIcon.tiff */; };
 		56EEDFCE2BA0E61F0096D8BA /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */; };
 		56F533A02B98F5E3001D9A58 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F5339F2B98F5E3001D9A58 /* StatusBar.swift */; };
 /* End PBXBuildFile section */
@@ -404,6 +405,7 @@
 		56C255592BD7A70400753C3D /* Actorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actorized.swift; sourceTree = "<group>"; };
 		56C714BD2C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageMergeEngine+WatermarkingError.swift"; sourceTree = "<group>"; };
 		56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PROgressWatermarkIcon.png; sourceTree = "<group>"; };
+		56C714D32C0F0C7D00E50356 /* PROgressWatermarkIcon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = PROgressWatermarkIcon.tiff; sourceTree = "<group>"; };
 		56EEDFCD2BA0E61F0096D8BA /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		56F5339F2B98F5E3001D9A58 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -509,6 +511,7 @@
 		563615D32BFF654A00D79EF0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				56C714D32C0F0C7D00E50356 /* PROgressWatermarkIcon.tiff */,
 				56C714CD2C0E206B00E50356 /* PROgressWatermarkIcon.png */,
 			);
 			path = Resources;
@@ -1017,6 +1020,7 @@
 				568B60622A7AD98400D5B5D3 /* Assets.xcassets in Resources */,
 				566730AC2C0C8C2000E6969D /* Assets.xcassets in Resources */,
 				563615D72BFF65CD00D79EF0 /* StoreKitTestCertificate.cer in Resources */,
+				56C714D42C0F0C7D00E50356 /* PROgressWatermarkIcon.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
