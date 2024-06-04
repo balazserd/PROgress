@@ -10,7 +10,7 @@
     "_applicationInternalID" : "6503061802",
     "_developerTeamID" : "B9J6J6XB6U",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 738679330.96205604,
+    "_lastSynchronizedDate" : 739195338.81214201,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -102,27 +102,27 @@
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "existing",
-                "expired",
                 "new"
               ],
-              "internalID" : "BA9B06D1",
+              "internalID" : "2603349C",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF Yearly!",
+              "referenceName" : "50% OFF First year!",
               "subscriptionPeriod" : "P1Y"
             },
             {
               "displayPrice" : "2.49",
               "eligibility" : [
+                "expired",
+                "existing",
                 "new"
               ],
-              "internalID" : "C974A32D",
+              "internalID" : "BED0982A",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF First year!",
+              "referenceName" : "50% OFF Yearly!",
               "subscriptionPeriod" : "P1Y"
             }
           ],

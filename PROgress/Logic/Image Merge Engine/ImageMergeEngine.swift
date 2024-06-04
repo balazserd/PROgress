@@ -237,16 +237,18 @@ actor ImageMergeEngine {
     }
     
     private static let watermarkRatio = 0.06
-    private static let watermarkPadding = 12.5
-//    private static let watermarkIconSize = 25
+    private static let watermarkAddedPaddingRatio = 0.2
+    private static let watermarkTextToIconRatio = 0.8
     
     private func createWatermarkImage(size: CGSize, backgroundColor: CIColor) throws -> CIImage {
         // Required size
+        // --------------------------------------------------------------------
         let watermarkIconRequiredSize = CGSize(width: min(size.height, size.width) * Self.watermarkRatio,
                                                height: min(size.height, size.width) * Self.watermarkRatio)
-//        let watermarkIconRequiredSize = CGSize(width: Self.watermarkIconSize, height: Self.watermarkIconSize)
+        let watermarkPadding = watermarkIconRequiredSize.height * Self.watermarkAddedPaddingRatio
         
         // Watermark Icon
+        // --------------------------------------------------------------------
         guard
             let watermarkIconUrl = Bundle.main.url(forResource: "PROgressWatermarkIcon", withExtension: "tiff"),
             let watermarkIconOriginalSize = CIImage(contentsOf: watermarkIconUrl)
@@ -261,14 +263,15 @@ actor ImageMergeEngine {
                 y: watermarkIconRequiredSize.height / watermarkIconOriginalSize.extent.height)
             )
             .transformed(by: CGAffineTransform(
-                translationX: size.width - Self.watermarkPadding - watermarkIconRequiredSize.width,
-                y: Self.watermarkPadding)
+                translationX: size.width - watermarkPadding - watermarkIconRequiredSize.width,
+                y: watermarkPadding)
             )
         
         // Watermark Text
+        // --------------------------------------------------------------------
         let watermarkTextFilter = CIFilter.attributedTextImageGenerator()
         watermarkTextFilter.text = NSAttributedString(string: "Made with PROgress")
-        watermarkTextFilter.scaleFactor = 2
+        watermarkTextFilter.scaleFactor = 5
         watermarkTextFilter.padding = 5
         
         guard let watermarkTextImage = watermarkTextFilter.outputImage else {
@@ -276,7 +279,7 @@ actor ImageMergeEngine {
             throw WatermarkingError.watermarkTextFilterFailure
         }
         
-        let watermarkTextFinalSizeScaling = watermarkIconRequiredSize.height / watermarkTextImage.extent.height
+        let watermarkTextFinalSizeScaling = (watermarkIconRequiredSize.height / watermarkTextImage.extent.height) * Self.watermarkTextToIconRatio
         let watermarkTextImageResized = watermarkTextImage
             .transformed(by: CGAffineTransform(
                 scaleX: watermarkTextFinalSizeScaling,
@@ -284,22 +287,25 @@ actor ImageMergeEngine {
             )
         let watermarkTextImageResizedAndPositioned = watermarkTextImageResized
             .transformed(by: CGAffineTransform(
-                translationX: size.width - Self.watermarkPadding - watermarkIconRequiredSize.width - 10 - watermarkTextImageResized.extent.width,
-                y: Self.watermarkPadding)
+                translationX: size.width - watermarkPadding - watermarkIconRequiredSize.width - watermarkPadding - watermarkTextImageResized.extent.width,
+                y: watermarkPadding + watermarkIconRequiredSize.height * (1.0 - Self.watermarkTextToIconRatio) / 2.0)
             )
         
         // Watermark Background
+        // --------------------------------------------------------------------
         let watermarkBackgroundFilter = CIFilter.roundedRectangleGenerator()
         watermarkBackgroundFilter.color = CIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
         watermarkBackgroundFilter.extent = CGRect(x: 0, y: 0,
                                                   width: size.width,
-                                                  height: Self.watermarkPadding * 2 + watermarkIconRequiredSize.height)
+                                                  height: watermarkPadding * 2 + watermarkIconRequiredSize.height)
         watermarkBackgroundFilter.radius = 0
         guard let watermarkBackgroundImage = watermarkBackgroundFilter.outputImage else {
             PRLogger.imageProcessing.error("Watermarking error, background filter cannot be built!")
             throw WatermarkingError.watermarkBackgroundFilterFailure
         }
         
+        // Final watermark
+        // --------------------------------------------------------------------
         return watermarkTextImageResizedAndPositioned
             .composited(over: watermarkIconFinalSize)
             .composited(over: watermarkBackgroundImage)

@@ -195,6 +195,14 @@ class NewProgressVideoViewModel: ObservableObject {
                 self?.navigationState.removeLast()
             }
             .store(in: &subscriptions)
+        
+        GlobalSettings.shared.$subscriptionType
+            .map { $0 == .premium }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isPremium in
+                self?.userSettings?.hideLogo = isPremium
+            }
+            .store(in: &subscriptions)
     }
     
     private func setInitialUserSettings() {
