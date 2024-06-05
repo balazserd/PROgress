@@ -43,15 +43,16 @@ struct ResolutionPickerForm: View {
             } footer: {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("PROgress cannot upscale your images, even if you select a larger resolution.")
+                        .font(.caption)
                     
                     if !globalSettings.isPremiumUser {
                         Text(footnoteAttributedString)
                             .font(.caption)
-                            .subscriptionSheetLink(isPresented: $isShowingSubscriptionsSheet)
                     }
                 }
             }
         }
+        .subscriptionSheetLink(isPresented: $isShowingSubscriptionsSheet)
         .navigationTitle("Resolution")
     }
     

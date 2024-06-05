@@ -48,7 +48,7 @@ struct PremiumSubscriptionView: View {
         .onInAppPurchaseCompletion { product, result in
             switch result {
             case .success(let purchaseResult):
-                PRLogger.purchases.notice("Finished in-app purchase successful!")
+                PRLogger.purchases.notice("Finished in-app purchase successful! [\(String(describing: purchaseResult))]")
                 NotificationCenter.default.post(name: .didPurchaseItem, object: nil)
                 
             case .failure(let error):

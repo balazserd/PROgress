@@ -76,6 +76,7 @@ struct ProgressVideoPlayerView: View {
                 ProgressView()
             }
         }
+        .ignoresSafeArea(.keyboard)
         .navigationTitle(viewModel.videoAsset.name ?? "[Unnamed Progress Video]")
         .toolbar { self.toolbar }
         .shareView(with: [viewModel.avAsset?.url as Any], isPresented: $showShareSheet)

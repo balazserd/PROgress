@@ -18,29 +18,33 @@ struct AlbumSelectorView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack {
-                    switch viewModel.photoAlbumsLoadingState {
-                    case .success(let albums):
-                        LazyVGrid(columns: Array(repeating: .init(spacing: 14), count: gridColumnCount),
-                                  spacing: 16) {
-                            ForEach(albums, id: \.index) { album in
-                                AlbumSelectorGridItem(album: album)
-                                    .onTapGesture {
-                                        selectedAlbum = album
-                                        dismiss()
-                                    }
+            VStack {
+                switch viewModel.photoAlbumsLoadingState {
+                case .success(let albums):
+                    ScrollView {
+                        VStack {
+                            LazyVGrid(columns: Array(repeating: .init(spacing: 14), count: gridColumnCount),
+                                      spacing: 16) {
+                                ForEach(albums, id: \.index) { album in
+                                    AlbumSelectorGridItem(album: album)
+                                        .onTapGesture {
+                                            selectedAlbum = album
+                                            dismiss()
+                                        }
+                                }
                             }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
-                    case .loading:
-                        ProgressView()
-                        
-                    case .failure:
-                        Text("Failed to load albums!")
-                        
-                    default: EmptyView()
                     }
+                case .loading:
+                    ProgressView() {
+                        Text("Loading your Photos folders...")
+                    }
+                    
+                case .failure:
+                    Text("Failed to load albums!")
+                    
+                default: EmptyView()
                 }
             }
             .navigationTitle("Select an album")
