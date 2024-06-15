@@ -23,15 +23,10 @@ class ProgressVideoPlayerViewModel {
     
     var videoAsset: VideoAsset {
         willSet {
-            if videoAsset.name != newValue.name, let newName = newValue.name {
-                self.updatePersistedVideoAssetName(to: newName)
+            if videoAsset.name != newValue.name {
+                self.updatePersistedVideoAssetName(to: newValue.name)
             }
         }
-    }
-    
-    var videoAssetNameBinding: Binding<String> {
-        Binding<String>(get: { self.videoAsset.name ?? "" },
-                        set: { self.videoAsset.name = $0 })
     }
     
     var avAsset: AVURLAsset? {

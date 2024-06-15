@@ -20,8 +20,6 @@ struct NewProgressVideoView: View {
     @State private var isShowingPhotoPicker: Bool = false
     @State private var isShowingPhotoAlbumPicker: Bool = false
     
-    @State private var isShowingVideoNameEditor: Bool = false
-    
     @State private var editedVideoName: String = ""
     
     @StateObject private var viewModel = NewProgressVideoViewModel()
@@ -53,10 +51,10 @@ struct NewProgressVideoView: View {
                 }
                 .toolbar { toolbar }
                 .navigationTitle($viewModel.videoName)
+                .navigationBarTitleDisplayMode(.inline)
                 .photosPicker(isPresented: $isShowingPhotoPicker,
                               selection: $viewModel.selectedItems,
                               matching: .any(of: [.images, .screenshots]))
-                .videoNameEditorAlert($viewModel.videoName, isPresented: $isShowingVideoNameEditor)
                 .sheet(isPresented: $isShowingPhotoAlbumPicker,
                        onDismiss: { isShowingPhotoAlbumPicker = false }) {
                     AlbumSelectorView(selectedAlbum: $viewModel.selectedAlbum)
@@ -71,7 +69,6 @@ struct NewProgressVideoView: View {
                 Color.gray
                     .opacity(0.7)
                     .edgesIgnoringSafeArea(.all)
-                    .onTapGesture(perform: { viewModel.resetVideoProcessingState() })
                 
                 VideoProcessingInProgressView(progress: progress)
                     .transition(.opacity.animation(.linear(duration: 0.3)))
@@ -96,9 +93,12 @@ struct NewProgressVideoView: View {
                 Text("Importing photos...")
             }
             
-            Text("Depending on the number of selected photos, this operation might take a few minutes.\nIf photos are only available in iCloud, the operation's length will also depend on your download speed.")
-                .font(.system(size: 10))
-                .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Depending on the number of selected photos, this operation might take a few minutes.")
+                Text("If photos are only available in iCloud, the operation's length will also depend on your download speed.")
+            }
+            .font(.system(size: 10))
+            .foregroundColor(.secondary)
         }
         .padding()
     }
@@ -123,12 +123,6 @@ struct NewProgressVideoView: View {
     // MARK: - Toolbar
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigation) {
-            Button(action: { isShowingVideoNameEditor = true }) {
-                Image(systemName: "pencil")
-            }
-        }
-        
         ToolbarItem(placement: .primaryAction) {
             photoSelectionMenu {
                 Image(systemName: "plus")

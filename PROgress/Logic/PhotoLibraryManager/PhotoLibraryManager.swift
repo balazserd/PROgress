@@ -411,7 +411,6 @@ actor PhotoLibraryManager {
         return VideoAsset(firstImage: thumbnails[0],
                           middleImages: Array(thumbnails[1...3]),
                           lastImage: thumbnails[4],
-                          name: nil,
                           length: videoLength.seconds,
                           index: indexedAvAsset.index,
                           creationDate: creationDate,

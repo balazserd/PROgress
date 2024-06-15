@@ -15,7 +15,6 @@ struct NewProgressVideoPlayerView: View {
     private var video: ProgressVideo { self.viewModel.video }
     
     @State private var showShareSheet = false
-    @State private var isShowingVideoNameEditor: Bool = false
     
     private let avPlayer: AVPlayer
     
@@ -25,7 +24,7 @@ struct NewProgressVideoPlayerView: View {
     }
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 20) {
             AVPlayerViewController.Representable(player: avPlayer)
                 .aspectRatio(viewModel.video.resolution.width / viewModel.video.resolution.height, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -48,20 +47,14 @@ struct NewProgressVideoPlayerView: View {
         }
         .padding(20)
         .toolbar { toolbar }
-        .navigationTitle(viewModel.video.name)
+        .navigationTitle($viewModel.video.name)
+        .navigationBarTitleDisplayMode(.inline)
         .shareView(with: [viewModel.video.url], isPresented: $showShareSheet)
-        .videoNameEditorAlert($viewModel.video.name, isPresented: $isShowingVideoNameEditor)
         .ignoresSafeArea(.keyboard)
     }
     
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .primaryAction) {
-            Button(action: { isShowingVideoNameEditor = true }) {
-                Image(systemName: "pencil")
-            }
-        }
-        
         ToolbarItem(placement: .primaryAction) {
             switch viewModel.saveStatus {
             case .inProgress:

@@ -17,7 +17,7 @@ extension View {
             .environment(\.openURL, OpenURLAction { url in
                 PRLogger.app.debug("Handling URL on PremiumVideoSettingsSection page.")
                 
-                if url.absoluteString == "PROgress://open-subscriptions-sheet" {
+                if url == URL.openSubscriptionSheet {
                     isPresented.wrappedValue = true
                 }
                 

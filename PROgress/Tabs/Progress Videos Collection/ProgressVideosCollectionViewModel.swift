@@ -99,7 +99,7 @@ class ProgressVideosCollectionViewModel: ObservableObject {
                     return videos
                 }
                 
-                return videos?.filter { $0.name?.contains(searchText) == true }
+                return videos?.filter { $0.name.contains(searchText) == true }
             }
             .receive(on: DispatchQueue.main)
             .assign(to: &self.$searchCriteriaFulfillingVideos)

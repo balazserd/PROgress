@@ -59,7 +59,7 @@ struct ResolutionPickerForm: View {
     private var footnoteAttributedString: AttributedString = {
         let regularTextPart = AttributedString("Some resolution types are only available with PROgress Premium subscription. ")
         var linkPart = AttributedString("More info...")
-        linkPart.link = URL(string: "PROgress://open-subscriptions-sheet")
+        linkPart.link = .openSubscriptionSheet
         
         return regularTextPart + linkPart
     }()

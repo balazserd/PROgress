@@ -13,7 +13,6 @@ struct ProgressVideoPlayerView: View {
     @Bindable private var viewModel: ProgressVideoPlayerViewModel
     
     @State private var showShareSheet = false
-    @State private var isShowingVideoNameEditor: Bool = false
     
     @MainActor
     init(video: VideoAsset) {
@@ -77,10 +76,10 @@ struct ProgressVideoPlayerView: View {
             }
         }
         .ignoresSafeArea(.keyboard)
-        .navigationTitle(viewModel.videoAsset.name ?? "[Unnamed Progress Video]")
+        .navigationTitle($viewModel.videoAsset.name)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { self.toolbar }
         .shareView(with: [viewModel.avAsset?.url as Any], isPresented: $showShareSheet)
-        .videoNameEditorAlert(viewModel.videoAssetNameBinding, isPresented: $isShowingVideoNameEditor)
     }
     
     @ToolbarContentBuilder @MainActor
@@ -89,12 +88,6 @@ struct ProgressVideoPlayerView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showShareSheet = true }) {
                     Image(systemName: "square.and.arrow.up")
-                }
-            }
-            
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: { isShowingVideoNameEditor = true }) {
-                    Image(systemName: "pencil")
                 }
             }
         }

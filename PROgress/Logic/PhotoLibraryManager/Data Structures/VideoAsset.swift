@@ -12,7 +12,7 @@ struct VideoAsset: Hashable, Sendable {
     var firstImage: UIImage?
     var middleImages: [UIImage?]
     var lastImage: UIImage?
-    var name: String?
+    var name: String = "Progress Video"
     var length: Double
     var index: Int
     var creationDate: Date?
@@ -25,7 +25,7 @@ extension Array where Element == VideoAsset {
             if let model = persistedAssets.first(where: { $0.localIdentifier == asset.localIdentifier }) {
                 self[index].name = model.name
             } else {
-                self[index].name = "<Unnamed Progress Video>"
+                self[index].name = "Progress Video"
             }
         }
     }

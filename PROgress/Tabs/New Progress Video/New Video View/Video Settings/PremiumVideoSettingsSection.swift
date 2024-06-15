@@ -47,7 +47,7 @@ struct PremiumVideoSettingsSection: View {
     private var onlyWithPremiumAttributedString: AttributedString = {
         let regularTextPart = AttributedString("These options are only available with PROgress Premium subscription. ")
         var linkPart = AttributedString("More info...")
-        linkPart.link = URL(string: "PROgress://open-subscriptions-sheet")
+        linkPart.link = .openSubscriptionSheet
         
         return regularTextPart + linkPart
     }()
