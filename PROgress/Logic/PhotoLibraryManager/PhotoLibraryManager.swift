@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@preconcurrency import Photos
+import Photos
 import SwiftUI
 import UIKit
-@preconcurrency import AVFoundation
+import AVFoundation
 import Factory
 import SwiftData
 
@@ -114,7 +114,6 @@ actor PhotoLibraryManager {
         
         let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: .imagesInAlbum)
-        let count = assets.count
         
         let indexedPhotos = await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {

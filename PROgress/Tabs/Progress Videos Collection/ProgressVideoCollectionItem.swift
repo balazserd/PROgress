@@ -29,7 +29,7 @@ struct ProgressVideoCollectionItem: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading) {
-                        Text(video.name ?? "Progress Video [\(video.index)]")
+                        Text(video.name)
                             .font(.title3)
                             .bold()
                             .lineLimit(1)

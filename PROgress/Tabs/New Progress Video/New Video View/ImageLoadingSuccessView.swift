@@ -5,7 +5,7 @@
 //  Created by Balázs Erdész on 2023. 08. 12..
 //
 
-import SwiftUI
+@preconcurrency import SwiftUI
 import EBUniAppsKit
 
 struct ImageLoadingSuccessView: View {
@@ -15,6 +15,7 @@ struct ImageLoadingSuccessView: View {
     @EnvironmentObject private var viewModel: NewProgressVideoViewModel
     
     @State private var draggedImage: ProgressImage?
+    @State private var isInSelectionMode: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -44,7 +45,7 @@ struct ImageLoadingSuccessView: View {
             .padding(.horizontal, -8)
             .contentMargins([.horizontal, .bottom], 8, for: .scrollContent)
         }
-        .toolbar { toolbar }
+        .toolbar { Self.Toolbar(selectionModeToggle: $isInSelectionMode) }
         .frame(maxHeight: .infinity)
         .padding(8)
         .navigationTitle("Selected Photos (\(viewModel.progressImages?.count ?? 0))")
@@ -58,14 +59,48 @@ struct ImageLoadingSuccessView: View {
         }
     }
     
-    @ToolbarContentBuilder
-    private var toolbar: some ToolbarContent {
-        ToolbarItem {
-            Button(action: {
-                viewModel.photoUserOrdering.reverse()
-                viewModel.progressImages?.reverse()
-            }) {
-                Text("Reverse")
+    private struct Toolbar: ToolbarContent {
+        @EnvironmentObject private var viewModel: NewProgressVideoViewModel
+        
+        @Binding var selectionModeToggle: Bool
+        
+        @State private var reverseButtonAnimation: Bool = false
+        
+        // This warning thrown here is fixed by Apple on iOS 18: `@MainActor @preconcurrency protocol ToolbarContent`
+        var body: some ToolbarContent {
+            if selectionModeToggle {
+                ToolbarItem {
+                    Button(action: { fatalError("Missing action!") }) {
+                        Image(systemName: "trash.fill")
+                            .foregroundStyle(Color.red)
+                    }
+                    .disabled(true) // TODO: remove selected pictures!
+                }
+            }
+            
+            ToolbarItem {
+                Button(action: {
+                    selectionModeToggle.toggle()
+                }) {
+                    if selectionModeToggle {
+                        Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                    } else {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                    }
+                }
+            }
+            
+            ToolbarItem {
+                Button(action: {
+                    reverseButtonAnimation.toggle()
+                    
+                    viewModel.photoUserOrdering.reverse()
+                    viewModel.progressImages?.reverse()
+                }) {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .rotationEffect(reverseButtonAnimation ? .degrees(180) : .degrees(0))
+                        .animation(.default, value: reverseButtonAnimation)
+                }
             }
         }
     }

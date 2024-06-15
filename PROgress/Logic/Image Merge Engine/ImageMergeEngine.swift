@@ -21,6 +21,7 @@ actor ImageMergeEngine {
     
     // MARK: -  Operation-private variables
     private var watermarkImage: CIImage?
+    private var assetWritingConfiguration: VideoAssetWriterConfiguration!
     
     // MARK: - Operations
     func provideVideoCreationActivityThumbnails<ConversionEngine: PhotoConversionEngine>(
@@ -96,10 +97,10 @@ actor ImageMergeEngine {
         
         let indexedImages = images.enumerated().map { ($1, $0) }
         
-        let assetWriterConfig = try VideoAssetWriterConfiguration(settings: options.userSettings)
-        guard assetWriterConfig.assetWriter.startWriting() else {
-            let error = assetWriterConfig.assetWriter.error
-            let status = assetWriterConfig.assetWriter.status.rawValue
+        self.assetWritingConfiguration = try VideoAssetWriterConfiguration(settings: options.userSettings)
+        guard self.assetWritingConfiguration.assetWriter.startWriting() else {
+            let error = self.assetWritingConfiguration.assetWriter.error
+            let status = self.assetWritingConfiguration.assetWriter.status.rawValue
             
             PRLogger.imageProcessing.error("Failed to start asset writing! [status: \(status)] [error: \(error)]")
             
@@ -108,7 +109,7 @@ actor ImageMergeEngine {
         
         state.send(.working(progress: 0.0))
         
-        assetWriterConfig.assetWriter.startSession(atSourceTime: .zero)
+        self.assetWritingConfiguration.assetWriter.startSession(atSourceTime: .zero)
         
         let taskLimit = ProcessInfo.recommendedMaximumConcurrency
         let count = indexedImages.count
@@ -121,13 +122,12 @@ actor ImageMergeEngine {
                 return try await self.processImage(image,
                                                    with: engine,
                                                    indexed: index,
-                                                   config: assetWriterConfig,
                                                    context: reusableContext)
             },
             serialPerformBlock: { [unowned self] sample in
-                try await assetWriterConfig.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
+                try await self.assetWritingConfiguration.inputAdaptor.assetWriterInput.waitUntilReadyForMoreMediaData()
 
-                if !assetWriterConfig.inputAdaptor.append(sample.buffer, withPresentationTime: sample.time) {
+                if await !self.assetWritingConfiguration.inputAdaptor.append(sample.buffer, withPresentationTime: sample.time) {
                     PRLogger.imageProcessing.error("Frame was not appended to video!")
                 }
 
@@ -137,19 +137,25 @@ actor ImageMergeEngine {
             }
         )
         
-        assetWriterConfig.inputAdaptor.assetWriterInput.markAsFinished()
-        await assetWriterConfig.assetWriter.finishWriting()
+        self.assetWritingConfiguration.inputAdaptor.assetWriterInput.markAsFinished()
         
-        let writerStatus = assetWriterConfig.assetWriter.status
-        if writerStatus != .completed {
-            let error = assetWriterConfig.assetWriter.error ?? MergeError.unknown
-            PRLogger.imageProcessing.error("Status is not completed after finishing writing! [\(writerStatus.rawValue)] [error: \(error)]")
+        await withCheckedContinuation { continuation in
+            self.assetWritingConfiguration.assetWriter.finishWriting {
+                let writerStatus = self.assetWritingConfiguration.assetWriter.status
+                if writerStatus != .completed {
+                    let error = self.assetWritingConfiguration.assetWriter.error ?? MergeError.unknown
+                    PRLogger.imageProcessing.error("Status is not completed after finishing writing! [\(writerStatus.rawValue)] [error: \(error)]")
+                }
+                
+                self.state.value = .finished
+            }
+            
+            continuation.resume()
         }
         
-        self.state.value = .finished
-        return ProgressVideo(videoId: assetWriterConfig.videoId,
-                             url: assetWriterConfig.outputUrl,
-                             resolution: assetWriterConfig.userSettings.extents)
+        return ProgressVideo(videoId: self.assetWritingConfiguration.videoId,
+                             url: self.assetWritingConfiguration.outputUrl,
+                             resolution: self.assetWritingConfiguration.userSettings.extents)
     }
     
     // MARK: - Private functions
@@ -170,7 +176,6 @@ actor ImageMergeEngine {
         _ image: ConversionEngine.Input,
         with engine: ConversionEngine,
         indexed index: Int,
-        config: VideoAssetWriterConfiguration,
         context: CIContext
     ) async throws -> Sample {
         var data: Data
@@ -187,29 +192,31 @@ actor ImageMergeEngine {
         }
         
         var pixelBuffer: CVPixelBuffer!
-        let success = CVPixelBufferPoolCreatePixelBuffer(nil, config.inputAdaptor.pixelBufferPool!, &pixelBuffer)
+        let success = CVPixelBufferPoolCreatePixelBuffer(nil,
+                                                         self.assetWritingConfiguration.inputAdaptor.pixelBufferPool!,
+                                                         &pixelBuffer)
         if success != kCVReturnSuccess {
             PRLogger.imageProcessing.error("Failed to create pixel buffer! \(success)")
             throw MergeError.pixelBufferCreationError
         }
         
         let scaledToFitImage = ciImage
-            .scaleToFitInContainerOfSize(config.userSettings.extents)
-            .positionInContainerOfSize(config.userSettings.extents)
+            .scaleToFitInContainerOfSize(self.assetWritingConfiguration.userSettings.extents)
+            .positionInContainerOfSize(self.assetWritingConfiguration.userSettings.extents)
         
         PRLogger.imageProcessing.debug("resizedImage extent: \(scaledToFitImage.extent.debugDescription)")
         
         pixelBuffer.lock()
         
         let base = CIImage(color: .white)
-        let backgroundColor = CIColor(argbComponents: config.userSettings.backgroundColorComponentsARGB)
+        let backgroundColor = CIColor(argbComponents: self.assetWritingConfiguration.userSettings.backgroundColorComponentsARGB)
         let background = CIImage(color: backgroundColor)
         
         var finalImage = scaledToFitImage // Video frame.
             .composited(over: background) // Actual background color.
             .composited(over: base) // Overwrites base black background, allowing for background colors with alpha.
         
-        if !config.userSettings.hideLogo {
+        if !self.assetWritingConfiguration.userSettings.hideLogo {
             let width = CVPixelBufferGetWidth(pixelBuffer)
             let height = CVPixelBufferGetHeight(pixelBuffer)
             
@@ -230,7 +237,7 @@ actor ImageMergeEngine {
                        bounds: finalImage.extent,
                        colorSpace: CGColorSpace(name: CGColorSpace.sRGB)) // Not setting the color space produces a dark image.
 
-        let time = CMTime(value: Int64(index) * Int64(config.userSettings.timeBetweenFrames / 0.05),
+        let time = CMTime(value: Int64(index) * Int64(self.assetWritingConfiguration.userSettings.timeBetweenFrames / 0.05),
                           timescale: 20)
         
         return Sample(index: index, time: time, buffer: pixelBuffer)

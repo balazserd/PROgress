@@ -56,7 +56,7 @@ struct ResolutionPickerForm: View {
         .navigationTitle("Resolution")
     }
     
-    private var footnoteAttributedString: AttributedString = {
+    private let footnoteAttributedString: AttributedString = {
         let regularTextPart = AttributedString("Some resolution types are only available with PROgress Premium subscription. ")
         var linkPart = AttributedString("More info...")
         linkPart.link = .openSubscriptionSheet
