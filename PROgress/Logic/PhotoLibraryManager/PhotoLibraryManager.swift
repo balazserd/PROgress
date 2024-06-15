@@ -114,6 +114,7 @@ actor PhotoLibraryManager {
         
         let album = try self.assetCollectionForAlbum(photoAlbum)
         let assets = PHAsset.fetchAssets(in: album, options: .imagesInAlbum)
+        let count = assets.count
         
         let indexedPhotos = await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {
@@ -130,30 +131,37 @@ actor PhotoLibraryManager {
                     
                     imageRequestOptions.isSynchronous = true
                     
-                    PHImageManager.default()
-                        .requestImageDataAndOrientation(for: asset, options: imageRequestOptions) { data, _, _, resultInfo in
-                            defer { Task {
-                                progressBlock()
-                            }}
-                            
-                            guard
-                                let data,
-                                let uiImage = UIImage(data: data),
-                                let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: 640, height: 640))
-                            else {
-                                let info = resultInfo ?? [:]
-                                PRLogger.photoLibraryManagement.error("Image could not be loaded! \(info.debugDescription)")
-                        
-                                return
+                    // Must invoke this block in an autoreleasepool otherwise CGImages backing up the UIImage pile up and memory
+                    // consumption keeps growing.
+                    autoreleasepool { () -> Void in
+                        PHImageManager.default()
+                            .requestImageDataAndOrientation(for: asset, options: imageRequestOptions) { data, _, _, resultInfo in
+                                defer { Task {
+                                    progressBlock()
+                                }}
+                                
+                                guard
+                                    let data,
+                                    let uiImage = UIImage(data: data),
+                                    let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: 640, height: 640))
+                                else {
+                                    let info = resultInfo ?? [:]
+                                    PRLogger.photoLibraryManagement.error("Image could not be loaded! \(info.debugDescription)")
+                                    
+                                    return
+                                }
+                                
+                                let image = Image(uiImage: thumbnail)
+                                
+                                // Immediately deallocate objects to free memory
+                                
+                                let progressImage = ProgressImage(image: image,
+                                                                  localIdentifier: asset.localIdentifier,
+                                                                  originalSize: CGSize(width: asset.pixelWidth,
+                                                                                       height: asset.pixelHeight))
+                                _indexedPhotos.append((index, progressImage))
                             }
-                            
-                            let image = Image(uiImage: thumbnail)
-                            let progressImage = ProgressImage(image: image,
-                                                              localIdentifier: asset.localIdentifier,
-                                                              originalSize: CGSize(width: asset.pixelWidth,
-                                                                                   height: asset.pixelHeight))
-                            _indexedPhotos.append((index, progressImage))
-                        }
+                    }
                 }
                 
                 continuation.resume(returning: _indexedPhotos)

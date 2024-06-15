@@ -44,6 +44,7 @@ struct ImageLoadingSuccessView: View {
             .padding(.horizontal, -8)
             .contentMargins([.horizontal, .bottom], 8, for: .scrollContent)
         }
+        .toolbar { toolbar }
         .frame(maxHeight: .infinity)
         .padding(8)
         .navigationTitle("Selected Photos (\(viewModel.progressImages?.count ?? 0))")
@@ -54,6 +55,18 @@ struct ImageLoadingSuccessView: View {
             self.verticalSizeClass == .regular ? 4 : 8
         } else {
             8
+        }
+    }
+    
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem {
+            Button(action: {
+                viewModel.photoUserOrdering.reverse()
+                viewModel.progressImages?.reverse()
+            }) {
+                Text("Reverse")
+            }
         }
     }
 }
