@@ -129,9 +129,7 @@ struct NewProgressVideoView: View {
             }
         }
         
-        if  let progressImages = viewModel.progressImages,
-            progressImages.count > 0
-        {
+        if viewModel.progressImages.count > 0 {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { viewModel.beginMerge() }) {
                     Image(systemName: "gearshape.arrow.triangle.2.circlepath")

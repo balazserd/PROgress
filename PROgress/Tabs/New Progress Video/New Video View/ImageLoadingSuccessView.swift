@@ -15,7 +15,6 @@ struct ImageLoadingSuccessView: View {
     @EnvironmentObject private var viewModel: NewProgressVideoViewModel
     
     @State private var draggedImage: ProgressImage?
-    @State private var isInSelectionMode: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -31,8 +30,10 @@ struct ImageLoadingSuccessView: View {
                 
             ScrollView {
                 LazyVGrid(columns: Array(repeating: .init(), count: gridColumnCount)) {
-                    ForEach(viewModel.progressImages!) {
-                        PhotoGridItem(progressImage: $0, draggedImage: $draggedImage)
+                    ForEach(viewModel.progressImages) {
+                        PhotoGridItem(progressImage: $0,
+                                      draggedImage: $draggedImage,
+                                      isInFilteringMode: $viewModel.isInFilteringMode)
                     }
                 }
                 
@@ -45,10 +46,10 @@ struct ImageLoadingSuccessView: View {
             .padding(.horizontal, -8)
             .contentMargins([.horizontal, .bottom], 8, for: .scrollContent)
         }
-        .toolbar { Self.Toolbar(selectionModeToggle: $isInSelectionMode) }
+        .toolbar { Self.Toolbar(selectionModeToggle: $viewModel.isInFilteringMode) }
         .frame(maxHeight: .infinity)
         .padding(8)
-        .navigationTitle("Selected Photos (\(viewModel.progressImages?.count ?? 0))")
+        .navigationTitle("Selected Photos (\(viewModel.progressImages.count))")
     }
     
     private var gridColumnCount: Int {
@@ -70,11 +71,14 @@ struct ImageLoadingSuccessView: View {
         var body: some ToolbarContent {
             if selectionModeToggle {
                 ToolbarItem {
-                    Button(action: { fatalError("Missing action!") }) {
+                    Button(action: {
+                        viewModel.excludeMarkedProgressImages()
+                        selectionModeToggle = false
+                    }) {
                         Image(systemName: "trash.fill")
-                            .foregroundStyle(Color.red)
+                            .tint(.red)
                     }
-                    .disabled(true) // TODO: remove selected pictures!
+                    .disabled(viewModel.imagesToExclude.isEmpty)
                 }
             }
             
@@ -95,7 +99,7 @@ struct ImageLoadingSuccessView: View {
                     reverseButtonAnimation.toggle()
                     
                     viewModel.photoUserOrdering.reverse()
-                    viewModel.progressImages?.reverse()
+                    viewModel.progressImages.reverse()
                 }) {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .rotationEffect(reverseButtonAnimation ? .degrees(180) : .degrees(0))

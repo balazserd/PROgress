@@ -11,6 +11,7 @@ extension ImageLoadingSuccessView {
     struct PhotoGridItem: View {
         var progressImage: ProgressImage
         @Binding var draggedImage: ProgressImage?
+        @Binding var isInFilteringMode: Bool
         
         @EnvironmentObject private var viewModel: NewProgressVideoViewModel
         @State private var isReordering: Bool = false
@@ -25,17 +26,33 @@ extension ImageLoadingSuccessView {
                         .onTapGesture {
                             // TODO: open image
                         }
+                    
+                    if viewModel.shouldExcludeProgressImage(progressImage) {
+                        Color.red.opacity(0.6)
+                    }
                 }
                 .cornerRadius(4)
                 .clipped()
                 .shadow(color: .gray.opacity(0.3), radius: 5, x: 2, y: 2)
-                .scaleEffect(of: isReordering ? 0.85 : 1.0)
+                .scaleEffect(of: (isReordering || viewModel.shouldExcludeProgressImage(progressImage)) ? 0.85 : 1.0)
                 .animation(.linear(duration: 0.2), value: isReordering)
                 .opacity(isReordering ? 0.8 : 1.0)
-                .onDrag {
-                    beginDrag(for: progressImage)
+                .opacity(viewModel.shouldExcludeProgressImage(progressImage) ? 0.2 : 1.0)
+                .overlay(alignment: .topTrailing) {
+                    if viewModel.shouldExcludeProgressImage(progressImage) {
+                        Image(systemName: "xmark.circle.fill")
+                            .symbolRenderingMode(.multicolor)
+                    }
                 }
+                .onDrag { beginDrag(for: progressImage ) }
                 .onDrop(of: [.text], delegate: buildDropDelegate(for: progressImage))
+                .highPriorityGesture(
+                    TapGesture()
+                        .onEnded {
+                            guard isInFilteringMode else { return }
+                            viewModel.toggleExclusionStatus(for: progressImage)
+                        }
+                )
                 .animation(.default, value: viewModel.progressImages)
         }
         

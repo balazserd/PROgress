@@ -40,7 +40,10 @@ class NewProgressVideoViewModel: ObservableObject {
     }
     
     @Published private(set) var imageLoadingState: ImageLoadingState = .undefined
-    @Published var progressImages: [ProgressImage]?
+    @Published var progressImages: [ProgressImage] = []
+    
+    @Published var isInFilteringMode: Bool = false
+    @Published var imagesToExclude = Set<ProgressImage>()
     
     @Published var userSettings: VideoProcessingUserSettings!
     
@@ -79,7 +82,7 @@ class NewProgressVideoViewModel: ObservableObject {
             return
         }
         
-        let assetIdentifiers = progressImages!.compactMap { $0.localIdentifier }
+        let assetIdentifiers = progressImages.compactMap { $0.localIdentifier }
         let isConvertingAlbum = selectedAlbum != nil
         
         Task.detached(priority: .userInitiated) { [photoUserOrdering, selectedItems] in
@@ -184,6 +187,27 @@ class NewProgressVideoViewModel: ObservableObject {
         }
     }
     
+    func shouldExcludeProgressImage(_ progressImage: ProgressImage) -> Bool {
+        self.imagesToExclude.contains(progressImage)
+    }
+    
+    func toggleExclusionStatus(for progressImage: ProgressImage) {
+        if shouldExcludeProgressImage(progressImage) {
+            self.imagesToExclude.remove(progressImage)
+        } else {
+            self.imagesToExclude.insert(progressImage)
+        }
+    }
+    
+    func excludeMarkedProgressImages() {
+        let indexesToRemove = self.imagesToExclude.compactMap {
+            self.progressImages.firstIndex(of: $0)
+        }
+        
+        self.progressImages.remove(atOffsets: .init(indexesToRemove))
+        self.photoUserOrdering.remove(atOffsets: .init(indexesToRemove))
+    }
+    
     // MARK: - Private methods
     private func initializeBindings() {
         // Pop the view if a resolution was picked.
@@ -203,10 +227,20 @@ class NewProgressVideoViewModel: ObservableObject {
                 self?.userSettings?.hideLogo = isPremium
             }
             .store(in: &subscriptions)
+        
+        // Reset remove filter if filter mode has been toggled off.
+        $isInFilteringMode
+            .dropFirst() // Drop initial value
+            .removeDuplicates()
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                self?.imagesToExclude.removeAll()
+            }
+            .store(in: &subscriptions)
     }
     
     private func setInitialUserSettings() {
-        let largestPhotoSize = progressImages!.reduce(CGSize.zero) {
+        let largestPhotoSize = progressImages.reduce(CGSize.zero) {
             CGSize(width: max($0.width, $1.originalSize.width),
                    height: max($0.height, $1.originalSize.height))
         }
@@ -306,7 +340,7 @@ class NewProgressVideoViewModel: ObservableObject {
     }
     
     private func updateState(to state: ImageLoadingState) {
-        if case .success = state, self.progressImages == nil {
+        if case .success = state, self.progressImages.isEmpty {
             PRLogger.app.fault("Settings success state without `progressImages` being set!")
         }
         

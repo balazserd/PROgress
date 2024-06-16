@@ -32,8 +32,15 @@ struct VideoProcessingUserSettings: Sendable {
                 aspectRatio = nil
                 
             default:
-                extentX = min(maxPhotoExtentX, resolution.maxExtentLength!)
-                extentY = min(maxPhotoExtentY, resolution.maxExtentLength!)
+                let _aspectRatio = maxPhotoExtentX / maxPhotoExtentY
+                
+                if extentX > extentY {
+                    extentX = min(maxPhotoExtentX, resolution.maxExtentLength!)
+                    extentY = extentX / _aspectRatio
+                } else {
+                    extentY = min(maxPhotoExtentY, resolution.maxExtentLength!)
+                    extentX = extentY * _aspectRatio
+                }
             }
         }
     }
@@ -42,11 +49,12 @@ struct VideoProcessingUserSettings: Sendable {
     
     var extents: CGSize {
         let defaultExtents = CGSize(width: extentX, height: extentY)
-        guard shape != .automatic else {
+        guard 
+            shape != .automatic,
+            let aspectRatioModifier = shape.aspectRatio
+        else {
             return defaultExtents
         }
-        
-        let aspectRatioModifier = shape.aspectRatio!
         
         switch extentX / extentY {
         case let extentRatio where extentRatio > aspectRatioModifier:
@@ -99,7 +107,13 @@ struct VideoProcessingUserSettings: Sendable {
     /// The order of components is as following: alpha, red, green, blue.
     private(set) var backgroundColorComponentsARGB: [UInt8]!
     
-    var customExtentAxis: Axis?
+    var customExtentAxis: Axis? {
+        didSet {
+            if customExtentAxis != nil {
+                aspectRatio = extentX / extentY
+            }
+        }
+    }
     
     var videoName: String = "New Progress Video"
     
@@ -111,7 +125,7 @@ struct VideoProcessingUserSettings: Sendable {
          maxPhotoExtentX: Double = 640,
          maxPhotoExtentY: Double = 320,
          backgroundColor: Color = .white,
-         customExtentAxis: Axis? = .horizontal) {
+         customExtentAxis: Axis? = nil) {
         self.timeBetweenFrames = timeBetweenFrames
         self.maxPhotoExtentX = maxPhotoExtentX
         self.maxPhotoExtentY = maxPhotoExtentY
@@ -126,9 +140,6 @@ struct VideoProcessingUserSettings: Sendable {
         }
         
         self.customExtentAxis = customExtentAxis
-        if customExtentAxis != nil {
-            aspectRatio = extentX / extentY
-        }
     }
     
     // MARK: - Resolution enumeration

@@ -17,7 +17,7 @@ struct ReorderImagesDropDelegate: DropDelegate {
     // Must follow index changes here too!
     @Binding var photoUserOrdering: [Int]
     
-    @Binding var allProgressImages: [ProgressImage]?
+    @Binding var allProgressImages: [ProgressImage]
     @Binding var currentlyMovedImage: ProgressImage?
     
     func dropEntered(info: DropInfo) {
@@ -27,16 +27,16 @@ struct ReorderImagesDropDelegate: DropDelegate {
         
         guard
             currentlyMovedImage != nil,
-            allProgressImages != nil,
-            let dragIndex = allProgressImages!.firstIndex(of: currentlyMovedImage!),
-            let dropIndex = allProgressImages!.firstIndex(of: parent)
+            !allProgressImages.isEmpty,
+            let dragIndex = allProgressImages.firstIndex(of: currentlyMovedImage!),
+            let dropIndex = allProgressImages.firstIndex(of: parent)
         else {
             PRLogger.app.error("DropDelegate misses items!")
             return
         }
         
-        allProgressImages!.move(fromOffsets: IndexSet([dragIndex]),
-                                toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
+        allProgressImages.move(fromOffsets: IndexSet([dragIndex]),
+                               toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)
         
         photoUserOrdering.move(fromOffsets: IndexSet([dragIndex]),
                                toOffset: dropIndex > dragIndex ? dropIndex + 1 : dropIndex)

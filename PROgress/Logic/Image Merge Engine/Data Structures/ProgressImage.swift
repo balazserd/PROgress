@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ProgressImage: Transferable, Equatable, Identifiable, @unchecked Sendable {
+struct ProgressImage: Transferable, Hashable, Identifiable, @unchecked Sendable {
     let image: Image
     let id = UUID()
     var localIdentifier: String!
@@ -26,6 +26,10 @@ struct ProgressImage: Transferable, Equatable, Identifiable, @unchecked Sendable
             let loadedImage = Image(uiImage: scaledDownImage)
             return ProgressImage(image: loadedImage, originalSize: uiImage.size)
         }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     @available(*, deprecated, message: "Use when transferable export is required for ProgressImage.")

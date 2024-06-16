@@ -17,7 +17,7 @@ struct VideoSettingsView: View {
         Form {
             Section("Photos") {
                 NavigationLink(value: VideoSubsetting.photoSelector) {
-                    Text("\(viewModel.progressImages?.count ?? -1) photo(s) selected")
+                    Text("\(viewModel.progressImages.count) photo(s) selected")
                 }
             }
             
