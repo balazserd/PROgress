@@ -37,6 +37,15 @@ class GlobalSettings: ObservableObject {
                 }
                 
                 group.addTask {
+                    try await AppStore.sync()
+                    
+                    for await verificationResult in Transaction.unfinished {
+                        if case let .verified(transaction) = verificationResult {
+                            PRLogger.purchases.debug("Unfinished transaction found!")
+                            await transaction.finish()
+                        }
+                    }
+                    
                     await self.refreshPurchaseStates()
                 }
             }
