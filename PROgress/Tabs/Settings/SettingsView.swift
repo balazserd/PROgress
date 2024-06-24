@@ -23,7 +23,7 @@ struct SettingsView: View {
             Form {
                 Section("Activities, Notifications") {
                     VStack(alignment: .leading) {
-                        Toggle("Private Activities Mode", isOn: $privateActivitiesMode)
+                        Toggle("Private Activities Mode - TODO!", isOn: $privateActivitiesMode)
                         
                         Text("When turned on, activities on the Lock Screen and in the Dynamic Island / Notification Status Bar will not contain images, just the progress status.")
                             .font(.caption)
@@ -81,12 +81,7 @@ struct SettingsView: View {
                 
                 Section("Feedback") {
                     Button {
-                        guard let reviewUrl = URL(string: "https://apps.apple.com/app/id<my-app-store-id>?action=write-review") else {
-                            PRLogger.app.error("Could not construct App Store App Review URL!")
-                            return
-                        }
-                        
-                        openURL(reviewUrl)
+                        openURL(.review)
                     } label: {
                         Text("Write a Review")
                     }
@@ -94,19 +89,33 @@ struct SettingsView: View {
                     Button(role: .destructive) {
                         // TODO
                     } label: {
-                        Text("Report an issue")
+                        Text("Report an issue - TODO!")
                     }
                 }
                 
                 Section("Miscellaneous") {
-                    NavigationLink(value: SubPages.licenseAttribution) {
-                        Text("License Attribution")
+                    Button(action: { openURL(.eula) }) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                    Text("End User License Agreement")
+                                
+                                Spacer()
+                            }
+                            
+                            Text("Important: You accepted this license agreement when you downloaded this application.")
+                                .font(.caption)
+                                .tint(.gray)
+                        }
                     }
                     
                     Button {
                         // TODO
                     } label: {
-                        Text("Privacy Policy")
+                        Text("Privacy Policy - TODO!")
+                    }
+                    
+                    NavigationLink(value: SubPages.licenseAttribution) {
+                        Text("License Attribution")
                     }
                 }
             }
@@ -117,7 +126,7 @@ struct SettingsView: View {
             .navigationDestination(for: SubPages.self) {
                 switch $0 {
                 case .licenseAttribution:
-                    EmptyView()
+                    LicenseAttributionPage()
                 }
             }
         }
@@ -126,4 +135,11 @@ struct SettingsView: View {
     private enum SubPages {
         case licenseAttribution
     }
+}
+
+#Preview {
+    VStack {
+        SettingsView()
+    }
+    .environmentObject(GlobalSettings.shared)
 }

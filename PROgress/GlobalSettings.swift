@@ -74,11 +74,11 @@ class GlobalSettings: ObservableObject {
         PRLogger.purchases.debug("Will refresh subscription states.")
         
         for await verificationResult in Transaction.currentEntitlements {
-            assertTransactionVerificationResult(verificationResult)
+            await assertTransactionVerificationResult(verificationResult)
         }
     }
     
-    private func assertTransactionVerificationResult(_ verificationResult: VerificationResult<Transaction>) {
+    private func assertTransactionVerificationResult(_ verificationResult: VerificationResult<Transaction>) async {
         switch verificationResult {
         case .verified(let transaction):
             PRLogger.purchases.debug("Received verified transaction with id [\(transaction.id)] for product [\(transaction.productID, privacy: .public)].")
@@ -96,6 +96,8 @@ class GlobalSettings: ObservableObject {
                     self.subscriptionType = .premium
                     self.subscriptionTransaction = transaction
                 }
+                
+                await transaction.finish()
             }
             
         case .unverified(let transaction, let _error):

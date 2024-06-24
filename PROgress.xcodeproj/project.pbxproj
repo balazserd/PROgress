@@ -85,6 +85,9 @@
 		56573C092BF0EA6F007AF80C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C082BF0EA6F007AF80C /* DateFormatter+Extensions.swift */; };
 		56573C0A2BF0EA6F007AF80C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C082BF0EA6F007AF80C /* DateFormatter+Extensions.swift */; };
 		56573C0B2BF0EA6F007AF80C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56573C082BF0EA6F007AF80C /* DateFormatter+Extensions.swift */; };
+		5663D3FA2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
+		5663D3FB2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
+		5663D3FC2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
 		566721A02BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A12BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A22BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
@@ -328,6 +331,7 @@
 		564408392BB4A7E700F035D3 /* ImageLoadingSuccessView+PhotoGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageLoadingSuccessView+PhotoGridItem.swift"; sourceTree = "<group>"; };
 		56573C032BF00136007AF80C /* AlbumSelectorGridItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectorGridItem.swift; sourceTree = "<group>"; };
 		56573C082BF0EA6F007AF80C /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAttributionPage.swift; sourceTree = "<group>"; };
 		5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoCollectionGrid.swift; sourceTree = "<group>"; };
 		566721A32BDFFAD600A7CEB2 /* ProgressVideoCollectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoCollectionItem.swift; sourceTree = "<group>"; };
 		566721A72BE0045A00A7CEB2 /* ProgressVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVideoPlayerView.swift; sourceTree = "<group>"; };
@@ -780,6 +784,7 @@
 			children = (
 				56BC80C22AA9AB2900DCA75D /* SettingsView.swift */,
 				563615CF2BFF3F5400D79EF0 /* PremiumSubscriptionView.swift */,
+				5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1102,6 +1107,7 @@
 				56C2553E2BCD9D9C00753C3D /* PremiumVideoSettingsSection.swift in Sources */,
 				56BFBC472BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */,
 				568B60972A82B3C900D5B5D3 /* ProgressImage.swift in Sources */,
+				5663D3FA2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */,
 				56A554462A8BE9A200E99F65 /* CIImage+Extensions.swift in Sources */,
 				5604B1142A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
 				56A554722A8FC14100E99F65 /* PhotoConversionEngine.swift in Sources */,
@@ -1190,6 +1196,7 @@
 				56673F8A2C1D7BBC005B7DF7 /* URL+Extensions.swift in Sources */,
 				56A554662A8D553200E99F65 /* PhotoAlbum.swift in Sources */,
 				5604B1152A9B89C800B0DA4B /* VideoSettingsView.swift in Sources */,
+				5663D3FB2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */,
 				564408372BB4A76200F035D3 /* Text+Extensions.swift in Sources */,
 				566721AD2BE0051500A7CEB2 /* ProgressVideoPlayerViewModel.swift in Sources */,
 				56BFBC482BDD5D8700046927 /* NSNotification.Name+Extensions.swift in Sources */,
@@ -1269,6 +1276,7 @@
 				56A554372A8901C100E99F65 /* VideoAssetWriterConfiguration.swift in Sources */,
 				56A5544C2A8BE9BE00E99F65 /* AVAssetWriterInput+Extensions.swift in Sources */,
 				56C714C02C0E0B4F00E50356 /* ImageMergeEngine+WatermarkingError.swift in Sources */,
+				5663D3FC2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */,
 				568B607F2A7AD98400D5B5D3 /* PROgressUITests.swift in Sources */,
 				56A5546F2A8E8F4600E99F65 /* AlbumSelectorView.swift in Sources */,
 				56BF34D72A97EE5B00AFA9E4 /* VideoCreationActivity.swift in Sources */,
@@ -1391,7 +1399,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1445,7 +1453,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
