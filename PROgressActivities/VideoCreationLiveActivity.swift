@@ -8,47 +8,77 @@
 import ActivityKit
 import WidgetKit
 import SwiftUI
+import Combine
 
 struct VideoCreationLiveActivity: Widget {
+    @AppStorage(.privateActivitiesMode, store: .appGroup) private var privateActivitiesMode: Bool = false
+    
     private typealias Context = ActivityViewContext<VideoCreationLiveActivityAttributes>
     
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: VideoCreationLiveActivityAttributes.self) { context in
-            VStack {
-                middleContent(firstImage: context.attributes.firstImage,
-                              middleImages: context.attributes.middleImages,
-                              lastImage: context.attributes.lastImage)
-                
-                bottomContent(description: context.state.description,
-                              progress: context.state.progress)
-                    .contentTransition(.identity)
-            }
-            .frame(height: 110)
-            .padding(16)
+            notificationContent(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
-                DynamicIslandExpandedRegion(.bottom) {
-                    bottomContent(description: context.state.description,
-                                  progress: context.state.progress)
-                        .padding([.horizontal], 10)
-                        .contentTransition(.identity)
-                }
-                
-                DynamicIslandExpandedRegion(.center) {
-                    middleContent(firstImage: context.attributes.firstImage,
-                                  middleImages: context.attributes.middleImages,
-                                  lastImage: context.attributes.lastImage)
-                        .padding(.horizontal, 10)
-                }
+                expandedContent(context: context)
             } compactLeading: {
                 compactLeadingContent(firstImage: context.attributes.firstImage,
-                                      lastImage: context.attributes.lastImage)
+                                      lastImage: context.attributes.lastImage,
+                                      progress: context.state.progress)
+                .transition(.identity)
             } compactTrailing: {
                 minimalContent(progress: context.state.progress)
                     .transition(.identity)
             } minimal: {
                 minimalContent(progress: context.state.progress)
                     .transition(.identity)
+            }
+        }
+    }
+    
+    // MARK: - Notification presentation components
+    private func notificationContent(context: Self.Context) -> some View {
+        VStack {
+            if privateActivitiesMode {
+                privateMiddleContent(progress: context.state.progress)
+                    .frame(height: 70)
+                    .contentTransition(.identity)
+            } else {
+                VStack {
+                    middleContent(firstImage: context.attributes.firstImage,
+                                  middleImages: context.attributes.middleImages,
+                                  lastImage: context.attributes.lastImage)
+                    
+                    bottomContent(description: context.state.description,
+                                  progress: context.state.progress)
+                    .contentTransition(.identity)
+                }
+                .frame(height: 110)
+            }
+        }
+        .padding(16)
+    }
+    
+    // MARK: - Expanded presentation components
+    @DynamicIslandExpandedContentBuilder
+    private func expandedContent(context: Self.Context) -> DynamicIslandExpandedContent<some View> {
+        DynamicIslandExpandedRegion(.bottom) {
+            if !privateActivitiesMode {
+                bottomContent(description: context.state.description,
+                              progress: context.state.progress)
+                .padding([.horizontal], 10)
+                .contentTransition(.identity)
+            }
+        }
+        
+        DynamicIslandExpandedRegion(.center) {
+            if privateActivitiesMode {
+                privateMiddleContent(progress: context.state.progress)
+            } else {
+                middleContent(firstImage: context.attributes.firstImage,
+                              middleImages: context.attributes.middleImages,
+                              lastImage: context.attributes.lastImage)
+                .padding(.horizontal, 10)
             }
         }
     }
@@ -84,32 +114,73 @@ struct VideoCreationLiveActivity: Widget {
         .frame(maxHeight: .infinity)
     }
     
-    // MARK: - Compact presentation components
-    private func compactLeadingContent(firstImage: URL?, lastImage: URL?) -> some View {
-        HStack(spacing: 4) {
-            thumbnailImage(url: firstImage, scale: .medium)
-                .frame(height: 25)
+    private func privateMiddleContent(progress: Double) -> some View {
+        VStack {
+            Spacer(minLength: 0)
             
-            Image(systemName: "arrow.forward")
-                .imageScale(.small)
-                .opacity(0.5)
-            
-            thumbnailImage(url: lastImage, scale: .medium)
-                .frame(height: 25)
+            HStack {
+                VStack(alignment: .leading) {
+                    if progress.isLess(than: 1.0) {
+                        Text("Creating your video...")
+                        Text(progress, format: .percent.precision(.fractionLength(0)).rounded(rule: .up))
+                            .font(.largeTitle)
+                            .bold()
+                            .contentTransition(.identity)
+                    } else {
+                        Text("Ready!")
+                            .font(.title)
+                            .bold()
+                        
+                        Text("Tap this notification to check the result.")
+                            .font(.caption)
+                    }
+                }
+                .layoutPriority(.infinity)
+                
+                Spacer(minLength: 25)
+                
+                minimalContent(progress: progress, scale: .large)
+            }
         }
-        .padding(.horizontal, 8)
+    }
+    
+    // MARK: - Compact presentation components
+    @ViewBuilder
+    private func compactLeadingContent(firstImage: URL?, lastImage: URL?, progress: Double) -> some View {
+        if privateActivitiesMode {
+            Text(progress, format: .percent.precision(.fractionLength(0)).rounded(rule: .up))
+                .contentTransition(.identity)
+        } else {
+            HStack(spacing: 4) {
+                thumbnailImage(url: firstImage, scale: .medium)
+                    .frame(height: 25)
+                
+                Image(systemName: "arrow.forward")
+                    .imageScale(.small)
+                    .opacity(0.5)
+                
+                thumbnailImage(url: lastImage, scale: .medium)
+                    .frame(height: 25)
+            }
+            .padding(.horizontal, 8)
+        }
     }
     
     // MARK: - Minimal presentation components
-    private func minimalContent(progress: Double) -> some View {
+    private func minimalContent(progress: Double, scale: Image.Scale = .small) -> some View {
         ProgressView(value: progress) {
-            Image(systemName: "photo.stack")
+            Image(uiImage: UIImage(named: "PROgressAppIcon")!)
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: scale == .large ? 35 : 12,
+                       maxHeight: scale == .large ? 35 : 12)
+                .opacity(0.8)
                 .imageScale(.small)
                 .foregroundColor(.accentColor.opacity(0.5))
         }
         .progressViewStyle(.circular)
-        .frame(height: 25)
-        .tint(.accentColor)
+        .frame(height: scale == .large ? nil : 25.0)
+        .tint(.green)
     }
     
     // MARK: - Reused components
@@ -135,6 +206,7 @@ struct VideoCreationLiveActivity: Widget {
     }
 }
 
+// MARK: - Previews
 struct PROgressActivitiesLiveActivity_Previews: PreviewProvider {
     static let url = URL(string: "/Users/balazserdesz/Downloads/xxx.jpg")
     static let attributes = VideoCreationLiveActivityAttributes(
@@ -142,7 +214,7 @@ struct PROgressActivitiesLiveActivity_Previews: PreviewProvider {
         middleImages: [Self.url, Self.url, Self.url],
         lastImage: Self.url
     )
-    static let contentState = VideoCreationLiveActivityAttributes.ContentState(progress: 0.77, description: "Creating your video...")
+    static var contentState = VideoCreationLiveActivityAttributes.ContentState(progress: 0.00, description: "Creating your video...")
 
     static var previews: some View {
         attributes

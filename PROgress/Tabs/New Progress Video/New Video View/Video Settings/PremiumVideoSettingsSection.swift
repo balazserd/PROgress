@@ -52,7 +52,3 @@ struct PremiumVideoSettingsSection: View {
         return regularTextPart + linkPart
     }()
 }
-
-#Preview {
-    PremiumVideoSettingsSection()
-}

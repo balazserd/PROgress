@@ -88,6 +88,7 @@
 		5663D3FA2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
 		5663D3FB2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
 		5663D3FC2C297CCF00A5741A /* LicenseAttributionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663D3F92C297CCF00A5741A /* LicenseAttributionPage.swift */; };
+		5663D4012C401C1600A5741A /* UserDefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC80C62AA9B8DB00DCA75D /* UserDefaultKeys.swift */; };
 		566721A02BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A12BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
 		566721A22BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667219F2BDFF88800A7CEB2 /* ProgressVideoCollectionGrid.swift */; };
@@ -1323,6 +1324,7 @@
 			files = (
 				56A554972A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */,
 				56A554832A9210A100E99F65 /* VideoCreationLiveActivity.swift in Sources */,
+				5663D4012C401C1600A5741A /* UserDefaultKeys.swift in Sources */,
 				56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */,
 				56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
 				56A554852A9210A100E99F65 /* PROgressActivities.swift in Sources */,

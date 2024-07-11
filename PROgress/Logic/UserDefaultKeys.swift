@@ -12,6 +12,10 @@ enum UserDefaultKeys: String {
     case privateActivitiesMode
 }
 
+extension UserDefaults {
+    static var appGroup: UserDefaults? { .init(suiteName: "group.com.ebuniapps.PROgress") }
+}
+
 extension AppStorage {
     init(wrappedValue: Value, _ key: UserDefaultKeys, store: UserDefaults? = nil) where Value == String {
         self.init(wrappedValue: wrappedValue, key.rawValue, store: store)

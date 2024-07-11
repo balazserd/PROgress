@@ -12,7 +12,7 @@ import StoreKit
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     
-    @AppStorage(.privateActivitiesMode) private var privateActivitiesMode: Bool = false
+    @AppStorage(.privateActivitiesMode, store: .appGroup) private var privateActivitiesMode: Bool = false
     
     @EnvironmentObject private var globalSettings: GlobalSettings
     
@@ -23,7 +23,7 @@ struct SettingsView: View {
             Form {
                 Section("Activities, Notifications") {
                     VStack(alignment: .leading) {
-                        Toggle("Private Activities Mode - TODO!", isOn: $privateActivitiesMode)
+                        Toggle("Private Activities Mode", isOn: $privateActivitiesMode)
                         
                         Text("When turned on, activities on the Lock Screen and in the Dynamic Island / Notification Status Bar will not contain images, just the progress status.")
                             .font(.caption)
