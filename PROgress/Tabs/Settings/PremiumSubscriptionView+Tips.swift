@@ -28,6 +28,12 @@ struct SubscriptionSelectionTip: Tip {
     }
 }
 
+extension View {
+    func subscriptionSelectionTip(didShowTip: Binding<Bool>) -> some View {
+        self.modifier(SubscriptionSelectionTipModifier(didShowTip: didShowTip))
+    }
+}
+
 private struct SubscriptionSelectionTipModifier: ViewModifier {
     private let tip = SubscriptionSelectionTip()
     @Binding var didShowTip: Bool
@@ -39,11 +45,5 @@ private struct SubscriptionSelectionTipModifier: ViewModifier {
             }
             .popoverTip(tip)
             .tipViewStyle(PRTipViewStyle(didShowTip: $didShowTip))
-    }
-}
-
-extension View {
-    func subscriptionSelectionTip(didShowTip: Binding<Bool>) -> some View {
-        self.modifier(SubscriptionSelectionTipModifier(didShowTip: didShowTip))
     }
 }

@@ -10,7 +10,7 @@
     "_applicationInternalID" : "6503061802",
     "_developerTeamID" : "B9J6J6XB6U",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 739195338.81214201,
+    "_lastSynchronizedDate" : 742493781.760571,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -76,7 +76,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "0.49",
+          "displayPrice" : "0.69",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6503062222",
@@ -102,27 +102,27 @@
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "new"
+                "existing",
+                "new",
+                "expired"
               ],
-              "internalID" : "2603349C",
+              "internalID" : "803C004F",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF First year!",
+              "referenceName" : "50% OFF Yearly!",
               "subscriptionPeriod" : "P1Y"
             },
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "expired",
-                "existing",
                 "new"
               ],
-              "internalID" : "BED0982A",
+              "internalID" : "05A595EA",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF Yearly!",
+              "referenceName" : "50% OFF First year!",
               "subscriptionPeriod" : "P1Y"
             }
           ],
@@ -133,7 +133,7 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Premium features for 1 year. Renews.",
+              "description" : "Premium features for 1 Year. Renews.",
               "displayName" : "PROgress Premium - Yearly",
               "locale" : "en_US"
             }
