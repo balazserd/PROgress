@@ -27,3 +27,23 @@ struct SubscriptionSelectionTip: Tip {
         Image(systemName: "questionmark.circle")
     }
 }
+
+private struct SubscriptionSelectionTipModifier: ViewModifier {
+    private let tip = SubscriptionSelectionTip()
+    @Binding var didShowTip: Bool
+    
+    func body(content: Self.Content) -> some View {
+        content
+            .onTapGesture {
+                SubscriptionSelectionTip.isShowing.toggle()
+            }
+            .popoverTip(tip)
+            .tipViewStyle(PRTipViewStyle(didShowTip: $didShowTip))
+    }
+}
+
+extension View {
+    func subscriptionSelectionTip(didShowTip: Binding<Bool>) -> some View {
+        self.modifier(SubscriptionSelectionTipModifier(didShowTip: didShowTip))
+    }
+}

@@ -11,7 +11,6 @@ import os
 import TipKit
 
 struct PremiumSubscriptionView: View {
-    let subscriptionSuggestionTip = SubscriptionSelectionTip()
     @State private var didShowTip: Bool = false
     
     var body: some View {
@@ -47,11 +46,7 @@ struct PremiumSubscriptionView: View {
                     }
                     .font(.caption)
                     .foregroundStyle(.tint.opacity(0.7))
-                    .onTapGesture {
-                        SubscriptionSelectionTip.isShowing.toggle()
-                    }
-                    .popoverTip(SubscriptionSelectionTip())
-                    .tipViewStyle(PRTipViewStyle(didShowTip: $didShowTip))
+                    .subscriptionSelectionTip(didShowTip: $didShowTip)
                     .padding(.top, 24)
                 }
             }
