@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
+import os
 
 @main
 struct PROgressApp: App {
@@ -16,6 +18,18 @@ struct PROgressApp: App {
         WindowGroup {
             MainWindow()
                 .environmentObject(GlobalSettings.shared)
+        }
+    }
+    
+    init() {
+        do {
+            #if DEBUG
+            try Tips.resetDatastore()
+            #endif
+            
+            try Tips.configure()
+        } catch let error {
+            PRLogger.app.error("Tips could not be configured: [\(error)]")
         }
     }
 }

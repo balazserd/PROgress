@@ -8,8 +8,12 @@
 import SwiftUI
 import StoreKit
 import os
+import TipKit
 
 struct PremiumSubscriptionView: View {
+    let subscriptionSuggestionTip = SubscriptionSelectionTip()
+    @State private var didShowTip: Bool = false
+    
     var body: some View {
         SubscriptionStoreView(groupID: "21491764") {
             VStack {
@@ -31,6 +35,24 @@ struct PremiumSubscriptionView: View {
                         .bold().foregroundStyle(.tint)
                     Text("up from 100 photos maximum")
                         .font(.caption2).foregroundStyle(.secondary)
+                }
+                
+                if !didShowTip {
+                    HStack(spacing: 4) {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .bold()
+                        Text("Which subscription duration is good for me?")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.tint.opacity(0.7))
+                    .onTapGesture {
+                        SubscriptionSelectionTip.isShowing.toggle()
+                    }
+                    .popoverTip(SubscriptionSelectionTip())
+                    .tipViewStyle(PRTipViewStyle(didShowTip: $didShowTip))
+                    .padding(.top, 24)
                 }
             }
             .multilineTextAlignment(.center)
@@ -60,7 +82,10 @@ struct PremiumSubscriptionView: View {
 }
 
 #Preview {
-    Text("SSSS")
+    Button(action: { }) {
+        Text("Button")
+    }
+        .popoverTip(SubscriptionSelectionTip())
         .sheet(isPresented: .constant(true), content: {
             PremiumSubscriptionView()
         })
