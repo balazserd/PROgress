@@ -1,1 +1,1 @@
-- [Privacy Policy](./PROgress_privacy_policy.txt)
+- [Privacy Policy](./Privacy_Policy.md)
