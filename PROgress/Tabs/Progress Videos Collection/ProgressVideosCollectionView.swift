@@ -41,6 +41,7 @@ struct ProgressVideosCollectionView: View {
                                         }
                                         .onLongPressGesture {
                                             viewModel.isEditing.toggle()
+                                            viewModel.toggleDeletionStatus(for: video)
                                         }
                                 }
                             }
