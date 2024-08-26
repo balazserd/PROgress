@@ -30,7 +30,8 @@ struct NewProgressVideoView: View {
                 VStack {
                     switch viewModel.imageLoadingState {
                     case .undefined:
-                        photoSelectionMenu {
+                        PhotoSelectionMenu(isShowingPhotoPicker: $isShowingPhotoPicker,
+                                           isShowingPhotoAlbumPicker: $isShowingPhotoAlbumPicker)  {
                             Text("Select photos")
                         }
                         
@@ -49,7 +50,10 @@ struct NewProgressVideoView: View {
                         VideoSettingsView()
                     }
                 }
-                .toolbar { toolbar }
+                .toolbar { 
+                    Toolbar(isShowingPhotoPicker: $isShowingPhotoPicker,
+                            isShowingPhotoAlbumPicker: $isShowingPhotoAlbumPicker)
+                }
                 .navigationTitle($viewModel.videoName)
                 .navigationBarTitleDisplayMode(.inline)
                 .photosPicker(isPresented: $isShowingPhotoPicker,
@@ -101,50 +105,6 @@ struct NewProgressVideoView: View {
             .foregroundColor(.secondary)
         }
         .padding()
-    }
-    
-    private func photoSelectionMenu<Content: View>(@ViewBuilder label: () -> Content) -> some View {
-        Menu {
-            Button(action: { isShowingPhotoPicker = true }) {
-                Label("Select photos", systemImage: "photo.stack")
-            }
-            
-            Button(action: {
-                isShowingPhotoAlbumPicker = true
-                viewModel.loadPhotoAlbums()
-            }) {
-                Label("Select a folder", systemImage: "folder")
-            }
-        } label: {
-            label()
-        }
-    }
-    
-    // MARK: - Toolbar
-    @ToolbarContentBuilder
-    private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .primaryAction) {
-            photoSelectionMenu {
-                Image(systemName: "plus")
-            }
-        }
-        
-        if viewModel.progressImages.count > 0 {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: { viewModel.beginMerge() }) {
-                    Image(systemName: "gearshape.arrow.triangle.2.circlepath")
-                }
-                .disabled(!viewModel.imageLoadingState.isSuccess)
-            }
-        }
-        
-        if viewModel.video != nil {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: { viewModel.watchVideo() }) {
-                    Image(systemName: "video.fill")
-                }
-            }
-        }
     }
 }
 

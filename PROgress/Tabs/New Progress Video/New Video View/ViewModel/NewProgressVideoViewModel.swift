@@ -208,6 +208,16 @@ class NewProgressVideoViewModel: ObservableObject {
         self.photoUserOrdering.remove(atOffsets: .init(indexesToRemove))
     }
     
+    func resetProgressImages() {
+        self.progressImages.removeAll()
+        self.imagesToExclude.removeAll()
+        self.imagesToExclude.removeAll()
+        self.imageLoadingState = .undefined
+        self.videoProcessingState = .idle
+        self.photoAlbumsLoadingState = .undefined
+        self.video = nil
+    }
+    
     // MARK: - Private methods
     private func initializeBindings() {
         // Pop the view if a resolution was picked.
@@ -216,6 +226,8 @@ class NewProgressVideoViewModel: ObservableObject {
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] _ in
+                guard self?.navigationState.count ?? 0 > 0 else { return }
+                
                 self?.navigationState.removeLast()
             }
             .store(in: &subscriptions)
@@ -373,6 +385,11 @@ class NewProgressVideoViewModel: ObservableObject {
         
         var isSuccess: Bool {
             guard case .success = self else { return false }
+            return true
+        }
+        
+        var isLoading: Bool {
+            guard case .loading = self else { return false }
             return true
         }
     }

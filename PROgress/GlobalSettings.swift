@@ -23,6 +23,10 @@ class GlobalSettings: ObservableObject {
     static let shared = GlobalSettings()
     private init() {
         setupSubscriptions()
+        
+        Task {
+            await self.refreshPurchaseStates()
+        }
     }
     
     // MARK: - Public operations
@@ -57,13 +61,13 @@ class GlobalSettings: ObservableObject {
     // MARK: - Private operations
     private nonisolated func setupSubscriptions() {
         Task(priority: .background) {
-            for await _notification in NotificationCenter.default.notifications(named: .didPurchaseItem) {
+            for await _ in NotificationCenter.default.notifications(named: .didPurchaseItem) {
                 await self.refreshPurchaseStates()
             }
         }
         
         Task(priority: .background) {
-            for await _update in Transaction.updates {
+            for await _ in Transaction.updates {
                 PRLogger.purchases.debug("Received update to a transaction. Refreshing purchase states...")
                 await self.refreshPurchaseStates()
             }
@@ -100,8 +104,8 @@ class GlobalSettings: ObservableObject {
                 await transaction.finish()
             }
             
-        case .unverified(let transaction, let _error):
-            PRLogger.purchases.warning("Received unverified transaction with id [\(transaction.id)] for product [\(transaction.productID, privacy: .public)].")
+        case .unverified(let transaction, let error):
+            PRLogger.purchases.warning("Received unverified transaction with id [\(transaction.id)] for product [\(transaction.productID, privacy: .public)]. Error: \(error)")
         }
     }
 }

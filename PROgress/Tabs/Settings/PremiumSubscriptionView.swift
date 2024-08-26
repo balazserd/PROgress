@@ -14,7 +14,7 @@ struct PremiumSubscriptionView: View {
     @State private var didShowTip: Bool = false
     
     var body: some View {
-        SubscriptionStoreView(groupID: "21491764") {
+        SubscriptionStoreView(groupID: SubscriptionType.premiumSubscriptionGroupIdentifier) {
             VStack {
                 Text("PROgress Premium")
                     .font(.largeTitle).bold()
@@ -23,17 +23,10 @@ struct PremiumSubscriptionView: View {
                     .font(.footnote)
                     .padding(.bottom, 40)
                 
-                VStack {
-                    Text("High resolution videos")
-                        .bold().foregroundStyle(.tint)
-                    Text("up from 1280 pixels maximum in both extents")
-                        .font(.caption2).foregroundStyle(.secondary)
-                        .padding(.bottom, 4)
+                VStack(spacing: 8) {
+                    premiumFeature(title: "High resolution videos", description: "up from 1280 pixels maximum in both extents")
                     
-                    Text("Unlimited progress photo count")
-                        .bold().foregroundStyle(.tint)
-                    Text("up from 100 photos maximum")
-                        .font(.caption2).foregroundStyle(.secondary)
+                    premiumFeature(title: "Unlimited progress photo count", description: "up from 100 photos maximum")
                 }
                 
                 if !didShowTip {
@@ -59,6 +52,7 @@ struct PremiumSubscriptionView: View {
                                startPoint: .top,
                                endPoint: .bottom)
             }
+            .padding(.top, 12)
         }
         .backgroundStyle(.clear)
         .subscriptionStoreControlStyle(.prominentPicker)
@@ -73,6 +67,15 @@ struct PremiumSubscriptionView: View {
             }
         }
         .storeButton(.visible, for: .redeemCode)
+    }
+    
+    func premiumFeature(title: String, description: String) -> some View {
+        VStack {
+            Text(title)
+                .bold().foregroundStyle(.tint)
+            Text(description)
+                .font(.caption2).foregroundStyle(.secondary)
+        }
     }
 }
 
