@@ -260,7 +260,7 @@ actor ImageMergeEngine {
             let watermarkIconUrl = Bundle.main.url(forResource: "PROgressWatermarkIcon", withExtension: "tiff"),
             let watermarkIconOriginalSize = CIImage(contentsOf: watermarkIconUrl)
         else {
-            PRLogger.imageProcessing.error("Watermarking error, bundle png corrupted or missing!")
+            PRLogger.imageProcessing.error("Watermarking error, bundle .tiff corrupted or missing!")
             throw WatermarkingError.watermarkIconMissingInBundle
         }
         
@@ -319,7 +319,7 @@ actor ImageMergeEngine {
             .composited(over: CIImage(color: .clear))
     }
     
-    // MARK: - Typealias Sample
+    // MARK: - Sample
     private struct Sample: @unchecked Sendable {
         var index: Int
         var time: CMTime
