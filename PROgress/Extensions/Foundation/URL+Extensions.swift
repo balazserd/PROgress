@@ -16,4 +16,6 @@ extension URL {
     
     // MARK: - License Attribution
     static let factory = URL(string: "https://github.com/hmlongco/Factory")!
+    static let pixabay = URL(string: "https://pixabay.com")!
+    static let appMockupStudio = URL(string: "https://studio.app-mockup.com")!
 }

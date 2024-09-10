@@ -22,17 +22,17 @@ struct PremiumVideoSettingsSection: View {
             }
             .disabled(!globalSettings.isPremiumUser)
             
-            VStack(alignment: .leading) {
-                Toggle(isOn: $viewModel.userSettings.addBeforeAfterFinalImage) {
-                    Text("Add before-after image as last frame")
-                }
-                
-                Text("A final frame is appended to the video that shows the first and the last photo side-by-side.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .foregroundColor(globalSettings.isPremiumUser ? .primary : .secondary)
-            .disabled(!globalSettings.isPremiumUser)
+//            VStack(alignment: .leading) {
+//                Toggle(isOn: $viewModel.userSettings.addBeforeAfterFinalImage) {
+//                    Text("Add before-after image as last frame")
+//                }
+//                
+//                Text("A final frame is appended to the video that shows the first and the last photo side-by-side.")
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
+//            }
+//            .foregroundColor(globalSettings.isPremiumUser ? .primary : .secondary)
+//            .disabled(!globalSettings.isPremiumUser)
         } header: {
             Text("Premium")
         } footer: {

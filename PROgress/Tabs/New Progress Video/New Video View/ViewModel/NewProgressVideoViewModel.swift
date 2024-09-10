@@ -210,6 +210,7 @@ class NewProgressVideoViewModel: ObservableObject {
     
     func resetProgressImages() {
         self.progressImages.removeAll()
+        self.selectedItems.removeAll()
         self.imagesToExclude.removeAll()
         self.imagesToExclude.removeAll()
         self.imageLoadingState = .undefined
