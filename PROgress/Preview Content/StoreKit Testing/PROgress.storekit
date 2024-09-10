@@ -102,9 +102,9 @@
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "existing",
+                "expired",
                 "new",
-                "expired"
+                "existing"
               ],
               "internalID" : "803C004F",
               "isStackable" : false,
