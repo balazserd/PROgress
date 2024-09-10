@@ -1,1 +1,2 @@
 - [Privacy Policy](./Privacy_Policy.md)
+- [Support](./Support.md)
