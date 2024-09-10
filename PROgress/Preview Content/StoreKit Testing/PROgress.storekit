@@ -10,7 +10,7 @@
     "_applicationInternalID" : "6503061802",
     "_developerTeamID" : "B9J6J6XB6U",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 742493781.760571,
+    "_lastSynchronizedDate" : 747688823.18610001,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -100,17 +100,14 @@
           ],
           "codeOffers" : [
             {
-              "displayPrice" : "2.49",
               "eligibility" : [
-                "expired",
-                "new",
-                "existing"
+                "new"
               ],
-              "internalID" : "803C004F",
+              "internalID" : "B975D6BD",
               "isStackable" : false,
               "numberOfPeriods" : 1,
-              "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF Yearly!",
+              "paymentMode" : "free",
+              "referenceName" : "FREE First Year!",
               "subscriptionPeriod" : "P1Y"
             },
             {
@@ -118,11 +115,25 @@
               "eligibility" : [
                 "new"
               ],
-              "internalID" : "05A595EA",
+              "internalID" : "322BE147",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
               "referenceName" : "50% OFF First year!",
+              "subscriptionPeriod" : "P1Y"
+            },
+            {
+              "displayPrice" : "2.49",
+              "eligibility" : [
+                "existing",
+                "expired",
+                "new"
+              ],
+              "internalID" : "95B7A6A8",
+              "isStackable" : false,
+              "numberOfPeriods" : 1,
+              "paymentMode" : "payUpFront",
+              "referenceName" : "50% OFF Yearly!",
               "subscriptionPeriod" : "P1Y"
             }
           ],
