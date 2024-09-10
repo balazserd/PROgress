@@ -25,7 +25,7 @@ struct VideoProcessingInProgressView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .foregroundColor(.white)
+                .foregroundStyle(.background)
         )
     }
 }
@@ -59,7 +59,7 @@ struct VideoProcessingFinishedView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .foregroundColor(.white)
+                .foregroundStyle(.background)
         )
     }
 }

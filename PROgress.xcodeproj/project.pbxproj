@@ -211,7 +211,6 @@
 		56A5547E2A9210A100E99F65 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56A5547D2A9210A100E99F65 /* SwiftUI.framework */; };
 		56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */; };
 		56A554832A9210A100E99F65 /* VideoCreationLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */; };
-		56A554852A9210A100E99F65 /* PROgressActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554842A9210A100E99F65 /* PROgressActivities.swift */; };
 		56A554882A9210A300E99F65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A554872A9210A300E99F65 /* Assets.xcassets */; };
 		56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
 		56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
@@ -405,7 +404,6 @@
 		56A5547D2A9210A100E99F65 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressActivitiesBundle.swift; sourceTree = "<group>"; };
 		56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreationLiveActivity.swift; sourceTree = "<group>"; };
-		56A554842A9210A100E99F65 /* PROgressActivities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROgressActivities.swift; sourceTree = "<group>"; };
 		56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PROgressActivities.intentdefinition; sourceTree = "<group>"; };
 		56A554872A9210A300E99F65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56A554892A9210A300E99F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -786,7 +784,6 @@
 				56A554802A9210A100E99F65 /* PROgressActivitiesBundle.swift */,
 				56A554822A9210A100E99F65 /* VideoCreationLiveActivity.swift */,
 				56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */,
-				56A554842A9210A100E99F65 /* PROgressActivities.swift */,
 				56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */,
 				56A554872A9210A300E99F65 /* Assets.xcassets */,
 				56A554892A9210A300E99F65 /* Info.plist */,
@@ -1381,7 +1378,6 @@
 				5663D4012C401C1600A5741A /* UserDefaultKeys.swift in Sources */,
 				56A554812A9210A100E99F65 /* PROgressActivitiesBundle.swift in Sources */,
 				56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */,
-				56A554852A9210A100E99F65 /* PROgressActivities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1563,6 +1559,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PROgress/PROgress.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PROgress/Preview Content\"";
@@ -1586,6 +1583,7 @@
 				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

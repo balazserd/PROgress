@@ -54,10 +54,19 @@ struct ProgressVideosCollectionView: View {
                     }
                     .padding(.vertical, 12)
                 } else {
-                    ProgressView()
-                        .padding(.top, 20)
+                    HStack(spacing: 12) {
+                        ProgressView()
+                        
+                        Text("Loading videos...")
+                            .font(.headline)
+                    }
+                    .padding(.top, 20).padding(.bottom, 10)
                     
-                    Text("Loading videos...")
+                    Text("Make sure Photos Library access is not disabled in System Settings.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
+                        .multilineTextAlignment(.center)
                 }
             }
             .searchable(text: $viewModel.searchText)

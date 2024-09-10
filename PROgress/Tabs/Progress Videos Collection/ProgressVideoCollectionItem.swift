@@ -55,8 +55,8 @@ struct ProgressVideoCollectionItem: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white)
-                .shadow(color: .gray.opacity(0.2), radius: 12)
+                .fill(.background)
+                .shadow(color: .gray.opacity(0.3), radius: 12)
                 .background {
                     if isEditing {
                         RoundedRectangle(cornerRadius: 10)
@@ -94,7 +94,6 @@ struct ProgressVideoCollectionItem: View {
     
     private func progressImage(from uiImage: UIImage?, isLarge: Bool) -> some View {
         Rectangle()
-            .fill(.clear)
             .aspectRatio(1, contentMode: .fill)
             .overlay {
                 Image(uiImage: uiImage ?? .init(systemName: "photo")!)

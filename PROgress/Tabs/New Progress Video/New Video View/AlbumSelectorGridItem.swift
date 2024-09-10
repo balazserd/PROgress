@@ -46,7 +46,7 @@ struct AlbumSelectorGridItem: View {
         .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(.white)
+                .fill(.background)
                 .shadow(color: .gray.opacity(0.3), radius: 7, x: 0, y: 0)
         )
         .contentShape(RoundedRectangle(cornerRadius: 8))
