@@ -18,6 +18,7 @@ struct SettingsView: View {
     @EnvironmentObject private var globalSettings: GlobalSettings
     
     @StateObject private var viewModel = SettingsViewModel()
+    @State private var showManageSubscriptionsSheet = false
     
     var body: some View {
         NavigationStack {
@@ -63,21 +64,21 @@ struct SettingsView: View {
                 HStack {
                     Text("Current plan")
                     Spacer()
-                    Text(globalSettings.subscriptionType.rawValue)
+                    Text(globalSettings.subscriptionType.typeDescription)
                         .foregroundColor(.secondary)
                 }
                 
-                if globalSettings.subscriptionType == .premium {
+                if globalSettings.isPremiumUser {
                     VStack(alignment: .leading, spacing: 8) {
-                        if let expirationDate = globalSettings.subscriptionTransaction?.expirationDate {
-                            Text("Your current Premium plan billing period lasts until\n")
-                            +
-                            Text("\(DateFormatter.videoDateFormatter.string(from: expirationDate)).")
-                                .bold()
-                            
-                            Text("This does not mean you have no other subscriptions coming up after the above shown date. Check your Apple ID settings in the Settings app for your full list of subscriptions related to PROgress.")
+                        if globalSettings.subscriptionType < .premium_lifetime {
+                            Text("You receive Premium features via a renewing subscription. Check the subscription details via the \"Manage subscriptions\" menu item or, alternatively, modify your subscription type via the **Upgrade subscription** menu item.")
                             
                             Text("Auto-renewable subscriptions can be cancelled anytime and they will last until the end of the current billing period.")
+                        } else {
+                            Text("You have purchased a **Lifetime Premium** plan. You can continue to use the Premium features as long as the application is available.")
+                            
+                            Text("If you upgraded to lifetime from a recurring billing plan, make sure to cancel that plan.")
+                                .bold()
                         }
                     }
                     .font(.caption)
@@ -86,8 +87,14 @@ struct SettingsView: View {
                 }
             }
             
-            Button("Change subscription", action: {
-                viewModel.isShowingSubscriptionsSheet = true
+            if globalSettings.isPremiumUser && globalSettings.subscriptionType < .premium_lifetime {
+                Button("Upgrade subscription") {
+                    viewModel.isShowingSubscriptionsSheet = true
+                }
+            }
+            
+            Button("Manage subscriptions", action: {
+                showManageSubscriptionsSheet = true
             })
             
             Button {
@@ -105,6 +112,7 @@ struct SettingsView: View {
             }
             .disabled(globalSettings.purchaseRestorationInProgress)
         }
+        .manageSubscriptionsSheet(isPresented: $showManageSubscriptionsSheet)
     }
     
     // MARK: - Feedback Section

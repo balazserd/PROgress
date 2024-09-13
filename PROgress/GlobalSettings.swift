@@ -17,7 +17,7 @@ class GlobalSettings: ObservableObject {
     
     @Published var purchaseRestorationInProgress: Bool = false
     
-    var isPremiumUser: Bool { self.subscriptionType == .premium }
+    var isPremiumUser: Bool { self.subscriptionType > .free }
     
     // MARK: - Initializer
     static let shared = GlobalSettings()
@@ -86,20 +86,42 @@ class GlobalSettings: ObservableObject {
         switch verificationResult {
         case .verified(let transaction):
             PRLogger.purchases.debug("Received verified transaction with id [\(transaction.id)] for product [\(transaction.productID, privacy: .public)].")
-            guard let group = transaction.subscriptionGroupID else {
-                PRLogger.purchases.fault("Transaction has no group id!")
-                return
-            }
             
-            if group == SubscriptionType.premiumSubscriptionGroupIdentifier {
+            if let group = transaction.subscriptionGroupID {
+                guard group == SubscriptionType.premiumSubscriptionGroupIdentifier else {
+                    PRLogger.purchases.error("Unknown group ID! [\(group, privacy: .public)]")
+                    return
+                }
+                
                 if transaction.expired {
                     PRLogger.purchases.debug("Transaction with product ID \(transaction.productID, privacy: .public) has expired on \(transaction.expirationDate ?? .distantPast)!")
-                    self.subscriptionType = .free
                 } else {
                     PRLogger.purchases.debug("Transaction with product ID \(transaction.productID, privacy: .public) is live!")
-                    self.subscriptionType = .premium
+                    guard let subscription = SubscriptionType(productId: transaction.productID) else {
+                        PRLogger.purchases.error("Unrecocnized product ID!")
+                        return
+                    }
+                    
+                    guard self.subscriptionType < subscription else {
+                        PRLogger.purchases.debug("The subscription type is not higher order than the currently existing one!")
+                        return
+                    }
+                    
+                    self.subscriptionType = subscription
                     self.subscriptionTransaction = transaction
                 }
+                
+                await transaction.finish()
+            } else if transaction.productID == SubscriptionType.premium_lifetime.productID {
+                guard transaction.revocationDate == nil else {
+                    PRLogger.purchases.debug("Transaction with product ID \(transaction.productID, privacy: .public) is revoked!")
+                    return
+                }
+                
+                PRLogger.purchases.debug("Transaction with product ID \(transaction.productID, privacy: .public) is live!")
+                
+                self.subscriptionType = .premium_lifetime
+                self.subscriptionTransaction = transaction
                 
                 await transaction.finish()
             }
@@ -110,21 +132,36 @@ class GlobalSettings: ObservableObject {
     }
 }
 
-enum SubscriptionType: String {
-    case free = "Free"
-    case premium = "Premium"
+enum SubscriptionType: Int, CaseIterable, Comparable {
+    case free = 0
+    case premium_monthly
+    case premium_yearly
+    case premium_lifetime
     
     static let premiumSubscriptionGroupIdentifier = "21491764"
     
-    enum PremiumLength: String {
-        case monthly
-        case yearly
-        
-        var productID: String {
-            switch self {
-            case .monthly:  return "com.ebuniapps.progress.subscriptions.premium.1m"
-            case .yearly:   return "com.ebuniapps.progress.subscriptions.premium.1y"
-            }
+    init?(productId: String) {
+        if let _self = Self.allCases.first(where: { $0.productID == productId }) {
+            self = _self
+        } else {
+            return nil
         }
+    }
+    
+    var productID: String? {
+        switch self {
+        case .free:             return nil
+        case .premium_monthly:  return "com.ebuniapps.progress.subscriptions.premium.1m"
+        case .premium_yearly:   return "com.ebuniapps.progress.subscriptions.premium.1y"
+        case .premium_lifetime: return "com.ebuniapps.progress.iap.premium.lifetime"
+        }
+    }
+    
+    var typeDescription: String {
+        self == .free ? "Free" : "Premium"
+    }
+    
+    static func < (lhs: SubscriptionType, rhs: SubscriptionType) -> Bool {
+        lhs.rawValue < rhs.rawValue
     }
 }

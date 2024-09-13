@@ -4,13 +4,27 @@
 
   ],
   "products" : [
-
+    {
+      "displayPrice" : "8.99",
+      "familyShareable" : false,
+      "internalID" : "6677021773",
+      "localizations" : [
+        {
+          "description" : "Get Premium Features without a time limit.",
+          "displayName" : "PROgress Premium - Lifetime",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.ebuniapps.progress.iap.premium.lifetime",
+      "referenceName" : "Lifetime Premium",
+      "type" : "NonConsumable"
+    }
   ],
   "settings" : {
     "_applicationInternalID" : "6503061802",
     "_developerTeamID" : "B9J6J6XB6U",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 747688823.18610001,
+    "_lastSynchronizedDate" : 747822797.34374404,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -103,7 +117,7 @@
               "eligibility" : [
                 "new"
               ],
-              "internalID" : "B975D6BD",
+              "internalID" : "C95116A3",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "free",
@@ -113,27 +127,27 @@
             {
               "displayPrice" : "2.49",
               "eligibility" : [
+                "expired",
+                "existing",
                 "new"
               ],
-              "internalID" : "322BE147",
+              "internalID" : "4E3342D6",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF First year!",
+              "referenceName" : "50% OFF Yearly!",
               "subscriptionPeriod" : "P1Y"
             },
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "existing",
-                "expired",
                 "new"
               ],
-              "internalID" : "95B7A6A8",
+              "internalID" : "7CDC0B71",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
-              "referenceName" : "50% OFF Yearly!",
+              "referenceName" : "50% OFF First year!",
               "subscriptionPeriod" : "P1Y"
             }
           ],

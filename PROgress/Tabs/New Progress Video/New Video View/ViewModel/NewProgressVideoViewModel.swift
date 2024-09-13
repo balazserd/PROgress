@@ -234,7 +234,7 @@ class NewProgressVideoViewModel: ObservableObject {
             .store(in: &subscriptions)
         
         GlobalSettings.shared.$subscriptionType
-            .map { $0 == .premium }
+            .map { $0 > .free }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isPremium in
                 self?.userSettings?.hideLogo = isPremium

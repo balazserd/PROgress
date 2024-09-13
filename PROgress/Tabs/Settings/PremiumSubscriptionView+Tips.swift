@@ -19,7 +19,7 @@ struct SubscriptionSelectionTip: Tip {
     }
     
     var message: Text? {
-        Text("If you plan to use the premium features **regularly** (like creating a progress video of something on a weekly basis) you can save money by opting for a yearly subscription.")
+        Text("If you plan to use the premium features **regularly** (like creating a progress video of something on a weekly basis) you can save money by opting for a yearly or lifetime subscription.")
             .font(.caption2)
     }
     
