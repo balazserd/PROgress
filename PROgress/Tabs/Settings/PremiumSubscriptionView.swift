@@ -23,53 +23,55 @@ struct PremiumSubscriptionView: View {
     @EnvironmentObject private var globalSettings: GlobalSettings
     
     var body: some View {
-        VStack {
-            Text("PROgress Premium")
-                .font(.largeTitle).bold()
-                .padding(.top, 24)
-            
-            Text("grants access to the following features:")
-                .font(.footnote)
-                .padding(.bottom, 40)
-            
-            VStack(spacing: 8) {
-                premiumFeature(title: "High resolution videos", description: "up from 1280 pixels maximum in both extents")
+        ScrollView {
+            VStack {
+                Text("PROgress Premium")
+                    .font(.largeTitle).bold()
+                    .padding(.top, 24)
                 
-                premiumFeature(title: "Unlimited progress photo count", description: "up from 100 photos maximum")
+                Text("grants access to the following features:")
+                    .font(.footnote)
+                    .padding(.bottom, 40)
                 
-                premiumFeature(title: "No watermarks", description: "make it look professional")
-            }
-            
-            if !didShowTip {
-                HStack(spacing: 4) {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                        .bold()
-                    Text("Which subscription duration is good for me?")
+                VStack(spacing: 8) {
+                    premiumFeature(title: "High resolution videos", description: "up from 1280 pixels maximum in both extents")
+                    
+                    premiumFeature(title: "Unlimited progress photo count", description: "up from 100 photos maximum")
+                    
+                    premiumFeature(title: "No watermarks", description: "make it look professional")
                 }
-                .font(.caption)
-                .foregroundStyle(.tint.opacity(0.7))
-                .subscriptionSelectionTip(didShowTip: $didShowTip)
-                .padding(.top, 24)
+                
+                if !didShowTip {
+                    HStack(spacing: 4) {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .bold()
+                        Text("Which subscription duration is good for me?")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.tint.opacity(0.7))
+                    .subscriptionSelectionTip(didShowTip: $didShowTip)
+                    .padding(.top, 24)
+                }
+                
+                if self.productIDs.isEmpty {
+                    ContentUnavailableView("You already have the highest tier of PROgress Premium.",
+                                           systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.gray)
+                } else {
+                    StoreView(ids: self.productIDs)
+                        .productViewStyle(.compact)
+                        .storeButton(.visible, for: .restorePurchases)
+                        .storeButton(.hidden, for: .cancellation)
+                        .padding(.horizontal, -16)
+                        .padding(.top, 40)
+                }
+                
+                Button(action: { showRedeemCodeSheet = true }, label: {
+                    Text("Redeem Code")
+                })
             }
-            
-            if self.productIDs.isEmpty {
-                ContentUnavailableView("You already have the highest tier of PROgress Premium.",
-                                       systemImage: "checkmark.circle.fill")
-                .foregroundStyle(.gray)
-            } else {
-                StoreView(ids: self.productIDs)
-                    .productViewStyle(.compact)
-                    .storeButton(.visible, for: .restorePurchases)
-                    .storeButton(.hidden, for: .cancellation)
-                    .padding(.horizontal, -16)
-                    .padding(.top, 40)
-            }
-            
-            Button(action: { showRedeemCodeSheet = true }, label: {
-                Text("Redeem Code")
-            })
         }
         .padding(16)
         .background(

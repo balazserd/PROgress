@@ -98,6 +98,9 @@ class NewProgressVideoViewModel: ObservableObject {
                     self.videoProcessingState = .working(progress: 0.0)
                 }
                 
+                let _assetIdentifiers = await self.trimAssetsForFreeUser(assets: assetIdentifiers)
+                let _selectedItems = await self.trimAssetsForFreeUser(assets: selectedItems)
+                
                 backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable in
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
@@ -112,11 +115,11 @@ class NewProgressVideoViewModel: ObservableObject {
                 var thumbnails: VideoCreationActivityThumbnailData
                 if isConvertingAlbum {
                     thumbnails = try await self.imageMergeEngine
-                        .provideVideoCreationActivityThumbnails(from: assetIdentifiers,
+                        .provideVideoCreationActivityThumbnails(from: _assetIdentifiers,
                                                                 by: .phAssetEngine(options: .detailed))
                 } else {
                     thumbnails = try await self.imageMergeEngine
-                        .provideVideoCreationActivityThumbnails(from: selectedItems,
+                        .provideVideoCreationActivityThumbnails(from: _selectedItems,
                                                                 by: .photosPickerItemEngine)
                 }
                 
@@ -130,11 +133,11 @@ class NewProgressVideoViewModel: ObservableObject {
                 var video: ProgressVideo
                 if isConvertingAlbum {
                     // Order is automatically included here.
-                    video = try await self.imageMergeEngine.mergeImages(assetIdentifiers,
+                    video = try await self.imageMergeEngine.mergeImages(_assetIdentifiers,
                                                                         by: .phAssetEngine(options: .detailed),
                                                                         options: options)
                 } else {
-                    var images = selectedItems
+                    var images = _selectedItems
                     if let order = options.customOrder {
                         images = order.map { images[$0] }
                     }
@@ -381,6 +384,14 @@ class NewProgressVideoViewModel: ObservableObject {
     
     private func setPhotoAlbumsLoadingState(to state: PhotoAlbumsLoadingState) {
         self.photoAlbumsLoadingState = state
+    }
+    
+    private func trimAssetsForFreeUser<T>(assets: [T]) -> [T] {
+        if GlobalSettings.shared.isPremiumUser || assets.count <= GlobalSettings.shared.maximumNumberOfPhotosForFreeUser {
+            return assets
+        }
+        
+        return Array(assets[0..<GlobalSettings.shared.maximumNumberOfPhotosForFreeUser])
     }
     
     // MARK: - ImageLoadingState enum

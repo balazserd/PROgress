@@ -29,6 +29,8 @@ class GlobalSettings: ObservableObject {
         }
     }
     
+    let maximumNumberOfPhotosForFreeUser = 100
+    
     // MARK: - Initializer
     static let shared = GlobalSettings()
     private init() {
