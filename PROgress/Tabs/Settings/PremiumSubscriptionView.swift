@@ -9,13 +9,18 @@ import SwiftUI
 import StoreKit
 import os
 import TipKit
+import Combine
 
 struct PremiumSubscriptionView: View {
     @State private var didShowTip: Bool = false
     @State private var showRedeemCodeSheet: Bool = false
+    @State private var showManageSubscriptionsSheetWarning: Bool = false
     @State private var showManageSubscriptionsSheet: Bool = false
     
     @State private var productIDs: [String] = []
+    
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var globalSettings: GlobalSettings
     
     var body: some View {
         VStack {
@@ -31,6 +36,8 @@ struct PremiumSubscriptionView: View {
                 premiumFeature(title: "High resolution videos", description: "up from 1280 pixels maximum in both extents")
                 
                 premiumFeature(title: "Unlimited progress photo count", description: "up from 100 photos maximum")
+                
+                premiumFeature(title: "No watermarks", description: "make it look professional")
             }
             
             if !didShowTip {
@@ -47,12 +54,18 @@ struct PremiumSubscriptionView: View {
                 .padding(.top, 24)
             }
             
-            StoreView(ids: self.productIDs)
-                .productViewStyle(.compact)
-                .storeButton(.visible, for: .restorePurchases)
-                .storeButton(.hidden, for: .cancellation)
-                .padding(.horizontal, -16)
-                .padding(.top, 40)
+            if self.productIDs.isEmpty {
+                ContentUnavailableView("You already have the highest tier of PROgress Premium.",
+                                       systemImage: "checkmark.circle.fill")
+                .foregroundStyle(.gray)
+            } else {
+                StoreView(ids: self.productIDs)
+                    .productViewStyle(.compact)
+                    .storeButton(.visible, for: .restorePurchases)
+                    .storeButton(.hidden, for: .cancellation)
+                    .padding(.horizontal, -16)
+                    .padding(.top, 40)
+            }
             
             Button(action: { showRedeemCodeSheet = true }, label: {
                 Text("Redeem Code")
@@ -68,11 +81,33 @@ struct PremiumSubscriptionView: View {
         .manageSubscriptionsSheet(isPresented: $showManageSubscriptionsSheet,
                                   subscriptionGroupID: SubscriptionType.premiumSubscriptionGroupIdentifier)
         .offerCodeRedemption(isPresented: $showRedeemCodeSheet)
-        .onReceive(GlobalSettings.shared.$subscriptionType) { currentSubscriptionType in
+        .onReceive(
+            Publishers.CombineLatest(globalSettings.$subscriptionType,
+                                     globalSettings.$isPremiumUserWithRecurringPayments)
+        ) { (currentSubscriptionType, isPremiumUserWithRecurringPayments) in
             let purchaseableProducts = SubscriptionType.allCases
                 .filter { $0 > currentSubscriptionType }
             
             self.productIDs = purchaseableProducts.compactMap { $0.productID }
+        
+            if currentSubscriptionType == .premium_lifetime && isPremiumUserWithRecurringPayments {
+                // Auto show manage subscription sheet to cancel
+                showManageSubscriptionsSheetWarning = true
+            }
+        }
+        .alert("Warning", isPresented: $showManageSubscriptionsSheetWarning) {
+            Button(role: .cancel, action: {
+                dismiss()
+                showManageSubscriptionsSheet = true
+            }) {
+                Text("Manage...")
+            }
+            
+            Button(role: .destructive, action: { dismiss() }) {
+                Text("Not now")
+            }
+        } message: {
+            Text("Thanks for buying Lifetime Premium! Make sure to **cancel any recurring subscriptions** you might have as it's not possible to cancel those automatically.")
         }
         
         // Version without lifetime premium

@@ -19,6 +19,16 @@ class GlobalSettings: ObservableObject {
     
     var isPremiumUser: Bool { self.subscriptionType > .free }
     
+    @Published private(set) var isPremiumUserWithRecurringPayments: Bool = false
+    private var currentProductIDs: [String] = [] {
+        didSet {
+            let recurringProductIDs = [SubscriptionType.premium_monthly, .premium_yearly].map { $0.productID }
+            isPremiumUserWithRecurringPayments = currentProductIDs
+                .filter { recurringProductIDs.contains($0) }
+                .count > 0
+        }
+    }
+    
     // MARK: - Initializer
     static let shared = GlobalSettings()
     private init() {
@@ -77,6 +87,8 @@ class GlobalSettings: ObservableObject {
     private func refreshPurchaseStates() async {
         PRLogger.purchases.debug("Will refresh subscription states.")
         
+        self.currentProductIDs.removeAll()
+        
         for await verificationResult in Transaction.currentEntitlements {
             await assertTransactionVerificationResult(verificationResult)
         }
@@ -102,6 +114,29 @@ class GlobalSettings: ObservableObject {
                         return
                     }
                     
+                    do {
+                        guard let product = try await Product.products(for: [transaction.productID]).first else {
+                            PRLogger.purchases.error("Product not found! [id: \(transaction.productID, privacy: .public)]")
+                            return
+                        }
+                        
+                        let renewalInfos = try await product.subscription?.status.compactMap {
+                            if case .verified(let renewalInfo) = $0.renewalInfo {
+                                return renewalInfo
+                            }
+                            
+                            return nil
+                        }
+                        
+                        if renewalInfos?.filter({ $0.willAutoRenew }).isEmpty == false {
+                            self.currentProductIDs.append(transaction.productID)
+                        }
+                    } catch let error {
+                        PRLogger.purchases.error("Product fetching failed! [\(error)]")
+                        return
+                    }
+                    
+                    
                     guard self.subscriptionType < subscription else {
                         PRLogger.purchases.debug("The subscription type is not higher order than the currently existing one!")
                         return
@@ -119,6 +154,8 @@ class GlobalSettings: ObservableObject {
                 }
                 
                 PRLogger.purchases.debug("Transaction with product ID \(transaction.productID, privacy: .public) is live!")
+                
+                self.currentProductIDs.append(transaction.productID)
                 
                 self.subscriptionType = .premium_lifetime
                 self.subscriptionTransaction = transaction

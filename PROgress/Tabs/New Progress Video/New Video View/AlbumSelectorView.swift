@@ -21,19 +21,26 @@ struct AlbumSelectorView: View {
             VStack {
                 switch viewModel.photoAlbumsLoadingState {
                 case .success(let albums):
-                    ScrollView {
-                        VStack {
-                            LazyVGrid(columns: Array(repeating: .init(spacing: 14), count: gridColumnCount),
-                                      spacing: 16) {
-                                ForEach(albums, id: \.index) { album in
-                                    AlbumSelectorGridItem(album: album)
-                                        .onTapGesture {
-                                            selectedAlbum = album
-                                            dismiss()
-                                        }
+                    if albums.count == 0 {
+                        ContentUnavailableView("You have no albums.",
+                                               systemImage: "exclamationmark.triangle.fill",
+                                               description: Text("Create albums in the Photos app or use the 'Select Photos' option."))
+                            .symbolRenderingMode(.multicolor)
+                    } else {
+                        ScrollView {
+                            VStack {
+                                LazyVGrid(columns: Array(repeating: .init(spacing: 14), count: gridColumnCount),
+                                          spacing: 16) {
+                                    ForEach(albums, id: \.index) { album in
+                                        AlbumSelectorGridItem(album: album)
+                                            .onTapGesture {
+                                                selectedAlbum = album
+                                                dismiss()
+                                            }
+                                    }
                                 }
+                                          .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                         }
                     }
                 case .loading:
@@ -42,7 +49,9 @@ struct AlbumSelectorView: View {
                     }
                     
                 case .failure:
-                    Text("Failed to load albums!")
+                    ContentUnavailableView("Failed to load albums!",
+                                           systemImage: "xmark.circle.fill")
+                        .symbolRenderingMode(.multicolor)
                     
                 default: EmptyView()
                 }

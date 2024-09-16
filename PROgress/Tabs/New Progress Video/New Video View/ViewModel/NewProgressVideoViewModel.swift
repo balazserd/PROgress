@@ -94,10 +94,14 @@ class NewProgressVideoViewModel: ObservableObject {
             }
             
             do {
+                await MainActor.run {
+                    self.videoProcessingState = .working(progress: 0.0)
+                }
+                
                 backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable in
                     Task {
                         let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
-                        PRLogger.app.info("Background task ended. Remaining time: \(timeRemaining) seconds.")
+                        PRLogger.app.debug("Background task ended. Remaining time: \(timeRemaining) seconds.")
                     }
                 }
                 
@@ -250,6 +254,10 @@ class NewProgressVideoViewModel: ObservableObject {
                 self?.imagesToExclude.removeAll()
             }
             .store(in: &subscriptions)
+        
+        imageMergeEngine.state
+            .receive(on: DispatchQueue.main)
+            .assign(to: &self.$videoProcessingState)
     }
     
     private func setInitialUserSettings() {
@@ -331,9 +339,7 @@ class NewProgressVideoViewModel: ObservableObject {
             guard let self = self else { return }
             
             for await state in await self.imageMergeEngine.state.values {
-                await MainActor.run {
-                    self.videoProcessingState = state
-                }
+                try Task.checkCancellation()
                 
                 if  case .working(let progress) = state,
                     let activity = await self.videoCreationLiveActivity

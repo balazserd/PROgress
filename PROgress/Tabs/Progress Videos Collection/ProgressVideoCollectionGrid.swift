@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
+import EBUniAppsKit
 
+@DeviceDependent
 struct ProgressVideoCollectionGrid<Content: View>: View {
-    @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Binding var orientation: UIDeviceOrientation
     
-    @ViewBuilder
-    var content: Content
+    @ViewBuilder var content: Content
     
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 20) {
@@ -24,16 +24,14 @@ struct ProgressVideoCollectionGrid<Content: View>: View {
     private let twoColumnGrid = [GridItem(spacing: 20), GridItem(spacing: 20)]
     
     private var gridItems: [GridItem] {
-        if self.horizontalSizeClass == .compact {
-            self.verticalSizeClass == .regular ? oneColumnGrid : twoColumnGrid
-        } else {
-            twoColumnGrid
+        if isIpad && [.landscapeLeft, .landscapeRight].contains(orientation) {
+            return oneColumnGrid
         }
-    }
-}
-
-#Preview {
-    ProgressVideoCollectionGrid {
         
+        if self.horizontalSizeClass == .compact {
+            return self.verticalSizeClass == .regular ? oneColumnGrid : twoColumnGrid
+        } else {
+            return twoColumnGrid
+        }
     }
 }

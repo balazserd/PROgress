@@ -77,8 +77,13 @@ struct SettingsView: View {
                         } else {
                             Text("You have purchased a **Lifetime Premium** plan. You can continue to use the Premium features as long as the application is available.")
                             
-                            Text("If you upgraded to lifetime from a recurring billing plan, make sure to cancel that plan.")
-                                .bold()
+                            if  globalSettings.isPremiumUserWithRecurringPayments &&
+                                globalSettings.subscriptionType == .premium_lifetime
+                            {
+                                Text("Make sure to cancel your existing recurring plan by clicking 'Manage Subscriptions' below!")
+                                    .bold()
+                                    .foregroundStyle(.red)
+                            }
                         }
                     }
                     .font(.caption)
@@ -87,21 +92,23 @@ struct SettingsView: View {
                 }
             }
             
-            if globalSettings.isPremiumUser && globalSettings.subscriptionType < .premium_lifetime {
+            if globalSettings.subscriptionType < .premium_lifetime {
                 Button("Upgrade subscription") {
                     viewModel.isShowingSubscriptionsSheet = true
                 }
             }
             
-            Button("Manage subscriptions", action: {
-                showManageSubscriptionsSheet = true
-            })
+            if globalSettings.isPremiumUserWithRecurringPayments {
+                Button("Manage subscriptions", action: {
+                    showManageSubscriptionsSheet = true
+                })
+            }
             
             Button {
                 globalSettings.requestPurchaseRestore()
             } label: {
                 HStack {
-                    Text("Restore purchase")
+                    Text("Restore purchases")
                     
                     if globalSettings.purchaseRestorationInProgress {
                         Spacer()
@@ -113,6 +120,11 @@ struct SettingsView: View {
             .disabled(globalSettings.purchaseRestorationInProgress)
         }
         .manageSubscriptionsSheet(isPresented: $showManageSubscriptionsSheet)
+        .onChange(of: self.showManageSubscriptionsSheet) { wasShowing, isShowing in
+            if wasShowing && !isShowing {
+                NotificationCenter.default.post(name: .didPurchaseItem, object: nil)
+            }
+        }
     }
     
     // MARK: - Feedback Section

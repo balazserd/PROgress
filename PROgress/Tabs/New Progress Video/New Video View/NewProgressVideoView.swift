@@ -32,7 +32,7 @@ struct NewProgressVideoView: View {
                     case .undefined:
                         PhotoSelectionMenu(isShowingPhotoPicker: $isShowingPhotoPicker,
                                            isShowingPhotoAlbumPicker: $isShowingPhotoAlbumPicker)  {
-                            Text("Select photos")
+                            Text("Add photos")
                         }
                         
                     case .loading(let progress):

@@ -39,32 +39,31 @@ struct ProgressVideoPlayerView: View {
                         
                         Divider()
                         
-                        ScrollView {
-                            HStack {
-                                Text("Duration")
-                                    .bold()
-                                    .font(.caption)
-                                
-                                Spacer()
-                                
-                                Text(DateComponentsFormatter.videoDurationFormatter.string(from: .init(second: Int(viewModel.videoAsset.length))) ?? "00:00")
-                                    .font(.caption)
-                            }
+                        HStack {
+                            Text("Duration")
+                                .bold()
+                                .font(.caption)
                             
-                            HStack {
-                                Text("Created")
-                                    .bold()
-                                    .font(.caption)
-                                
-                                Spacer()
-                                
-                                Text(DateFormatter.videoDateFormatter.string(from: viewModel.videoAsset.creationDate ?? Date()))
-                                    .font(.caption)
-                            }
+                            Spacer()
+                            
+                            Text(DateComponentsFormatter.videoDurationFormatter.string(from: .init(second: Int(viewModel.videoAsset.length))) ?? "00:00")
+                                .font(.caption)
+                        }
+                        
+                        HStack {
+                            Text("Created")
+                                .bold()
+                                .font(.caption)
+                            
+                            Spacer()
+                            
+                            Text(DateFormatter.videoDateFormatter.string(from: viewModel.videoAsset.creationDate ?? Date()))
+                                .font(.caption)
                         }
                     }
                     .padding(20)
-                    .frame(minHeight: 150)
+                    
+                    Spacer()
                 } else {
                     ContentUnavailableView("Failed to load video",
                                            systemImage: "exclamationmark.triangle.fill",

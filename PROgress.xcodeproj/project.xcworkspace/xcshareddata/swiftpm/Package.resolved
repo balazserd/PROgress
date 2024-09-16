@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/balazserd/EBUniAppsKit",
       "state" : {
-        "revision" : "889e539d9386002957088ae0c93b5ff85ff1c4d6",
-        "version" : "0.0.11"
+        "revision" : "07648efc16b09fb78264cd1b33e6bf08461c752d",
+        "version" : "0.0.16"
       }
     },
     {
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "061b3afe0358a0da7ce568f8272c847910be3dd7",
         "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     }
   ],
