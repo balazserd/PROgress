@@ -10,8 +10,6 @@ import EBUniAppsKit
 
 @DeviceDependent
 struct ProgressVideoCollectionGrid<Content: View>: View {
-    @Binding var orientation: UIDeviceOrientation
-    
     @ViewBuilder var content: Content
     
     var body: some View {
@@ -22,10 +20,12 @@ struct ProgressVideoCollectionGrid<Content: View>: View {
     
     private let oneColumnGrid = [GridItem()]
     private let twoColumnGrid = [GridItem(spacing: 20), GridItem(spacing: 20)]
+    private let threeColumnGrid = [GridItem(spacing: 20), GridItem(spacing: 20), GridItem(spacing: 20)]
     
+    @MainActor
     private var gridItems: [GridItem] {
-        if isIpad && [.landscapeLeft, .landscapeRight].contains(orientation) {
-            return oneColumnGrid
+        if isIpad {
+            return threeColumnGrid
         }
         
         if self.horizontalSizeClass == .compact {

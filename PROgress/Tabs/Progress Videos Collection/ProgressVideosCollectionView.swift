@@ -6,20 +6,16 @@
 //
 
 import SwiftUI
-import EBUniAppsKit
 import Combine
 
-@DeviceDependent
 struct ProgressVideosCollectionView: View {
     @StateObject private var viewModel = ProgressVideosCollectionViewModel()
     
     @State private var selectedVideo: VideoAsset?
     @State private var showDeleteConfirmationAlert: Bool = false
     
-    @State private var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
-    
     var body: some View {
-        self.viewFrame {
+        NavigationStack(path: $viewModel.navigationState) {
             ScrollView {
                 if let videos = viewModel.videos {
                     VStack {
@@ -34,7 +30,7 @@ struct ProgressVideosCollectionView: View {
                                                    description: Text("No video matches your search."))
                                 .padding(.top, 50)
                         } else {
-                            ProgressVideoCollectionGrid(orientation: $deviceOrientation) {
+                            ProgressVideoCollectionGrid {
                                 ForEach(viewModel.searchCriteriaFulfillingVideos, id: \.index) { video in
                                     ProgressVideoCollectionItem(video: video, isEditing: $viewModel.isEditing)
                                         .environmentObject(viewModel)
@@ -42,11 +38,7 @@ struct ProgressVideosCollectionView: View {
                                             if viewModel.isEditing {
                                                 viewModel.toggleDeletionStatus(for: video)
                                             } else {
-                                                if isIpad {
-                                                    self.selectedVideo = video
-                                                } else {
-                                                    viewModel.navigationState.append(video)
-                                                }
+                                                viewModel.navigationState.append(video)
                                             }
                                         }
                                         .onLongPressGesture {
@@ -95,26 +87,6 @@ struct ProgressVideosCollectionView: View {
                 }
             } message: {
                 Text("The videos will also be deleted from the designated media library for PROgress in the Photos app.\n\nDeleted videos can be recovered in the Photos app for a period of time set by your operating system.")
-            }
-        }
-        .bindOrientation($deviceOrientation)
-    }
-    
-    @ViewBuilder
-    private func viewFrame<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        if isIpad && [.landscapeLeft, .landscapeRight].contains(self.deviceOrientation) {
-            NavigationSplitView(columnVisibility: .constant(.all)) {
-                content()
-            } detail: {
-                if let selectedVideo {
-                    ProgressVideoPlayerView(video: selectedVideo)
-                } else {
-                    ContentUnavailableView("Select a video to watch", systemImage: "filemenu.and.selection")
-                }
-            }
-        } else {
-            NavigationStack(path: $viewModel.navigationState) {
-                content()
             }
         }
     }

@@ -74,7 +74,7 @@ struct PremiumSubscriptionView: View {
         .padding(16)
         .background(
             LinearGradient(stops: [.init(color: Color.accentColor.opacity(0.1), location: 0),
-                                   .init(color: Color.white, location: 1)],
+                                   .init(color: Color(uiColor: .systemBackground), location: 1)],
                            startPoint: .top,
                            endPoint: .bottom)
         )
