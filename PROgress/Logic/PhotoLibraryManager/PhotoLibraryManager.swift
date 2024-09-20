@@ -272,7 +272,7 @@ actor PhotoLibraryManager {
             try await self.createPROgressMediaLibrary()
         }
         
-        let newAssetlocalIdentifier = String.makeActorized()
+        let newAssetlocalIdentifier = Actorized<String>()
         do {
             try await PHPhotoLibrary.shared().performChanges { @Sendable [newAssetlocalIdentifier, progressVideo] in
                 guard let creationRequest = PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: progressVideo.url) else {

@@ -78,7 +78,6 @@ struct ProgressVideoPlayerView: View {
         .navigationTitle($viewModel.videoAsset.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { self.toolbar }
-        .shareView(with: [viewModel.avAsset?.url as Any], isPresented: $showShareSheet)
     }
     
     @ToolbarContentBuilder @MainActor
@@ -88,6 +87,7 @@ struct ProgressVideoPlayerView: View {
                 Button(action: { showShareSheet = true }) {
                     Image(systemName: "square.and.arrow.up")
                 }
+                .shareView(with: [viewModel.avAsset?.url as Any], isPresented: $showShareSheet)
             }
         }
     }

@@ -49,7 +49,6 @@ struct NewProgressVideoPlayerView: View {
         .toolbar { toolbar }
         .navigationTitle($viewModel.video.name)
         .navigationBarTitleDisplayMode(.inline)
-        .shareView(with: [viewModel.video.url], isPresented: $showShareSheet)
         .ignoresSafeArea(.keyboard)
     }
     
@@ -95,7 +94,7 @@ struct NewProgressVideoPlayerView: View {
             Button(action: { showShareSheet = true }) {
                 Image(systemName: "square.and.arrow.up")
             }
-            .padding(.top, -3)
+            .shareView(with: [viewModel.video.url], isPresented: $showShareSheet)
         }
     }
 }

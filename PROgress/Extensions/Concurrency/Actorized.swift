@@ -22,13 +22,3 @@ actor Actorized<T: Sendable> {
         self.value = value
     }
 }
-
-extension Sendable {
-    static func makeActorized() -> Actorized<Self> {
-        return Actorized(value: nil)
-    }
-    
-    static func makeActorized<V>(value: V? = nil) -> Actorized<Self> where Self == Optional<V> {
-        return Actorized(value: value)
-    }
-}

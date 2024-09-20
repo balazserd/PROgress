@@ -66,11 +66,34 @@ struct PremiumSubscriptionView: View {
                         .storeButton(.hidden, for: .cancellation)
                         .padding(.horizontal, -16)
                         .padding(.top, 40)
+                        .frame(minHeight: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 
-                Button(action: { showRedeemCodeSheet = true }, label: {
+                Button(action: { showRedeemCodeSheet = true }) {
                     Text("Redeem Code")
-                })
+                }
+                .padding(.top, 12)
+                
+                Divider()
+                    .padding(.top, 8)
+                
+                HStack {
+                    Spacer()
+                    
+                    Link(destination: .privacyPolicy) {
+                        Text("Privacy Policy")
+                    }
+                    Spacer()
+                    Link(destination: .eula) {
+                        Text("Terms of Use")
+                    }
+                    
+                    Spacer()
+                }
+                .font(.footnote)
+                .opacity(0.7)
+                .padding(.top, 8)
             }
         }
         .padding(16)
@@ -187,5 +210,6 @@ struct PremiumSubscriptionView: View {
         .popoverTip(SubscriptionSelectionTip())
         .sheet(isPresented: .constant(true), content: {
             PremiumSubscriptionView()
+                .environmentObject(GlobalSettings.shared)
         })
 }

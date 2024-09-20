@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "5B3EDC0D",
   "nonRenewingSubscriptions" : [
 
@@ -10,8 +20,8 @@
       "internalID" : "6677021773",
       "localizations" : [
         {
-          "description" : "Get Premium Features without a time limit.",
-          "displayName" : "PROgress Premium - Lifetime",
+          "description" : "Get Premium Features without a Time Limit.",
+          "displayName" : "Premium (Lifetime)",
           "locale" : "en_US"
         }
       ],
@@ -24,7 +34,7 @@
     "_applicationInternalID" : "6503061802",
     "_developerTeamID" : "B9J6J6XB6U",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 747822797.34374404,
+    "_lastSynchronizedDate" : 748438986.11367297,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -97,8 +107,8 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Premium features for 1 Month. Renews.",
-              "displayName" : "PROgress Premium - Monthly",
+              "description" : "Premium Features for 1 Month.",
+              "displayName" : "Premium (1 Month)",
               "locale" : "en_US"
             }
           ],
@@ -106,7 +116,10 @@
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "PROgress Premium [Monthly]",
           "subscriptionGroupID" : "21491764",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         },
         {
           "adHocOffers" : [
@@ -117,7 +130,7 @@
               "eligibility" : [
                 "new"
               ],
-              "internalID" : "C95116A3",
+              "internalID" : "B3156CF8",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "free",
@@ -127,11 +140,11 @@
             {
               "displayPrice" : "2.49",
               "eligibility" : [
-                "expired",
                 "existing",
-                "new"
+                "new",
+                "expired"
               ],
-              "internalID" : "4E3342D6",
+              "internalID" : "DFA81EA4",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
@@ -143,7 +156,7 @@
               "eligibility" : [
                 "new"
               ],
-              "internalID" : "7CDC0B71",
+              "internalID" : "E66D45F4",
               "isStackable" : false,
               "numberOfPeriods" : 1,
               "paymentMode" : "payUpFront",
@@ -158,8 +171,8 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Premium features for 1 Year. Renews.",
-              "displayName" : "PROgress Premium - Yearly",
+              "description" : "Premium Features for 1 Year.",
+              "displayName" : "Premium (1 Year)",
               "locale" : "en_US"
             }
           ],
@@ -167,13 +180,16 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "PROgress Premium [Yearly]",
           "subscriptionGroupID" : "21491764",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }
   ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }
