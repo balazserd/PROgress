@@ -5,6 +5,7 @@
 //  Created by Balázs Erdész on 2023. 08. 22..
 //
 
+#if canImport(ActivityKit)
 import Foundation
 import ActivityKit
 
@@ -27,3 +28,4 @@ struct VideoCreationLiveActivityAttributes: Equatable, ActivityAttributes {
     var middleImages: [URL?]
     var lastImage: URL?
 }
+#endif

@@ -5,6 +5,7 @@
 //  Created by Balázs Erdész on 2023. 08. 22..
 //
 
+#if canImport(ActivityKit)
 import Foundation
 import ActivityKit
 
@@ -73,3 +74,4 @@ enum ActivityManagementError: Error {
     case activitiesAreDisabled
     case activityNotFound
 }
+#endif

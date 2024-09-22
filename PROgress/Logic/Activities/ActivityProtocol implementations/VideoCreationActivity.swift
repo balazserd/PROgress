@@ -5,6 +5,7 @@
 //  Created by Balázs Erdész on 2023. 08. 24..
 //
 
+#if canImport(ActivityKit)
 import Foundation
 
 extension ActivityProtocol where Self == VideoCreationActivity {
@@ -47,3 +48,4 @@ actor VideoCreationActivity: ActivityProtocol {
         }
     }
 }
+#endif

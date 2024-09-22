@@ -5,6 +5,7 @@
 //  Created by Balázs Erdész on 2023. 08. 24..
 //
 
+#if canImport(ActivityKit)
 import Foundation
 import ActivityKit
 
@@ -32,3 +33,4 @@ extension ActivityProtocol {
         self.id = id
     }
 }
+#endif

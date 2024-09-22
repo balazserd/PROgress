@@ -18,9 +18,11 @@ extension Container {
         self { PhotoLibraryManager() }
     }
     
+    #if canImport(ActivityKit)
     var activityManager: Factory<ActivityManager> {
         self { ActivityManager() }
     }
+    #endif
     
     var persistenceContainer: Factory<ModelContainer?> {
         self {

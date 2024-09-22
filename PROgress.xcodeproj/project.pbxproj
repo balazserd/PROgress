@@ -214,7 +214,7 @@
 		56A554882A9210A300E99F65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A554872A9210A300E99F65 /* Assets.xcassets */; };
 		56A5548A2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
 		56A5548B2A9210A300E99F65 /* PROgressActivities.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 56A554862A9210A100E99F65 /* PROgressActivities.intentdefinition */; };
-		56A5548E2A9210A300E99F65 /* PROgressActivitiesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		56A5548E2A9210A300E99F65 /* PROgressActivitiesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 56A554792A9210A100E99F65 /* PROgressActivitiesExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		56A554942A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
 		56A554952A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
 		56A554962A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A554932A949DAE00E99F65 /* VideoCreationLiveActivityAttributes.swift */; };
@@ -1396,6 +1396,7 @@
 		};
 		56A5548D2A9210A300E99F65 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 56A554782A9210A100E99F65 /* PROgressActivitiesExtension */;
 			targetProxy = 56A5548C2A9210A300E99F65 /* PBXContainerItemProxy */;
 		};
@@ -1548,6 +1549,8 @@
 				OTHER_SWIFT_FLAGS = "-warn-concurrency";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1586,6 +1589,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1694,6 +1699,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress.PROgressActivities;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1724,6 +1730,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebuniapps.PROgress.PROgressActivities;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

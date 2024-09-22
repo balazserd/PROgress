@@ -11,14 +11,18 @@ import PhotosUI
 @preconcurrency import Combine
 import EBUniAppsKit
 import Factory
+#if canImport(ActivityKit)
 import ActivityKit
+#endif
 
 @MainActor
 class NewProgressVideoViewModel: ObservableObject {
     // MARK: - Injections
     @Injected(\.imageMergeEngine) private var imageMergeEngine
     @Injected(\.photoLibraryManager) private var photoLibraryManager
+    #if canImport(ActivityKit)
     @Injected(\.activityManager) private var activityManager
+    #endif
     @Injected(\.persistenceContainer) private var container
     
     // MARK: - Variables
@@ -47,7 +51,9 @@ class NewProgressVideoViewModel: ObservableObject {
     
     @Published var userSettings: VideoProcessingUserSettings!
     
+    #if canImport(ActivityKit)
     private var videoCreationLiveActivity: VideoCreationActivity?
+    #endif
     @Published private(set) var videoProcessingState: ImageMergeEngine.State = .idle
     @Published private(set) var video: ProgressVideo?
     @Published var videoName: String = "New progress video" {
@@ -103,7 +109,7 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 backgroundTaskId = await UIApplication.shared.beginBackgroundTask(withName: ImageMergeEngine.backgroundTaskName) { @Sendable in
                     Task {
-                        let timeRemaining = await UIApplication.shared.backgroundTimeRemaining
+                        let timeRemaining = UIApplication.shared.backgroundTimeRemaining
                         PRLogger.app.debug("Background task ended. Remaining time: \(timeRemaining) seconds.")
                     }
                 }
@@ -123,7 +129,9 @@ class NewProgressVideoViewModel: ObservableObject {
                                                                 by: .photosPickerItemEngine)
                 }
                 
+                #if canImport(ActivityKit)
                 await self.setupLiveActivityForProgressVideo(with: thumbnails)
+                #endif
                 
                 let settings = await self.userSettings!
                 let options = ImageMergeEngine.MergeOptions(customOrder: photoUserOrdering, userSettings: settings)
@@ -157,9 +165,11 @@ class NewProgressVideoViewModel: ObservableObject {
                 
                 await self.addVideoToView(video)
                 
+                #if canImport(ActivityKit)
                 if let activity = await self.videoCreationLiveActivity {
                     try await self.activityManager.endActivity(activity, with: .ended())
                 }
+                #endif
             } catch let error {
                 PRLogger.app.error("Video creation failed! \(error)")
                 return
@@ -322,6 +332,7 @@ class NewProgressVideoViewModel: ObservableObject {
         }
     }
     
+    #if canImport(ActivityKit)
     private func setupLiveActivityForProgressVideo(with thumbnails: VideoCreationActivityThumbnailData) async {
         let attributes = VideoCreationLiveActivityAttributes(firstImage: thumbnails.firstImageData,
                                                              middleImages: thumbnails.middleImagesData,
@@ -356,6 +367,7 @@ class NewProgressVideoViewModel: ObservableObject {
             }
         }
     }
+    #endif
     
     private func setProgressImages(to images: [ProgressImage]) {
         self.progressImages = images
